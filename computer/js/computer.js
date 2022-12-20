@@ -1,3 +1,6 @@
+function isLargeScreen() {
+  return window.matchMedia("(min-width: 560px)").matches
+}
 var windowInnerWidth = window.innerWidth;
 function loadSVG(fragment) {
   switch ((z.append(fragment), (s = z.select("#flight-computer")), scope)) {
@@ -50,10 +53,6 @@ function loadSVG(fragment) {
     }),
     webkitRedraw();
   resetApp();
-}
-
-function isLargeScreen() {
-  return window.matchMedia("(min-width: 560px)").matches
 }
 function dirControl() {
   var className = this.className,

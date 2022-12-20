@@ -411,3 +411,6 @@ a:focus {
     width: auto;
   }
 }
+#Disc{
+  cursor: move;
+}

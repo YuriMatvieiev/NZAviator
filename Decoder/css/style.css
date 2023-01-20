@@ -75,10 +75,6 @@
           box-sizing: border-box;
 }
 
-body {
-  margin: 20px;
-}
-
 .form {
   display: -webkit-box;
   display: -ms-flexbox;

@@ -17,9 +17,10 @@
       <div class="col-md-12">
         <form action="#" class="form">
           <div class="first-input">
-            <textarea name="js-textarea-read" class="js-textarea-read" placeholder="Enter text here"
+            <textarea name="js-textarea-read" class="js-textarea-read" placeholder="Enter code here"
               onkeydown="checkForEnter(event)"></textarea>
-            <button type="button" class="button-decode">Translate</button>
+            <button type="button" class="button-clear">Clear</button>
+            <button type="button" class="button-decode">Decode</button>
           </div>
           <?xml version="1.0" encoding="utf-8"?><!-- Uploaded to: SVG Repo, www.svgrepo.com, Generator: SVG Repo Mixer Tools -->
           <svg fill="#000000" width="40px" height="40px" viewBox="0 0 24 24" id="left-right-arrow" data-name="Flat Line"
@@ -35,7 +36,7 @@
             </path>
           </svg>
           <div class="second-input">
-            <textarea class="js-textarea-write"></textarea>
+            <textarea readonly class="js-textarea-write"></textarea>
           </div>
           <script src="js/main.js"></script>
         </form>

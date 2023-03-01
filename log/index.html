@@ -1,0 +1,880 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Log</title>
+
+  <link href="css/style.css" rel="stylesheet">
+</head>
+
+<body class="log">
+  <div class="log__container">
+    <div class="log__block">
+      <div class="log__header">
+        <h2 class="log__title">VFR Navigation Flight Log</h2>
+        <div class="log__sartime">
+          <label>Sartime</label>
+          <input type="text" id="sartime">
+        </div>
+      </div>
+      <div class="log__table desktop">
+        <table id="table1" class="table1">
+          <tr>
+            <th rowspan="2">FROM</th>
+            <th rowspan="2">TO</th>
+            <th rowspan="2">MSA</th>
+            <th rowspan="2">CAS</th>
+            <th colspan="2">ALTITUDE</th>
+            <th rowspan="2" class="log__readonly">TAS <br>
+              kts</th>
+            <th rowspan="2">TRK <br>
+              °T
+            </th>
+            <th colspan="2">WIND</th>
+            <th rowspan="2">VAR. <br>(-E &nbsp; +W)</th>
+          </tr>
+          <tr>
+            <th>FEET</th>
+            <th>TEMP</th>
+            <th>°T</th>
+            <th>Kt's</th>
+          </tr>
+          <tr>
+            <td><input class="from1" type="text"></td>
+            <td><input class="to1" type="text"></td>
+            <td><input class="msa1" type="number"></td>
+            <td><input class="cas1" type="number"></td>
+            <td><input class="feet1" type="number"></td>
+            <td><input class="temp1" type="number"></td>
+            <td><input class="tas_kts1" readonly type="text"></td>
+            <td><input class="trk_t1" type="number"></td>
+            <td><input class="wind_t1" type="number"></td>
+            <td><input class="wind_kts1" type="number"></td>
+            <td><input class="var_e_w1" type="number"></td>
+          </tr>
+          <tr>
+            <td><input class="from2" type="text"></td>
+            <td><input class="to2" type="text"></td>
+            <td><input class="msa2" type="number"></td>
+            <td><input class="cas2" type="number"></td>
+            <td><input class="feet2" type="number"></td>
+            <td><input class="temp2" type="number"></td>
+            <td><input class="tas_kts2" readonly type="text"></td>
+            <td><input class="trk_t2" type="number"></td>
+            <td><input class="wind_t2" type="number"></td>
+            <td><input class="wind_kts2" type="number"></td>
+            <td><input class="var_e_w2" type="number"></td>
+          </tr>
+          <tr>
+            <td><input class="from3" type="text"></td>
+            <td><input class="to3" type="text"></td>
+            <td><input class="msa3" type="number"></td>
+            <td><input class="cas3" type="number"></td>
+            <td><input class="feet3" type="number"></td>
+            <td><input class="temp3" type="number"></td>
+            <td><input class="tas_kts3" readonly type="text"></td>
+            <td><input class="trk_t3" type="number"></td>
+            <td><input class="wind_t3" type="number"></td>
+            <td><input class="wind_kts3" type="number"></td>
+            <td><input class="var_e_w3" type="number"></td>
+          </tr>
+          <tr class="row-4">
+            <td><input class="from4" type="text"></td>
+            <td><input class="to4" type="text"></td>
+            <td><input class="msa4" type="number"></td>
+            <td><input class="cas4" type="number"></td>
+            <td><input class="feet4" type="number"></td>
+            <td><input class="temp4" type="number"></td>
+            <td><input class="tas_kts4" readonly type="text"></td>
+            <td><input class="trk_t4" type="number"></td>
+            <td><input class="wind_t4" type="number"></td>
+            <td><input class="wind_kts4" type="number"></td>
+            <td><input class="var_e_w4" type="number"></td>
+          </tr>
+          <tr class="row-5">
+            <td><input class="from5" type="text"></td>
+            <td><input class="to5" type="text"></td>
+            <td><input class="msa5" type="number"></td>
+            <td><input class="cas5" type="number"></td>
+            <td><input class="feet5" type="number"></td>
+            <td><input class="temp5" type="number"></td>
+            <td><input class="tas_kts5" readonly type="text"></td>
+            <td><input class="trk_t5" type="number"></td>
+            <td><input class="wind_t5" type="number"></td>
+            <td><input class="wind_kts5" type="number"></td>
+            <td><input class="var_e_w5" type="number"></td>
+          </tr>
+          <tr class="row-6">
+            <td><input class="from6" type="text"></td>
+            <td><input class="to6" type="text"></td>
+            <td><input class="msa6" type="number"></td>
+            <td><input class="cas6" type="number"></td>
+            <td><input class="feet6" type="number"></td>
+            <td><input class="temp6" type="number"></td>
+            <td><input class="tas_kts6" readonly type="text"></td>
+            <td><input class="trk_t6" type="number"></td>
+            <td><input class="wind_t6" type="number"></td>
+            <td><input class="wind_kts6" type="number"></td>
+            <td><input class="var_e_w6" type="number"></td>
+          </tr>
+          <tr class="row-7">
+            <td><input class="from7" type="text"></td>
+            <td><input class="to7" type="text"></td>
+            <td><input class="msa7" type="number"></td>
+            <td><input class="cas7" type="number"></td>
+            <td><input class="feet7" type="number"></td>
+            <td><input class="temp7" type="number"></td>
+            <td><input class="tas_kts7" readonly type="text"></td>
+            <td><input class="trk_t7" type="number"></td>
+            <td><input class="wind_t7" type="number"></td>
+            <td><input class="wind_kts7" type="number"></td>
+            <td><input class="var_e_w7" type="number"></td>
+          </tr>
+          <tr class="row-8">
+            <td><input class="from8" type="text"></td>
+            <td><input class="to8" type="text"></td>
+            <td><input class="msa8" type="number"></td>
+            <td><input class="cas8" type="number"></td>
+            <td><input class="feet8" type="number"></td>
+            <td><input class="temp8" type="number"></td>
+            <td><input class="tas_kts8" readonly type="text"></td>
+            <td><input class="trk_t8" type="number"></td>
+            <td><input class="wind_t8" type="number"></td>
+            <td><input class="wind_kts8" type="number"></td>
+            <td><input class="var_e_w8" type="number"></td>
+          </tr>
+          <tr class="row-9">
+            <td><input class="from9" type="text"></td>
+            <td><input class="to9" type="text"></td>
+            <td><input class="msa9" type="number"></td>
+            <td><input class="cas9" type="number"></td>
+            <td><input class="feet9" type="number"></td>
+            <td><input class="temp9" type="number"></td>
+            <td><input class="tas_kts9" readonly type="text"></td>
+            <td><input class="trk_t9" type="number"></td>
+            <td><input class="wind_t9" type="number"></td>
+            <td><input class="wind_kts9" type="number"></td>
+            <td><input class="var_e_w9" type="number"></td>
+          </tr>
+        </table>
+        <table id="table2" class="table2">
+          <tr>
+            <th rowspan="2" class="log__readonly">HDG °M</th>
+            <th rowspan="2">DISTANCE <br> NM</th>
+            <th rowspan="2" class="log__readonly">G/S Kts</th>
+            <th rowspan="2" class="log__readonly">EET</th>
+            <th rowspan="2">ETA</th>
+            <th rowspan="2">REVISED <br> ETA</th>
+            <th rowspan="2">ATA</th>
+            <th rowspan="2" class="log__readonly">LEG <br> FUEL</th>
+            <th rowspan="2">Fuel <br> Burn</th>
+            <th rowspan="2" class="log__readonly">FUEL <br> REMAIN</th>
+            <th rowspan="2">Fuel on <br> Board</th>
+          </tr>
+          <tr>
+          </tr>
+          <tr>
+            <td><input class="hdg1" readonly type="text"></td>
+            <td><input class="distance_nm1" type="number"></td>
+            <td><input class="gs_kts1" readonly type="text"></td>
+            <td><input class="eet1" readonly type="text"></td>
+            <td><input class="eta1" type="number"></td>
+            <td><input class="revised_eta1" type="number"></td>
+            <td><input class="ata1" type="number"></td>
+            <td><input class="leg_fuel1" readonly type="text"></td>
+            <td><input class="fuel_burn1" type="number"></td>
+            <td><input class="fuel_remain1" readonly type="text"></td>
+            <td><input class="fuel_on_board1" type="number"></td>
+          </tr>
+          <tr>
+            <td><input class="hdg2" readonly type="text"></td>
+            <td><input class="distance_nm2" type="number"></td>
+            <td><input class="gs_kts2" readonly type="text"></td>
+            <td><input class="eet2" readonly type="text"></td>
+            <td><input class="eta2" type="number"></td>
+            <td><input class="revised_eta2" type="number"></td>
+            <td><input class="ata2" type="number"></td>
+            <td><input class="leg_fuel2" readonly type="text"></td>
+            <td><input class="fuel_burn2" type="number"></td>
+            <td><input class="fuel_remain2" readonly type="text"></td>
+            <td><input class="fuel_on_board2" type="number"></td>
+          </tr>
+          <tr>
+            <td><input class="hdg3" readonly type="text"></td>
+            <td><input class="distance_nm3" type="number"></td>
+            <td><input class="gs_kts3" readonly type="text"></td>
+            <td><input class="eet3" readonly type="text"></td>
+            <td><input class="eta3" type="number"></td>
+            <td><input class="revised_eta3" type="number"></td>
+            <td><input class="ata3" type="number"></td>
+            <td><input class="leg_fuel3" readonly type="text"></td>
+            <td><input class="fuel_burn3" type="number"></td>
+            <td><input class="fuel_remain3" readonly type="text"></td>
+            <td><input class="fuel_on_board3" type="number"></td>
+          </tr>
+          <tr class="row-4">
+            <td><input class="hdg4" readonly type="text"></td>
+            <td><input class="distance_nm4" type="number"></td>
+            <td><input class="gs_kts4" readonly type="text"></td>
+            <td><input class="eet4" readonly type="text"></td>
+            <td><input class="eta4" type="number"></td>
+            <td><input class="revised_eta4" type="number"></td>
+            <td><input class="ata4" type="number"></td>
+            <td><input class="leg_fuel4" readonly type="text"></td>
+            <td><input class="fuel_burn4" type="number"></td>
+            <td><input class="fuel_remain4" readonly type="text"></td>
+            <td><input class="fuel_on_board4" type="number"></td>
+          </tr>
+          <tr class="row-5">
+            <td><input class="hdg5" readonly type="text"></td>
+            <td><input class="distance_nm5" type="number"></td>
+            <td><input class="gs_kts5" readonly type="text"></td>
+            <td><input class="eet5" readonly type="text"></td>
+            <td><input class="eta5" type="number"></td>
+            <td><input class="revised_eta5" type="number"></td>
+            <td><input class="ata5" type="number"></td>
+            <td><input class="leg_fuel5" readonly type="text"></td>
+            <td><input class="fuel_burn5" type="number"></td>
+            <td><input class="fuel_remain5" readonly type="text"></td>
+            <td><input class="fuel_on_board5" type="number"></td>
+          </tr>
+          <tr class="row-6">
+            <td><input class="hdg6" readonly type="text"></td>
+            <td><input class="distance_nm6" type="number"></td>
+            <td><input class="gs_kts6" readonly type="text"></td>
+            <td><input class="eet6" readonly type="text"></td>
+            <td><input class="eta6" type="number"></td>
+            <td><input class="revised_eta6" type="number"></td>
+            <td><input class="ata6" type="number"></td>
+            <td><input class="leg_fuel6" readonly type="text"></td>
+            <td><input class="fuel_burn6" type="number"></td>
+            <td><input class="fuel_remain6" readonly type="text"></td>
+            <td><input class="fuel_on_board6" type="number"></td>
+          </tr>
+
+          <tr class="row-7">
+            <td><input class="hdg7" readonly type="text"></td>
+            <td><input class="distance_nm7" type="number"></td>
+            <td><input class="gs_kts7" readonly type="text"></td>
+            <td><input class="eet7" readonly type="text"></td>
+            <td><input class="eta7" type="number"></td>
+            <td><input class="revised_eta7" type="number"></td>
+            <td><input class="ata7" type="number"></td>
+            <td><input class="leg_fuel7" readonly type="text"></td>
+            <td><input class="fuel_burn7" type="number"></td>
+            <td><input class="fuel_remain7" readonly type="text"></td>
+            <td><input class="fuel_on_board7" type="number"></td>
+          </tr>
+          <tr class="row-8">
+            <td><input class="hdg8" readonly type="text"></td>
+            <td><input class="distance_nm8" type="number"></td>
+            <td><input class="gs_kts8" readonly type="text"></td>
+            <td><input class="eet8" readonly type="text"></td>
+            <td><input class="eta8" type="number"></td>
+            <td><input class="revised_eta8" type="number"></td>
+            <td><input class="ata8" type="number"></td>
+            <td><input class="leg_fuel8" readonly type="text"></td>
+            <td><input class="fuel_burn8" type="number"></td>
+            <td><input class="fuel_remain8" readonly type="text"></td>
+            <td><input class="fuel_on_board8" type="number"></td>
+          </tr>
+          <tr class="row-9">
+            <td><input class="hdg9" readonly type="text"></td>
+            <td><input class="distance_nm9" type="number"></td>
+            <td><input class="gs_kts9" readonly type="text"></td>
+            <td><input class="eet9" readonly type="text"></td>
+            <td><input class="eta9" type="number"></td>
+            <td><input class="revised_eta9" type="number"></td>
+            <td><input class="ata9" type="number"></td>
+            <td><input class="leg_fuel9" readonly type="text"></td>
+            <td><input class="fuel_burn9" type="number"></td>
+            <td><input class="fuel_remain9" readonly type="text"></td>
+            <td><input class="fuel_on_board9" type="number"></td>
+          </tr>
+        </table>
+        <div class="log__table-bottom">
+          <table id="table3" class="table3">
+            <tr>
+              <th rowspan="2">Start,<br> Taxi</th>
+              <th rowspan="2">Reserve <br> Fuel</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="start_taxi1" type="number"></td>
+              <td><input class="reserve_fuel1" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="start_taxi2" type="number"></td>
+              <td><input class="reserve_fuel2" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="start_taxi3" type="number"></td>
+              <td><input class="reserve_fuel3" type="number"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="start_taxi4" type="number"></td>
+              <td><input class="reserve_fuel4" type="number"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="start_taxi5" type="number"></td>
+              <td><input class="reserve_fuel5" type="number"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="start_taxi6" type="number"></td>
+              <td><input class="reserve_fuel6" type="number"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="start_taxi7" type="number"></td>
+              <td><input class="reserve_fuel7" type="number"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="start_taxi8" type="number"></td>
+              <td><input class="reserve_fuel8" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="start_taxi9" type="number"></td>
+              <td><input class="reserve_fuel9" type="number"></td>
+            </tr>
+          </table>
+          <table id="table4" class="table4">
+            <tr>
+              <th rowspan="2">CLEARANCES / NOTES</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="notes1" type="text"></td>
+            </tr>
+            <tr>
+              <td><input class="notes2" type="text"></td>
+            </tr>
+            <tr>
+              <td><input class="notes3" type="text"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="notes4" type="text"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="notes5" type="text"></td>
+            </tr>
+
+            <tr class="row-6">
+              <td><input class="notes6" type="text"></td>
+            </tr>
+
+            <tr class="row-7">
+              <td><input class="notes7" type="text"></td>
+            </tr>
+
+            <tr class="row-8">
+              <td><input class="notes8" type="text"></td>
+            </tr>
+
+            <tr class="row-9">
+              <td><input class="notes9" type="text"></td>
+            </tr>
+          </table>
+        </div>
+        <div class="log__buttons">
+          <button class="log__button-add" onclick="addRows()" type="submit">Add New Line</button>
+          <button class="log__button-clear" onclick="clearRows()" type="reset">CLEAR</button>
+        </div>
+      </div>
+      <div class="log__table mobile">
+        <div class="log__table-mobile">
+          <table id="mobile1" class="mobile1">
+            <tr>
+              <th rowspan="2">FROM</th>
+              <th rowspan="2">TO</th>
+              <th rowspan="2">MSA</th>
+              <th rowspan="2">CAS</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="from10" type="text"></td>
+              <td><input class="to10" type="text"></td>
+              <td><input class="msa10" type="number"></td>
+              <td><input class="cas10 " type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="from11" type="text"></td>
+              <td><input class="to11" type="text"></td>
+              <td><input class="msa11" type="number"></td>
+              <td><input class="cas11" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="from12" type="text"></td>
+              <td><input class="to12" type="text"></td>
+              <td><input class="msa12" type="number"></td>
+              <td><input class="cas12" type="number"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="from13" type="text"></td>
+              <td><input class="to13" type="text"></td>
+              <td><input class="msa13" type="number"></td>
+              <td><input class="cas13" type="number"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="from14" type="text"></td>
+              <td><input class="to14" type="text"></td>
+              <td><input class="msa14" type="number"></td>
+              <td><input class="cas14" type="number"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="from15" type="text"></td>
+              <td><input class="to15" type="text"></td>
+              <td><input class="msa15" type="number"></td>
+              <td><input class="cas15" type="number"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="from16" type="text"></td>
+              <td><input class="to16" type="text"></td>
+              <td><input class="msa16" type="number"></td>
+              <td><input class="cas16" type="number"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="from17" type="text"></td>
+              <td><input class="to17" type="text"></td>
+              <td><input class="msa17" type="number"></td>
+              <td><input class="cas17" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="from18" type="text"></td>
+              <td><input class="to18" type="text"></td>
+              <td><input class="msa18" type="number"></td>
+              <td><input class="cas18" type="number"></td>
+            </tr>
+
+          </table>
+          <table id="mobile2" class="mobile2">
+            <tr>
+              <th colspan="2">ALTITUDE</th>
+              <th rowspan="2" class="log__readonly">TAS <br>kts</th>
+              <th rowspan="2">TRK <br>°T</th>
+            </tr>
+            <tr>
+              <th>FEET</th>
+              <th>TEMP</th>
+            </tr>
+            <tr>
+              <td><input class="feet10" type="number"></td>
+              <td><input class="temp10" type="number"></td>
+              <td><input class="tas_kts10" readonly type="text"></td>
+              <td><input class="trk_t10" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="feet11" type="number"></td>
+              <td><input class="temp11" type="number"></td>
+              <td><input class="tas_kts11" readonly type="text"></td>
+              <td><input class="trk_t11" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="feet12" type="number"></td>
+              <td><input class="temp12" type="number"></td>
+              <td><input class="tas_kts12" readonly type="text"></td>
+              <td><input class="trk_t12" type="number"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="feet13" type="number"></td>
+              <td><input class="temp13" type="number"></td>
+              <td><input class="tas_kts13" readonly type="text"></td>
+              <td><input class="trk_t13" type="number"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="feet14" type="number"></td>
+              <td><input class="temp14" type="number"></td>
+              <td><input class="tas_kts14" readonly type="text"></td>
+              <td><input class="trk_t14" type="number"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="feet15" type="number"></td>
+              <td><input class="temp15" type="number"></td>
+              <td><input class="tas_kts15" readonly type="text"></td>
+              <td><input class="trk_t15" type="number"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="feet16" type="number"></td>
+              <td><input class="temp16" type="number"></td>
+              <td><input class="tas_kts16" readonly type="text"></td>
+              <td><input class="trk_t16" type="number"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="feet17" type="number"></td>
+              <td><input class="temp17" type="number"></td>
+              <td><input class="tas_kts17" readonly type="text"></td>
+              <td><input class="trk_t17" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="feet18" type="number"></td>
+              <td><input class="temp18" type="number"></td>
+              <td><input class="tas_kts18" readonly type="text"></td>
+              <td><input class="trk_t18" type="number"></td>
+            </tr>
+
+          </table>
+          <div class="log__buttons">
+            <button class="log__button-add" onclick="addRows()" type="submit">Add New Line</button>
+            <button class="log__button-clear" onclick="clearRows()" type="reset">CLEAR</button>
+          </div>
+          <div class="log__nav" style="justify-content: flex-end;">
+            <a onclick="nextBlocks()" class="log__nav-button">NEXT <span></span> <svg width="24" height="24"
+                fill="#8edab5" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
+              </svg></a>
+          </div>
+        </div>
+        <div class="log__table-mobile" style="display: none;">
+          <table id="mobile3" class="mobile3">
+            <tr>
+              <th colspan="2">WIND</th>
+              <th rowspan="2">VAR. <br>(-E &nbsp; +W)</th>
+              <th rowspan="2" class="log__readonly">HDG °M</th>
+            </tr>
+            <tr>
+              <th>°T</th>
+              <th>Kt's</th>
+            </tr>
+            <tr>
+              <td><input class="wind_t10" type="number"></td>
+              <td><input class="wind_kts10" type="number"></td>
+              <td><input class="var_e_w10" type="number"></td>
+              <td><input class="hdg10" readonly type="text"></td>
+            </tr>
+
+            <tr>
+              <td><input class="wind_t11" type="number"></td>
+              <td><input class="wind_kts11" type="number"></td>
+              <td><input class="var_e_w11" type="number"></td>
+              <td><input class="hdg11" readonly type="text"></td>
+            </tr>
+
+            <tr>
+              <td><input class="wind_t12" type="number"></td>
+              <td><input class="wind_kts12" type="number"></td>
+              <td><input class="var_e_w12" type="number"></td>
+              <td><input class="hdg12" readonly type="text"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="wind_t13" type="number"></td>
+              <td><input class="wind_kts13" type="number"></td>
+              <td><input class="var_e_w13" type="number"></td>
+              <td><input class="hdg13" readonly type="text"></td>
+            </tr>
+
+            <tr class="row-5">
+              <td><input class="wind_t14" type="number"></td>
+              <td><input class="wind_kts14" type="number"></td>
+              <td><input class="var_e_w14" type="number"></td>
+              <td><input class="hdg14" readonly type="text"></td>
+            </tr>
+
+            <tr class="row-6">
+              <td><input class="wind_t15" type="number"></td>
+              <td><input class="wind_kts15" type="number"></td>
+              <td><input class="var_e_w15" type="number"></td>
+              <td><input class="hdg15" readonly type="text"></td>
+            </tr>
+
+            <tr class="row-7">
+              <td><input class="wind_t16" type="number"></td>
+              <td><input class="wind_kts16" type="number"></td>
+              <td><input class="var_e_w16" type="number"></td>
+              <td><input class="hdg16" readonly type="text"></td>
+            </tr>
+
+            <tr class="row-8">
+              <td><input class="wind_t17" type="number"></td>
+              <td><input class="wind_kts17" type="number"></td>
+              <td><input class="var_e_w17" type="number"></td>
+              <td><input class="hdg17" readonly type="text"></td>
+            </tr>
+
+            <tr class="row-9">
+              <td><input class="wind_t18" type="number"></td>
+              <td><input class="wind_kts18" type="number"></td>
+              <td><input class="var_e_w18" type="number"></td>
+              <td><input class="hdg18" readonly type="text"></td>
+            </tr>
+
+
+          </table>
+          <table id="mobile4" class="mobile4">
+            <tr>
+              <th rowspan="2">DISTANCE <br> NM</th>
+              <th rowspan="2" class="log__readonly">G/S Kts</th>
+              <th rowspan="2" class="log__readonly">EET</th>
+              <th rowspan="2">ETA</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="distance_nm10" type="number"></td>
+              <td><input class="gs_kts10" readonly type="text"></td>
+              <td><input class="eet10" readonly type="text"></td>
+              <td><input class="eta10" type="number"></td>
+            </tr>
+
+            <tr>
+              <td><input class="distance_nm11" type="number"></td>
+              <td><input class="gs_kts11" readonly type="text"></td>
+              <td><input class="eet11" readonly type="text"></td>
+              <td><input class="eta11" type="number"></td>
+            </tr>
+
+            <tr>
+              <td><input class="distance_nm12" type="number"></td>
+              <td><input class="gs_kts12" readonly type="text"></td>
+              <td><input class="eet12" readonly type="text"></td>
+              <td><input class="eta12" type="number"></td>
+            </tr>
+
+            <tr class="row-4">
+              <td><input class="distance_nm13" type="number"></td>
+              <td><input class="gs_kts13" readonly type="text"></td>
+              <td><input class="eet13" readonly type="text"></td>
+              <td><input class="eta13" type="number"></td>
+            </tr>
+
+            <tr class="row-5">
+              <td><input class="distance_nm14" type="number"></td>
+              <td><input class="gs_kts14" readonly type="text"></td>
+              <td><input class="eet14" readonly type="text"></td>
+              <td><input class="eta14" type="number"></td>
+            </tr>
+
+            <tr class="row-6">
+              <td><input class="distance_nm15" type="number"></td>
+              <td><input class="gs_kts15" readonly type="text"></td>
+              <td><input class="eet15" readonly type="text"></td>
+              <td><input class="eta15" type="number"></td>
+            </tr>
+
+            <tr class="row-7">
+              <td><input class="distance_nm16" type="number"></td>
+              <td><input class="gs_kts16" readonly type="text"></td>
+              <td><input class="eet16" readonly type="text"></td>
+              <td><input class="eta16" type="number"></td>
+            </tr>
+
+            <tr class="row-8">
+              <td><input class="distance_nm17" type="number"></td>
+              <td><input class="gs_kts17" readonly type="text"></td>
+              <td><input class="eet17" readonly type="text"></td>
+              <td><input class="eta17" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="distance_nm18" type="number"></td>
+              <td><input class="gs_kts18" readonly type="text"></td>
+              <td><input class="eet18" readonly type="text"></td>
+              <td><input class="eta18" type="number"></td>
+            </tr>
+          </table>
+          <div class="log__nav">
+            <a onclick="previousBlock()" class="log__nav-button"> <svg width="24" height="24" fill="#377d22"
+                xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+              </svg><span></span>BACK</a>
+            <a onclick="nextBlocks()" class="log__nav-button">NEXT <span></span> <svg width="24" height="24"
+                fill="#8edab5" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
+              </svg></a>
+
+          </div>
+        </div>
+        <div class="log__table-mobile" style="display: none;">
+          <table id="mobile5" class="mobile5">
+            <tr>
+              <th rowspan="2">REVISED <br> ETA</th>
+              <th rowspan="2">ATA</th>
+              <th rowspan="2" class="log__readonly">LEG <br> FUEL</th>
+              <th rowspan="2">Fuel <br> Burn</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="revised_eta10" type="number"></td>
+              <td><input class="ata10" type="number"></td>
+              <td><input class="leg_fuel10" readonly type="text"></td>
+              <td><input class="fuel_burn10" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="revised_eta11" type="number"></td>
+              <td><input class="ata11" type="number"></td>
+              <td><input class="leg_fuel11" readonly type="text"></td>
+              <td><input class="fuel_burn11" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="revised_eta12" type="number"></td>
+              <td><input class="ata12" type="number"></td>
+              <td><input class="leg_fuel12" readonly type="text"></td>
+              <td><input class="fuel_burn12" type="number"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="revised_eta13" type="number"></td>
+              <td><input class="ata13" type="number"></td>
+              <td><input class="leg_fuel13" readonly type="text"></td>
+              <td><input class="fuel_burn13" type="number"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="revised_eta14" type="number"></td>
+              <td><input class="ata14" type="number"></td>
+              <td><input class="leg_fuel14" readonly type="text"></td>
+              <td><input class="fuel_burn14" type="number"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="revised_eta15" type="number"></td>
+              <td><input class="ata15" type="number"></td>
+              <td><input class="leg_fuel15" readonly type="text"></td>
+              <td><input class="fuel_burn15" type="number"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="revised_eta16" type="number"></td>
+              <td><input class="ata16" type="number"></td>
+              <td><input class="leg_fuel16" readonly type="text"></td>
+              <td><input class="fuel_burn16" type="number"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="revised_eta17" type="number"></td>
+              <td><input class="ata17" type="number"></td>
+              <td><input class="leg_fuel17" readonly type="text"></td>
+              <td><input class="fuel_burn17" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="revised_eta18" type="number"></td>
+              <td><input class="ata18" type="number"></td>
+              <td><input class="leg_fuel18" readonly type="text"></td>
+              <td><input class="fuel_burn18" type="number"></td>
+            </tr>
+          </table>
+          <table id="mobile6" class="mobile6">
+            <tr>
+              <th rowspan="2" class="log__readonly">FUEL <br> REMAIN</th>
+              <th rowspan="2">Fuel on <br> Board</th>
+              <th rowspan="2">Start,<br> Taxi</th>
+              <th rowspan="2">Reserve <br> Fuel</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="fuel_remain10" readonly type="text"></td>
+              <td><input class="fuel_on_board10" type="number"></td>
+              <td><input class="start_taxi10" type="number"></td>
+              <td><input class="reserve_fuel10" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="fuel_remain11" readonly type="text"></td>
+              <td><input class="fuel_on_board11" type="number"></td>
+              <td><input class="start_taxi11" type="number"></td>
+              <td><input class="reserve_fuel11" type="number"></td>
+            </tr>
+            <tr>
+              <td><input class="fuel_remain12" readonly type="text"></td>
+              <td><input class="fuel_on_board12" type="number"></td>
+              <td><input class="start_taxi12" type="number"></td>
+              <td><input class="reserve_fuel12" type="number"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="fuel_remain13" readonly type="text"></td>
+              <td><input class="fuel_on_board13" type="number"></td>
+              <td><input class="start_taxi13" type="number"></td>
+              <td><input class="reserve_fuel13" type="number"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="fuel_remain14" readonly type="text"></td>
+              <td><input class="fuel_on_board14" type="number"></td>
+              <td><input class="start_taxi14" type="number"></td>
+              <td><input class="reserve_fuel14" type="number"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="fuel_remain15" readonly type="text"></td>
+              <td><input class="fuel_on_board15" type="number"></td>
+              <td><input class="start_taxi15" type="number"></td>
+              <td><input class="reserve_fuel15" type="number"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="fuel_remain16" readonly type="text"></td>
+              <td><input class="fuel_on_board16" type="number"></td>
+              <td><input class="start_taxi16" type="number"></td>
+              <td><input class="reserve_fuel16" type="number"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="fuel_remain17" readonly type="text"></td>
+              <td><input class="fuel_on_board17" type="number"></td>
+              <td><input class="start_taxi17" type="number"></td>
+              <td><input class="reserve_fuel17" type="number"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="fuel_remain18" readonly type="text"></td>
+              <td><input class="fuel_on_board18" type="number"></td>
+              <td><input class="start_taxi18" type="number"></td>
+              <td><input class="reserve_fuel18" type="number"></td>
+            </tr>
+
+          </table>
+          <div class="log__nav">
+            <a onclick="previousBlock()" class="log__nav-button"> <svg width="24" height="24" fill="#377d22"
+                xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+              </svg><span></span>BACK</a>
+            <a onclick="nextBlocks()" class="log__nav-button">NEXT <span></span> <svg width="24" height="24"
+                fill="#8edab5" xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M21.883 12l-7.527 6.235.644.765 9-7.521-9-7.479-.645.764 7.529 6.236h-21.884v1h21.883z" />
+              </svg></a>
+
+          </div>
+        </div>
+        <div class="log__table-mobile" style="display: none;">
+          <table id="mobile7" class="mobile7">
+            <tr>
+              <th rowspan="2">CLEARANCES / NOTES</th>
+            </tr>
+            <tr>
+            </tr>
+            <tr>
+              <td><input class="notes10" type="text"></td>
+            </tr>
+            <tr>
+              <td><input class="notes11" type="text"></td>
+            </tr>
+            <tr>
+              <td><input class="notes12" type="text"></td>
+            </tr>
+            <tr class="row-4">
+              <td><input class="notes13" type="text"></td>
+            </tr>
+            <tr class="row-5">
+              <td><input class="notes14" type="text"></td>
+            </tr>
+            <tr class="row-6">
+              <td><input class="notes15" type="text"></td>
+            </tr>
+            <tr class="row-7">
+              <td><input class="notes16" type="text"></td>
+            </tr>
+            <tr class="row-8">
+              <td><input class="notes17" type="text"></td>
+            </tr>
+            <tr class="row-9">
+              <td><input class="notes18" type="text"></td>
+            </tr>
+          </table>
+          <div class="log__nav" style="justify-content: flex-start;">
+            <a onclick="previousBlock()" class="log__nav-button"> <svg width="24" height="24" fill="#377d22"
+                xmlns="http://www.w3.org/2000/svg" fill-rule="evenodd" clip-rule="evenodd">
+                <path d="M2.117 12l7.527 6.235-.644.765-9-7.521 9-7.479.645.764-7.529 6.236h21.884v1h-21.883z" />
+              </svg><span></span>BACK</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="js/main.js"></script>
+</body>
+
+
+
+</html>

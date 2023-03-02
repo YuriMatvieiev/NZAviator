@@ -35,115 +35,24 @@ function previousBlock() {
   showBlock(currentIndex);
 }
 
-// Определяем массив объектов с информацией о таблицах и их шаблонах строк
-/* const MAX_ROWS = 14;
-const tableTemplates = {
-  table1: `<tr>
-  <td><input class="from1" type="text"></td>
-  <td><input class="to1" type="text"></td>
-  <td><input class="msa1" type="text"></td>
-  <td><input class="cas1" type="text"></td>
-  <td><input class="feet1" type="text"></td>
-  <td><input class="temp1" type="text"></td>
-  <td><input class="tas_kts1" readonly type="text"></td>
-  <td><input class="trk_t1" type="text"></td>
-  <td><input class="wind_t1" type="text"></td>
-  <td><input class="wind_kts1" type="text"></td>
-  <td><input class="var_e_w1" type="text"></td>
-</tr>`,
-  table2: '<tr><td><input id="hdg1" readonly type="text"></td><td><input id="distance_nm1" type="text"></td><td><input id="gs_kts1" readonly type="text"></td><td><input id="eet1" readonly type="text"></td><td><input id="eta1" type="text"></td><td><input id="revised_eta1" type="text"></td><td><input id="ata1" type="text"></td><td><input id="leg_fuel1" readonly type="text"></td><td><input id="fuel_burn1" type="text"></td><td><input id="fuel_remain1" readonly type="text"></td><td><input id="fuel_on_board1" type="text"></td></tr > ',
-  table3: '<td><input id="start_taxi1" type="text"></td><td><input id="reserve_fuel1" type="text"></td>',
-  table4: '<tr><td><input id="notes1" type="text"></td></tr>',
-  mobile1: '<tr><td><input id="from11" type="text"></td><td><input id="to11" type="text"></td><td><input id="msa11" type="text"></td><td><input id="cas11" type="text"></td></tr > ',
-  mobile2: '<tr><td><input id="feet11" type="text"></td><td><input id="temp11" type="text"></td><td><input id="tas_kts11" readonly type="text"></td><td><input id="trk_t11" type="text"></td></tr>',
-  mobile3: '<tr><td><input id="wind_t11" type="text"></td><td td ><input id="wind_kts11" type="text"></td><td><input id="var_e_w11" type="text"></td><td><input id="hdg11" readonly type="text"></td></tr>',
-  mobile4: '<tr><td><input id="distance_nm11" type="text"></td><td><input id="gs_kts11" readonly type="text"></td><td><input id="eet11" readonly type="text"></td><td><input id="eta11" type="text"></td></tr>',
-  mobile5: '<tr><td><input id="revised_eta11" type="text"></td><td><input id="ata11" type="text"></td><td><input id="leg_fuel11" readonly type="text"></td><td><input id="fuel_burn11" type="text"></td></tr>',
-  mobile6: '<tr><td><input id="fuel_remain11" readonly type="text"></td><td><input id="fuel_on_board11" type="text"></td><td><input id="start_taxi11" type="text"></td><td><input id="reserve_fuel11" type="text"></td></tr > ',
-  mobile7: '<tr><td><input id="notes11" type="text"></td></tr>',
-};
-
-const addRowButton = document.querySelector('#addRowButton');
-const removeRowsButton = document.querySelector('#clearButton');
-const tables = document.querySelectorAll('table');
-
-tables.forEach(table => {
-  const template = tableTemplates[table.id];
-  if (template) {
-    table.template = template;
-  }
-});
-
-function addRowToTable(table) {
-  const tbody = table.querySelector('tbody');
-  const rowCount = tbody.children.length;
-  if (rowCount + 3 > MAX_ROWS) {
-    return;
-  }
-  let indexIncrement = -1; // начальное значение индекса
-  if (window.innerWidth < 768) {
-    indexIncrement = 11; // если экран меньше 768 пикселей, увеличиваем индекс на 2
-  }
-  for (let i = 0; i < 3; i++) {
-    const newRow = document.createElement('tr');
-    newRow.innerHTML = table.template;
-    newRow.classList.add('added-row');
-    // Loop through all input fields in the template and update their IDs
-    newRow.querySelectorAll('input').forEach(input => {
-      const id = input.className;
-      if (id) {
-        const newId = id.replace(/\d+/, rowCount + i + indexIncrement);
-        input.className = newId;
-      }
-    });
-    tbody.appendChild(newRow);
-  }
-}
-
-function addRow() {
-  tables.forEach(table => {
-    if (table.template) {
-      addRowToTable(table);
-    }
-  });
-}
-
-function removeRows() {
-  tables.forEach(table => {
-    const tbody = table.querySelector('tbody');
-    const addedRows = tbody.querySelectorAll('.added-row');
-    addedRows.forEach(row => row.remove());
-  });
-} */
-
 // Get a reference to the rows that you want to display
-const allRows = document.querySelectorAll('.row-4, .row-5, .row-6, .row-7, .row-8, .row-9');
-const rows4to6 = document.querySelectorAll('.row-4, .row-5, .row-6');
-const rows7to9 = document.querySelectorAll('.row-7, .row-8, .row-9');
+const allRows = document.querySelectorAll('.row-4, .row-5, .row-6, .row-7, .row-8, .row-9, .row-10, .row-11, .row-12');
+const rows = [document.querySelectorAll('.row-4'), document.querySelectorAll('.row-5'), document.querySelectorAll('.row-6'), document.querySelectorAll('.row-7'), document.querySelectorAll('.row-8'), document.querySelectorAll('.row-9'), document.querySelectorAll('.row-10'), document.querySelectorAll('.row-11'), document.querySelectorAll('.row-12')];
 let clickCounter = 0;
 
 function addRows() {
   clickCounter++;
-  switch (clickCounter) {
-    case 1:
-      rows4to6.forEach(row => row.classList.add('show'));
-      break;
-    case 2:
-      rows7to9.forEach(row => row.classList.add('show'));
-      break;
-    default:
-      break;
+  if (clickCounter > 0 && clickCounter <= 9) {
+    rows[clickCounter - 1].forEach(row => row.classList.add('show'));
   }
 }
 
 function clearRows() {
   allRows.forEach(row => row.classList.remove('show'));
-  const inputs = document.querySelectorAll('input');
-  for (let i = 0; i < inputs.length; i++) {
-    inputs[i].value = '';
-  }
+  document.querySelectorAll('input').forEach(input => input.value = '');
   clickCounter = 0;
 }
+
 
 document.addEventListener("input", function () {
   const inputs = [];
@@ -172,9 +81,13 @@ document.addEventListener("input", function () {
 
     if (inputs[i - 1].cas) {
       inputs[i - 1].cas.addEventListener("input", calculateTasKts);
+      inputs[i - 1].cas.addEventListener("input", updateGSandHDG); // add event listener for 'CAS' input field
       inputs[i - 1].feet.addEventListener("input", calculateTasKts);
       inputs[i - 1].trkT.addEventListener("input", calculateHdg);
+      calculateHdg(); // call calculateHdg() once here to set initial values
+      calculateGsKts(); // call calculateGsKts() once here to set initial values
     }
+
     if (inputs[i - 1].windT) {
       inputs[i - 1].windT.addEventListener("input", calculateHdg);
 
@@ -214,7 +127,8 @@ document.addEventListener("input", function () {
     if (!isNaN(cas) && !isNaN(feet)) {
       const tasKts = cas + (cas * ((feet / 1000) * 0.02));
       inputs[index].tasKts.value = tasKts.toFixed(1);
-      calculateHdg();
+      calculateHdg(); // calculate hdg
+      calculateGsKts();
     } else {
       inputs[index].tasKts.value = "";
     }
@@ -227,8 +141,11 @@ document.addEventListener("input", function () {
       calculateHdg();
     }
   }
+
   function calculateHdg() {
     const index = inputs.findIndex(input =>
+      (input.cas === this) ||
+      (input.feet === this) || // add feet input here
       (input.trkT === this) ||
       (input.windT === this) ||
       (input.windKts === this) ||
@@ -237,22 +154,39 @@ document.addEventListener("input", function () {
     if (index === -1) {
       return;
     }
+    const casInput = parseFloat(inputs[index]?.cas?.value);
+    const feetInput = parseFloat(inputs[index]?.feet?.value);
     const tasKtsInput = Math.round(inputs[index].tasKts.value);
     const trkTInput = parseFloat(inputs[index]?.trkT?.value);
     const windTInput = parseFloat(inputs[index]?.windT?.value);
     const windKtsInput = parseFloat(inputs[index]?.windKts?.value);
     const varEWValInput = parseFloat(inputs[index]?.varEW?.value);
-    if (!isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput) && !isNaN(varEWValInput) && windKtsInput !== 0) {
+    if (!isNaN(casInput) && !isNaN(feetInput) && !isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput) && !isNaN(varEWValInput) && windKtsInput !== 0) {
       const windAngle = Math.atan((windKtsInput * Math.sin((windTInput - trkTInput) * Math.PI / 180)) / tasKtsInput);
       const windAngleDeg = windAngle * 180 / Math.PI;
       const HDG = trkTInput + varEWValInput + windAngleDeg;
-      inputs[index].hdg.value = Math.round(HDG);
+      const formattedHDG = HDG.toFixed(0).padStart(3, '0');
+      inputs[index].hdg.value = formattedHDG;
+      calculateGsKts();
+      if (inputs[index].cas) {
+        inputs[index].cas.addEventListener("input", calculateHdg);
+      }
+      if (inputs[index].feet) { // add event listener for feet input here
+        inputs[index].feet.addEventListener("input", calculateHdg);
+      }
     } else {
       inputs[index].hdg.value = "";
     }
   }
+
+  function updateGSandHDG() {
+    calculateGsKts();
+    calculateHdg();
+  }
   function calculateGsKts() {
     const index = inputs.findIndex(input =>
+      (input.cas === this) ||
+      (input.feet === this) || // add feet input here
       (input.trkT === this) ||
       (input.windT === this) ||
       (input.windKts === this) ||
@@ -265,11 +199,9 @@ document.addEventListener("input", function () {
     const trkTInput = parseFloat(inputs[index]?.trkT?.value);
     const windTInput = parseFloat(inputs[index]?.windT?.value);
     const windKtsInput = parseFloat(inputs[index]?.windKts?.value);
-    console.log(tasKtsInput);
-    console.log(trkTInput);
-    console.log(windTInput);
-    console.log(windKtsInput);
-    if (!isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput)) {
+    const feetInput = parseFloat(inputs[index]?.feet?.value);
+
+    if (!isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput) && !isNaN(feetInput)) {
       const radians = Math.PI / 180;
       const term1 = tasKtsInput * Math.sqrt(1 - Math.pow((windKtsInput / tasKtsInput) * Math.sin((windTInput - trkTInput) * radians), 2));
       const term2 = windKtsInput * Math.cos((windTInput - trkTInput) * radians);
@@ -278,7 +210,26 @@ document.addEventListener("input", function () {
       inputs[index].gsKts.value = "";
     }
     calculateEet();
+    if (inputs[index].cas) {
+      inputs[index].cas.addEventListener("input", calculateGsKts);
+    }
+    if (inputs[index].feet) { // add event listener for feet input here
+      inputs[index].feet.addEventListener("input", calculateGsKts);
+    }
+    if (inputs[index].windT) {
+      inputs[index].windT.addEventListener("input", calculateGsKts);
+    }
+    if (inputs[index].windKts) {
+      inputs[index].windKts.addEventListener("input", calculateGsKts);
+    }
+    if (inputs[index].tasKts) {
+      inputs[index].tasKts.addEventListener("input", calculateGsKts);
+    }
+    if (inputs[index].trkT) {
+      inputs[index].trkT.addEventListener("input", calculateGsKts);
+    }
   }
+
   function calculateEet() {
     const index = inputs.findIndex(input =>
       (input.gsKts === this) ||
@@ -321,6 +272,7 @@ document.addEventListener("input", function () {
     }
   }
 
+
 });
 
 
@@ -339,11 +291,21 @@ inputs.forEach(input => {
   });
 });
 
-let sartime = document.getElementById("sartime");
+// Get the input field element
+const sartimeInput = document.getElementById("sartime");
 
-sartime.addEventListener("keypress", function (event) {
-  let char = event.which || event.keyCode;
-  if (char !== 46 && char !== 44 && char !== 58 && char < 48 || char > 57) {
-    event.preventDefault();
+// Add an event listener to the input field for the "keypress" event
+sartimeInput.addEventListener("keypress", function (event) {
+  // Get the character code of the pressed key
+  const charCode = event.which || event.keyCode;
+
+  // Allow numbers (48-57), colon (58), dot (46), and comma (44)
+  if (charCode >= 48 && charCode <= 57 || charCode === 58 || charCode === 46 || charCode === 44) {
+    // Allow the character to be typed
+    return true;
   }
+
+  // Prevent the character from being typed
+  event.preventDefault();
+  return false;
 });

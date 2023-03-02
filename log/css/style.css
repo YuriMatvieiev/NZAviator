@@ -54,6 +54,7 @@
   width: 200px;
   height: 35px;
   padding: 5px 0;
+  border-right: none;
 }
 @media (max-width: 480px) {
   .log__sartime label {
@@ -66,9 +67,9 @@
   height: 35px;
   padding: 5px 0;
   text-align: center;
-  border-left: none;
   outline: none;
   font-size: 20px;
+  border-radius: 0;
 }
 @media (max-width: 480px) {
   .log__sartime input {
@@ -171,9 +172,15 @@
   justify-content: center;
   gap: 40px;
 }
+@media (max-width: 991px) {
+  .log__buttons {
+    justify-content: space-around;
+  }
+}
 @media (max-width: 480px) {
   .log__buttons {
     gap: 20px;
+    justify-content: space-between;
   }
 }
 .log__button-add {
@@ -280,7 +287,7 @@
   }
 }
 
-.row-4, .row-5, .row-6, .row-7, .row-8, .row-9 {
+.row-4, .row-5, .row-6, .row-7, .row-8, .row-9, .row-10, .row-11, .row-12 {
   display: none;
 }
 

@@ -161,17 +161,22 @@ document.addEventListener("input", function () {
     const windTInput = parseFloat(inputs[index]?.windT?.value);
     const windKtsInput = parseFloat(inputs[index]?.windKts?.value);
     const varEWValInput = parseFloat(inputs[index]?.varEW?.value);
-    if (!isNaN(casInput) && !isNaN(feetInput) && !isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput) && !isNaN(varEWValInput) && windKtsInput !== 0) {
-      const windAngle = Math.atan((windKtsInput * Math.sin((windTInput - trkTInput) * Math.PI / 180)) / tasKtsInput);
+    if (!isNaN(casInput) && !isNaN(feetInput) && !isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(varEWValInput)) {
+      const windAngle = (windKtsInput !== 0) ? Math.atan((windKtsInput * Math.sin((windTInput - trkTInput) * Math.PI / 180)) / tasKtsInput) : 0;
       const windAngleDeg = windAngle * 180 / Math.PI;
       const HDG = trkTInput + varEWValInput + windAngleDeg;
-      const formattedHDG = HDG.toFixed(0).padStart(3, '0');
-      inputs[index].hdg.value = formattedHDG;
+
+      if (HDG < 0) {
+        let newHDG = 360 + HDG;
+        inputs[index].hdg.value = newHDG.toFixed(0).padStart(3, '0');
+      } else {
+        inputs[index].hdg.value = HDG.toFixed(0).padStart(3, '0');
+      }
       calculateGsKts();
       if (inputs[index].cas) {
         inputs[index].cas.addEventListener("input", calculateHdg);
       }
-      if (inputs[index].feet) { // add event listener for feet input here
+      if (inputs[index].feet) {
         inputs[index].feet.addEventListener("input", calculateHdg);
       }
     } else {

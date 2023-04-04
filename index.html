@@ -1,2113 +1,2191 @@
-<!DOCTYPE html>
-<html>
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<style>
+  .sub-hd {
+    font-weight: 600;
+    text-decoration: underline;
+    font-size: 26px;
+    text-underline-offset: 7px;
+  }
 
-<head>
-  <title>JS Counter</title>
-  <!-- <link rel="stylesheet" href="css/style.css" type="text/css"> -->
-</head>
+  .containerCalu {
+    max-width: 1180px;
+    width: 100%;
+    margin: 30px auto;
+    font-family: Arial, Helvetica, sans-serif;
+  }
 
-<body>
-  <div>
-    <style>
-      .sub-hd {
-        font-weight: 600;
-        text-decoration: underline;
-        font-size: 26px;
-        text-underline-offset: 7px;
-      }
+  .caluContainer {
+    border: solid 1px #ccc;
+    border-radius: 8px;
+    overflow: hidden;
+  }
 
-      .containerCalu {
-        max-width: 1180px;
-        width: 100%;
-        margin: 30px auto;
-        font-family: Arial, Helvetica, sans-serif;
-      }
+  button.course-accordion {
+    background-color: transparent;
+    color: #000;
+    cursor: pointer;
+    padding: 20px;
+    width: 100%;
+    border: none;
+    text-align: left;
+    outline: none;
+    font-size: 22px;
+    font-weight: 600;
+  }
 
-      .caluContainer {
-        border: solid 1px #ccc;
-        border-radius: 8px;
-        overflow: hidden;
-      }
+  /*When the button is active or mouse hovers*/
+  button.course-accordion.active {
+    /* background-color: rgba(166, 166, 166, 0.6); */
+    border-bottom: 1px solid #ccc;
+  }
 
-      button.course-accordion {
-        background-color: transparent;
-        color: #000;
-        cursor: pointer;
-        padding: 20px;
-        width: 100%;
-        border: none;
-        text-align: left;
-        outline: none;
-        font-size: 22px;
-        font-weight: 600;
-      }
+  /*button not active*/
+  button.course-accordion:after {
+    content: '\002B';
+    color: #6ecad7;
+    font-weight: bold;
+    float: right;
+    margin-left: 5px;
+  }
 
-      /*When the button is active or mouse hovers*/
-      button.course-accordion.active {
-        /* background-color: rgba(166, 166, 166, 0.6); */
-        border-bottom: 1px solid #ccc;
-      }
+  /* minus button */
+  button.course-accordion.active:after {
+    content: "\2212";
+  }
 
-      /*button not active*/
-      button.course-accordion:after {
-        content: '\002B';
-        color: #6ecad7;
-        font-weight: bold;
-        float: right;
-        margin-left: 5px;
-      }
+  div.course-panel {
+    /* padding: 20px; */
+    background-color: transparent;
+    max-height: 0;
+    overflow: hidden;
+    -webkit-transition: max-height 0.2s ease-out;
+    transition: max-height 0.2s ease-out;
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.88);
+    border-bottom: 1px solid #ccc;
+  }
 
-      /* minus button */
-      button.course-accordion.active:after {
-        content: "\2212";
-      }
+  .insideDIv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 20px 0;
+    -ms-flex-flow: wrap;
+    flex-flow: wrap;
+  }
 
-      div.course-panel {
-        /* padding: 20px; */
-        background-color: transparent;
-        max-height: 0;
-        overflow: hidden;
-        -webkit-transition: max-height 0.2s ease-out;
-        transition: max-height 0.2s ease-out;
-        font-size: 15px;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 0.88);
-        border-bottom: 1px solid #ccc;
-      }
+  .insideDIv .caluCol,
+  .insideDIv .caluCol2,
+  .insideDIv .radioDiv {
+    width: 33.3333%;
+    position: relative;
+    padding: 15px 20px;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+  }
 
-      .insideDIv {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        padding: 20px 0;
-        -ms-flex-flow: wrap;
-        flex-flow: wrap;
-      }
+  .insideDIv .caluCol3 {
+    height: 47px;
+  }
 
-      .insideDIv .caluCol,
-      .insideDIv .caluCol2,
-      .insideDIv .radioDiv {
-        width: 33.3333%;
-        position: relative;
-        padding: 15px 20px;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-      }
+  .insideDIv .caluCol .formControl {
+    border: 1px solid #ccc;
+    padding: 15px;
+    padding-left: 160px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+  }
 
-      .insideDIv .caluCol3 {
-        height: 47px;
-      }
+  .insideDIv .caluCol .formControl:focus {
+    border: 1px solid #ccc;
+    outline: none !important;
+  }
 
-      .insideDIv .caluCol .formControl {
-        border: 1px solid #ccc;
-        padding: 15px;
-        padding-left: 160px;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        border-radius: 3px;
-      }
+  .insideDIv .caluCol2 .formControl-lg {
+    border: 1px solid #ccc;
+    padding: 15px;
+    padding-left: 250px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+  }
 
-      .insideDIv .caluCol .formControl:focus {
-        border: 1px solid #ccc;
-        outline: none !important;
-      }
+  .insideDIv .caluCol3 {
+    border: 1px solid #ccc;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-pack: distribute;
+    justify-content: space-around;
+  }
 
-      .insideDIv .caluCol2 .formControl-lg {
-        border: 1px solid #ccc;
-        padding: 15px;
-        padding-left: 250px;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        border-radius: 3px;
-      }
+  .insideDIv .caluCol label {
+    position: absolute;
+    left: 30px;
+    top: 16px;
+    bottom: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-width: 130px;
+    border-right: 1px solid #ccc;
+    font-weight: bold;
+    font-size: 14px;
+  }
 
-      .insideDIv .caluCol3 {
-        border: 1px solid #ccc;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        border-radius: 3px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-pack: distribute;
-        justify-content: space-around;
-      }
+  .insideDIv .caluCol2 label {
+    position: absolute;
+    left: 30px;
+    top: 16px;
+    bottom: 16px;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    min-width: 220px;
+    border-right: 1px solid #ccc;
+    font-weight: bold;
+    font-size: 14px;
+    background: #fff;
+    padding-left: 11px !important;
+    left: 21px;
+  }
 
-      .insideDIv .caluCol label {
-        position: absolute;
-        left: 30px;
-        top: 16px;
-        bottom: 16px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        min-width: 130px;
-        border-right: 1px solid #ccc;
-        font-weight: bold;
-        font-size: 14px;
-      }
+  .insideDIv .caluCol3 label {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 15px 20px;
+    font-weight: bold;
+    font-size: 14px;
+    background: #fff;
+  }
 
-      .insideDIv .caluCol2 label {
-        position: absolute;
-        left: 30px;
-        top: 16px;
-        bottom: 16px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        min-width: 220px;
-        border-right: 1px solid #ccc;
-        font-weight: bold;
-        font-size: 14px;
-        background: #fff;
-        padding-left: 11px !important;
-        left: 21px;
-      }
+  .btn {
+    border: 1px solid #000;
+    text-align: center;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    color: #000;
+    font-size: 18px;
+    text-decoration: none;
+  }
 
-      .insideDIv .caluCol3 label {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        padding: 15px 20px;
-        font-weight: bold;
-        font-size: 14px;
-        background: #fff;
-      }
+  .dot {
+    height: 20px;
+    width: 20px;
+    text-align: center;
+    vertical-align: middle;
+    border-radius: 50%;
+    display: inline-block;
+    border: 1px solid #000;
+    cursor: pointer;
+  }
 
-      .btn {
-        border: 1px solid #000;
-        text-align: center;
-        border-radius: 50%;
-        width: 40px;
-        height: 40px;
-        color: #000;
-        font-size: 18px;
-        text-decoration: none;
-      }
+  .containerCalu h1 {
+    text-align: center;
+    padding: 20px 0px;
+  }
 
-      .dot {
-        height: 20px;
-        width: 20px;
-        text-align: center;
-        vertical-align: middle;
-        border-radius: 50%;
-        display: inline-block;
-        border: 1px solid #000;
-        cursor: pointer;
-      }
+  div.course-panel-box {
+    font-size: 15px;
+    font-weight: 400;
+    color: rgba(0, 0, 0, 0.88);
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
 
-      .containerCalu h1 {
-        text-align: center;
-        padding: 20px 0px;
-      }
+  .borderBox {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 20px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    height: 100%;
+  }
 
-      div.course-panel-box {
-        font-size: 15px;
-        font-weight: 400;
-        color: rgba(0, 0, 0, 0.88);
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-      }
+  .caluColnew {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 20px 0px;
+  }
 
-      .borderBox {
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        padding: 20px;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        height: 100%;
-      }
+  .caluColnew label {
+    min-width: 300px;
+  }
 
-      .caluColnew {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        align-items: center;
-        padding: 20px 0px;
-      }
+  .caluColnew .formControl {
+    border: 1px solid #ccc;
+    padding: 15px;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+    border-radius: 3px;
+  }
 
-      .caluColnew label {
-        min-width: 300px;
-      }
+  .caluColnew .formControl:focus {
+    border: 1px solid #ccc;
+    outline: none !important;
+  }
 
-      .caluColnew .formControl {
-        border: 1px solid #ccc;
-        padding: 15px;
-        width: 100%;
-        -webkit-box-sizing: border-box;
-        box-sizing: border-box;
-        border-radius: 3px;
-      }
+  .rowColDiv {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
+  }
 
-      .caluColnew .formControl:focus {
-        border: 1px solid #ccc;
-        outline: none !important;
-      }
+  .rowColDiv .course-panel-box {
+    width: 48%;
+  }
 
-      .rowColDiv {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-      }
+  .rowColDiv .course-panel-box-wide {
+    width: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
 
-      .rowColDiv .course-panel-box {
-        width: 48%;
-      }
+  input:focus,
+  textarea:focus {
+    outline: none;
+  }
 
-      .rowColDiv .course-panel-box-wide {
-        width: 100%;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
-        flex-direction: column;
-      }
+  input[type=number]::-webkit-inner-spin-button {
+    opacity: 1;
+  }
 
-      input:focus,
-      textarea:focus {
-        outline: none;
-      }
+  .labelshort {
+    min-width: 200px !important;
+  }
 
-      input[type=number]::-webkit-inner-spin-button {
-        opacity: 1;
-      }
+  input[type="number"] {
+    width: 50% !important;
+  }
 
-      .labelshort {
-        min-width: 200px !important;
-      }
+  .col-form-label {
+    padding-top: calc(0.65rem + 1px);
+    padding-bottom: calc(0.65rem + 1px);
+    margin-bottom: 0;
+    font-size: inherit;
+    line-height: 1.5;
+  }
 
-      input[type="number"] {
-        width: 50% !important;
-      }
+  .col-xxl,
+  .col-xxl-auto,
+  .col-xxl-12,
+  .col-xxl-11,
+  .col-xxl-10,
+  .col-xxl-9,
+  .col-xxl-8,
+  .col-xxl-7,
+  .col-xxl-6,
+  .col-xxl-5,
+  .col-xxl-4,
+  .col-xxl-3,
+  .col-xxl-2,
+  .col-xxl-1,
+  .col-xl,
+  .col-xl-auto,
+  .col-xl-12,
+  .col-xl-11,
+  .col-xl-10,
+  .col-xl-9,
+  .col-xl-8,
+  .col-xl-7,
+  .col-xl-6,
+  .col-xl-5,
+  .col-xl-4,
+  .col-xl-3,
+  .col-xl-2,
+  .col-xl-1,
+  .col-lg,
+  .col-lg-auto,
+  .col-lg-12,
+  .col-lg-11,
+  .col-lg-10,
+  .col-lg-9,
+  .col-lg-8,
+  .col-lg-7,
+  .col-lg-6,
+  .col-lg-5,
+  .col-lg-4,
+  .col-lg-3,
+  .col-lg-2,
+  .col-lg-1,
+  .col-md,
+  .col-md-auto,
+  .col-md-12,
+  .col-md-11,
+  .col-md-10,
+  .col-md-9,
+  .col-md-8,
+  .col-md-7,
+  .col-md-6,
+  .col-md-5,
+  .col-md-4,
+  .col-md-3,
+  .col-md-2,
+  .col-md-1,
+  .col-sm,
+  .col-sm-auto,
+  .col-sm-12,
+  .col-sm-11,
+  .col-sm-10,
+  .col-sm-9,
+  .col-sm-8,
+  .col-sm-7,
+  .col-sm-6,
+  .col-sm-5,
+  .col-sm-4,
+  .col-sm-3,
+  .col-sm-2,
+  .col-sm-1,
+  .col,
+  .col-auto,
+  .col-12,
+  .col-11,
+  .col-10,
+  .col-9,
+  .col-8,
+  .col-7,
+  .col-6,
+  .col-5,
+  .col-4,
+  .col-3,
+  .col-2,
+  .col-1 {
+    position: relative;
+    width: 100%;
+    padding-right: 12.5px;
+    padding-left: 12.5px;
+  }
 
-      .col-form-label {
-        padding-top: calc(0.65rem + 1px);
-        padding-bottom: calc(0.65rem + 1px);
-        margin-bottom: 0;
-        font-size: inherit;
-        line-height: 1.5;
-      }
+  .form-group {
+    margin-bottom: 1.75rem;
+  }
 
-      .col-xxl,
-      .col-xxl-auto,
-      .col-xxl-12,
-      .col-xxl-11,
-      .col-xxl-10,
-      .col-xxl-9,
-      .col-xxl-8,
-      .col-xxl-7,
-      .col-xxl-6,
-      .col-xxl-5,
-      .col-xxl-4,
-      .col-xxl-3,
-      .col-xxl-2,
-      .col-xxl-1,
-      .col-xl,
-      .col-xl-auto,
-      .col-xl-12,
-      .col-xl-11,
-      .col-xl-10,
-      .col-xl-9,
-      .col-xl-8,
-      .col-xl-7,
-      .col-xl-6,
-      .col-xl-5,
-      .col-xl-4,
-      .col-xl-3,
-      .col-xl-2,
-      .col-xl-1,
-      .col-lg,
-      .col-lg-auto,
-      .col-lg-12,
-      .col-lg-11,
-      .col-lg-10,
-      .col-lg-9,
-      .col-lg-8,
-      .col-lg-7,
-      .col-lg-6,
-      .col-lg-5,
-      .col-lg-4,
-      .col-lg-3,
-      .col-lg-2,
-      .col-lg-1,
-      .col-md,
-      .col-md-auto,
-      .col-md-12,
-      .col-md-11,
-      .col-md-10,
-      .col-md-9,
-      .col-md-8,
-      .col-md-7,
-      .col-md-6,
-      .col-md-5,
-      .col-md-4,
-      .col-md-3,
-      .col-md-2,
-      .col-md-1,
-      .col-sm,
-      .col-sm-auto,
-      .col-sm-12,
-      .col-sm-11,
-      .col-sm-10,
-      .col-sm-9,
-      .col-sm-8,
-      .col-sm-7,
-      .col-sm-6,
-      .col-sm-5,
-      .col-sm-4,
-      .col-sm-3,
-      .col-sm-2,
-      .col-sm-1,
-      .col,
-      .col-auto,
-      .col-12,
-      .col-11,
-      .col-10,
-      .col-9,
-      .col-8,
-      .col-7,
-      .col-6,
-      .col-5,
-      .col-4,
-      .col-3,
-      .col-2,
-      .col-1 {
-        position: relative;
-        width: 100%;
-        padding-right: 12.5px;
-        padding-left: 12.5px;
-      }
-
-      .form-group {
-        margin-bottom: 1.75rem;
-      }
-
-      .row {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-        /*  margin-right: -12.5px;
+  .row {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    /*  margin-right: -12.5px;
 margin-left: -12.5px; */
-      }
+  }
 
-      @media (min-width: 850px) {
-        .col-sm-4 {
-          width: 33.33333333%;
-        }
+  @media (min-width: 850px) {
+    .col-sm-4 {
+      width: 33.33333333%;
+    }
 
-        .col-md-6 {
-          width: 50%;
-        }
+    .col-md-6 {
+      width: 50%;
+    }
 
-        .radioDiv {
-          margin-right: 50px;
-        }
-      }
+    .radioDiv {
+      margin-right: 50px;
+    }
+  }
 
-      @media (min-width: 992px) {
-        .col-lg-2 {
-          -webkit-box-flex: 0;
-          -ms-flex: 0 0 16.6666666667%;
-          flex: 0 0 16.6666666667%;
-          max-width: 16.6666666667%;
-        }
+  @media (min-width: 992px) {
+    .col-lg-2 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 16.6666666667%;
+      flex: 0 0 16.6666666667%;
+      max-width: 16.6666666667%;
+    }
 
-        .col-lg-6 {
-          -webkit-box-flex: 0;
-          -ms-flex: 0 0 50%;
-          flex: 0 0 50%;
-          max-width: 50%;
-        }
+    .col-lg-6 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 50%;
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
 
-        .col-lg-3 {
-          -webkit-box-flex: 0;
-          -ms-flex: 0 0 25%;
-          flex: 0 0 25%;
-          max-width: 25%;
-        }
-      }
+    .col-lg-3 {
+      -webkit-box-flex: 0;
+      -ms-flex: 0 0 25%;
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+  }
 
-      @media (max-width: 1078px) {
-        .insideDIv .caluCol3 label {
-          padding: 15px 0px;
-        }
-      }
+  @media (max-width: 1078px) {
+    .insideDIv .caluCol3 label {
+      padding: 15px 0px;
+    }
+  }
 
-      @media (max-width: 1040px) {
-        .insideDIv .caluCol2 label {
-          min-width: 190px;
-        }
+  @media (max-width: 1040px) {
+    .insideDIv .caluCol2 label {
+      min-width: 190px;
+    }
 
-        .insideDIv .caluCol2 .formControl-lg {
-          padding-left: calc(202px + 5px);
-        }
-      }
+    .insideDIv .caluCol2 .formControl-lg {
+      padding-left: calc(202px + 5px);
+    }
+  }
 
-      @media (max-width: 940px) {
-        .insideDIv .caluCol2 label {
-          min-width: 180px;
-        }
+  @media (max-width: 940px) {
+    .insideDIv .caluCol2 label {
+      min-width: 180px;
+    }
 
-        .insideDIv .caluCol2 .formControl-lg {
-          padding-right: 5px;
-          padding-left: calc(190px + 5px);
-        }
-      }
+    .insideDIv .caluCol2 .formControl-lg {
+      padding-right: 5px;
+      padding-left: calc(190px + 5px);
+    }
+  }
 
-      @media screen and (max-width: 850px) {
-        .insideDIv .caluCol {
-          width: 100%;
-        }
+  @media screen and (max-width: 850px) {
+    .insideDIv .caluCol {
+      width: 100%;
+    }
 
-        .rowColDiv,
-        .caluColnew {
-          -webkit-box-orient: vertical;
-          -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-          flex-direction: column;
-          -webkit-box-align: start;
-          -ms-flex-align: start;
-          align-items: flex-start;
-          padding: 8px 0px;
-        }
+    .rowColDiv,
+    .caluColnew {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -webkit-box-align: start;
+      -ms-flex-align: start;
+      align-items: flex-start;
+      padding: 8px 0px;
+    }
 
-        .rowColDiv .course-panel-box {
-          width: 100%;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-          margin-bottom: 20px;
-        }
+    .rowColDiv .course-panel-box {
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      margin-bottom: 20px;
+    }
 
-        .caluColnew label {
-          margin-bottom: 5px;
-        }
+    .caluColnew label {
+      margin-bottom: 5px;
+    }
 
-        .insideDIv .caluCol2 label {
-          min-width: 220px !important;
-        }
+    .insideDIv .caluCol2 label {
+      min-width: 220px !important;
+    }
 
-        .insideDIv .caluCol2 {
-          width: 100% !important;
-        }
+    .insideDIv .caluCol2 {
+      width: 100% !important;
+    }
 
-        .insideDIv .caluCol2 .formControl-lg {
-          border: 1px solid #ccc;
-          padding: 15px;
-          padding-left: 250px;
-          width: 100%;
-          -webkit-box-sizing: border-box;
-          box-sizing: border-box;
-          border-radius: 3px;
-        }
+    .insideDIv .caluCol2 .formControl-lg {
+      border: 1px solid #ccc;
+      padding: 15px;
+      padding-left: 250px;
+      width: 100%;
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+      border-radius: 3px;
+    }
 
-        .insideDIv .radioDiv {
-          width: 100%;
-        }
+    .insideDIv .radioDiv {
+      width: 100%;
+    }
 
-        .separate {
-          width: 100%;
-          border-top: 2px solid #000;
-          margin: 0 20px;
-        }
-      }
+    .separate {
+      width: 100%;
+      border-top: 2px solid #000;
+      margin: 0 20px;
+    }
+  }
 
-      @media (max-width: 380px) {
-        .radioDiv .caluCol3 label {
-          padding: 15px 0px;
-        }
-      }
+  @media (max-width: 380px) {
+    .radioDiv .caluCol3 label {
+      padding: 15px 0px;
+    }
+  }
 
-      @media (max-width: 850px) {
-        .insideDIvHeading :nth-child(1) {
-          -webkit-box-ordinal-group: 2;
-          -ms-flex-order: 1;
-          order: 1;
-        }
+  @media (max-width: 850px) {
+    .insideDIvHeading :nth-child(1) {
+      -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+      order: 1;
+    }
 
-        .insideDIvHeading :nth-child(2) {
-          -webkit-box-ordinal-group: 4;
-          -ms-flex-order: 3;
-          order: 3;
-        }
+    .insideDIvHeading :nth-child(2) {
+      -webkit-box-ordinal-group: 4;
+      -ms-flex-order: 3;
+      order: 3;
+    }
 
-        .insideDIvHeading :nth-child(3) {
-          -webkit-box-ordinal-group: 3;
-          -ms-flex-order: 2;
-          order: 2;
-        }
+    .insideDIvHeading :nth-child(3) {
+      -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+      order: 2;
+    }
 
-        .insideDIvHeading :nth-child(4) {
-          -webkit-box-ordinal-group: 5;
-          -ms-flex-order: 4;
-          order: 4;
-        }
-      }
+    .insideDIvHeading :nth-child(4) {
+      -webkit-box-ordinal-group: 5;
+      -ms-flex-order: 4;
+      order: 4;
+    }
+  }
 
-      @media (max-width: 850px) {
-        .insideDIvFuel :nth-child(1) {
-          -webkit-box-ordinal-group: 2;
-          -ms-flex-order: 1;
-          order: 1;
-        }
+  @media (max-width: 850px) {
+    .insideDIvFuel :nth-child(1) {
+      -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+      order: 1;
+    }
 
-        .insideDIvFuel :nth-child(2) {
-          -webkit-box-ordinal-group: 4;
-          -ms-flex-order: 3;
-          order: 3;
-        }
+    .insideDIvFuel :nth-child(2) {
+      -webkit-box-ordinal-group: 4;
+      -ms-flex-order: 3;
+      order: 3;
+    }
 
-        .insideDIvFuel :nth-child(3) {
-          -webkit-box-ordinal-group: 6;
-          -ms-flex-order: 5;
-          order: 5;
-        }
+    .insideDIvFuel :nth-child(3) {
+      -webkit-box-ordinal-group: 6;
+      -ms-flex-order: 5;
+      order: 5;
+    }
 
-        .insideDIvFuel :nth-child(4) {
-          -webkit-box-ordinal-group: 3;
-          -ms-flex-order: 2;
-          order: 2;
-        }
+    .insideDIvFuel :nth-child(4) {
+      -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+      order: 2;
+    }
 
-        .insideDIvFuel :nth-child(5) {
-          -webkit-box-ordinal-group: 5;
-          -ms-flex-order: 4;
-          order: 4;
-        }
+    .insideDIvFuel :nth-child(5) {
+      -webkit-box-ordinal-group: 5;
+      -ms-flex-order: 4;
+      order: 4;
+    }
 
-        .insideDIvFuel :nth-child(6) {
-          -webkit-box-ordinal-group: 7;
-          -ms-flex-order: 6;
-          order: 6;
-        }
-      }
+    .insideDIvFuel :nth-child(6) {
+      -webkit-box-ordinal-group: 7;
+      -ms-flex-order: 6;
+      order: 6;
+    }
+  }
 
-      .caluCol50 {
-        width: 50% !important;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-      }
+  .caluCol50 {
+    width: 50% !important;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
 
-      @media (max-width: 850px) {
-        .caluCol50 {
-          width: 100%;
-        }
-      }
+  @media (max-width: 850px) {
+    .caluCol50 {
+      width: 100%;
+    }
+  }
 
-      .caluCol50 .formControl-lg {
-        width: 100% !important;
-        padding: 15px !important;
-      }
+  .caluCol50 .formControl-lg {
+    width: 100% !important;
+    padding: 15px !important;
+  }
 
-      .caluCol50 label {
-        position: static !important;
-        border-right: 0 !important;
-        min-width: 190px !important;
-      }
+  .caluCol50 label {
+    position: static !important;
+    border-right: 0 !important;
+    min-width: 190px !important;
+  }
 
-      @media screen and (max-width: 850px) {
-        .caluCol50 label {
-          min-width: 180px !important;
-        }
-      }
+  @media screen and (max-width: 850px) {
+    .caluCol50 label {
+      min-width: 180px !important;
+    }
+  }
 
-      .insideDIv50 {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: wrap;
-        flex-wrap: wrap;
-      }
+  .insideDIv50 {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
 
-      @media (max-width: 850px) {
-        .insideDIv50 {
-          -webkit-box-orient: vertical;
-          -webkit-box-direction: normal;
-          -ms-flex-direction: column;
-          flex-direction: column;
-          -ms-flex-wrap: nowrap;
-          flex-wrap: nowrap;
-        }
+  @media (max-width: 850px) {
+    .insideDIv50 {
+      -webkit-box-orient: vertical;
+      -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+      flex-direction: column;
+      -ms-flex-wrap: nowrap;
+      flex-wrap: nowrap;
+    }
 
-        .insideDIv50 .caluCol50rn {
-          -webkit-box-ordinal-group: 2;
-          -ms-flex-order: 1;
-          order: 1;
-        }
+    .insideDIv50 .caluCol50rn {
+      -webkit-box-ordinal-group: 2;
+      -ms-flex-order: 1;
+      order: 1;
+    }
 
-        .insideDIv50 .caluCol50wd {
-          -webkit-box-ordinal-group: 3;
-          -ms-flex-order: 2;
-          order: 2;
-        }
+    .insideDIv50 .caluCol50wd {
+      -webkit-box-ordinal-group: 3;
+      -ms-flex-order: 2;
+      order: 2;
+    }
 
-        .insideDIv50 .caluCol50ws {
-          -webkit-box-ordinal-group: 4;
-          -ms-flex-order: 3;
-          order: 3;
-        }
+    .insideDIv50 .caluCol50ws {
+      -webkit-box-ordinal-group: 4;
+      -ms-flex-order: 3;
+      order: 3;
+    }
 
-        .insideDIv50 .caluCol50cw {
-          -webkit-box-ordinal-group: 5;
-          -ms-flex-order: 4;
-          order: 4;
-        }
+    .insideDIv50 .caluCol50cw {
+      -webkit-box-ordinal-group: 5;
+      -ms-flex-order: 4;
+      order: 4;
+    }
 
-        .insideDIv50 .caluCol50hw {
-          -webkit-box-ordinal-group: 6;
-          -ms-flex-order: 5;
-          order: 5;
-        }
+    .insideDIv50 .caluCol50hw {
+      -webkit-box-ordinal-group: 6;
+      -ms-flex-order: 5;
+      order: 5;
+    }
 
-        .insideDIv50 .caluCol50tw {
-          -webkit-box-ordinal-group: 7;
-          -ms-flex-order: 6;
-          order: 6;
-        }
-      }
+    .insideDIv50 .caluCol50tw {
+      -webkit-box-ordinal-group: 7;
+      -ms-flex-order: 6;
+      order: 6;
+    }
+  }
 
-      .radioFuel {
-        margin-right: 0;
-      }
+  .radioFuel {
+    margin-right: 0;
+  }
 
-      .radioFuel .caluCol3 label {
-        width: 50%;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        justify-content: center;
-        gap: 5px;
-      }
+  .radioFuel .caluCol3 label {
+    width: 50%;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    gap: 5px;
+  }
 
-      .radioFuel .caluCol3 label:first-child {
-        border-right: 1px solid #ccc;
-      }
+  .radioFuel .caluCol3 label:first-child {
+    border-right: 1px solid #ccc;
+  }
 
-      .insideDIvFuel .caluCol2 {
-        width: 33.333% !important;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-      }
+  .insideDIvFuel .caluCol2 {
+    width: 33.333% !important;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+  }
 
-      @media screen and (max-width: 850px) {
-        .insideDIvFuel .caluCol2 {
-          width: 100% !important;
-        }
-      }
+  @media screen and (max-width: 850px) {
+    .insideDIvFuel .caluCol2 {
+      width: 100% !important;
+    }
+  }
 
-      .insideDIvFuel .caluCol2 label {
-        border: 1px solid #ccc;
-        position: static !important;
-        border-right: 0 !important;
-        min-width: 0 !important;
-        width: calc(50% - 11px) !important;
-      }
+  .insideDIvFuel .caluCol2 label {
+    border: 1px solid #ccc;
+    position: static !important;
+    border-right: 0 !important;
+    min-width: 0 !important;
+    width: calc(50% - 11px) !important;
+  }
 
-      .insideDIvFuel .caluCol2 .formControl-lg {
-        width: 50% !important;
-        padding: 15px !important;
-        border-bottom-left-radius: 0px;
-        border-top-left-radius: 0px;
-      }
+  .insideDIvFuel .caluCol2 .formControl-lg {
+    width: 50% !important;
+    padding: 15px !important;
+    border-bottom-left-radius: 0px;
+    border-top-left-radius: 0px;
+  }
 
-      .noArrows input[type="number"]::-webkit-outer-spin-button,
-      .noArrows input[type="number"]::-webkit-inner-spin-button {
-        -webkit-appearance: none;
-      }
+  .noArrows input[type="number"]::-webkit-outer-spin-button,
+  .noArrows input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+  }
 
-      .noArrows input[type='number'],
-      .noArrows input[type="number"]:hover,
-      .noArrows input[type="number"]:focus {
-        -webkit-appearance: none;
-        appearance: none;
-        -moz-appearance: textfield;
-      }
+  .noArrows input[type='number'],
+  .noArrows input[type="number"]:hover,
+  .noArrows input[type="number"]:focus {
+    -webkit-appearance: none;
+    appearance: none;
+    -moz-appearance: textfield;
+  }
 
-      @media (max-width: 850px) {
-        .specificRangeFunction :nth-child(1) {
-          order: 1;
-        }
+  @media (max-width: 850px) {
+    .specificRangeFunction :nth-child(1) {
+      order: 1;
+    }
 
-        .specificRangeFunction :nth-child(2) {
-          order: 2;
-        }
+    .specificRangeFunction :nth-child(2) {
+      order: 2;
+    }
 
-        .specificRangeFunction :nth-child(3) {
-          order: 3;
-        }
+    .specificRangeFunction :nth-child(3) {
+      order: 3;
+    }
 
-        .specificRangeFunction :nth-child(4) {
-          order: 4;
-        }
+    .specificRangeFunction :nth-child(4) {
+      order: 4;
+    }
 
-        .specificRangeFunction :nth-child(5) {
-          order: 5;
-        }
-      }
-    </style>
-    <div class="containerCalu" onload="incrementCount(10)">
-      <h2 class="sub-hd">Unit Conversion</h2>
-      <div class="caluContainer" id="id_main_container">
-        <button class="course-accordion">Weight / Mass</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol">
-              <label>Gram</label>
-              <input id="gm" type="text" class="formControl" onkeyup="wightFunction(event,'gm')">
-            </div>
-            <div class="caluCol">
-              <label>Miligram</label>
-              <input id="mgm" type="text" class="formControl" onkeyup="wightFunction(event,'mgm')">
-            </div>
-            <div class="caluCol">
-              <label>Kilogram</label>
-              <input id="kgm" type="text" class="formControl" onkeyup="wightFunction(event,'kgm')">
-            </div>
-            <div class="caluCol">
-              <label>Ounce</label>
-              <input id="oun" type="text" class="formControl" onkeyup="wightPoundFunction(event,'oun')">
-            </div>
-            <div class="caluCol">
-              <label>Pound</label>
-              <input id="pnd" type="text" class="formControl" onkeyup="wightPoundFunction(event,'pnd')">
-            </div>
-            <div class="caluCol">
-              <label>Metric Ton</label>
-              <input id="mt" type="text" class="formControl" onkeyup="wightPoundFunction(event,'mt')">
-            </div>
-          </div>
+    .specificRangeFunction :nth-child(5) {
+      order: 5;
+    }
+  }
+</style>
+<div class="containerCalu" onload="incrementCount(10)">
+  <h2 class="sub-hd">Unit Conversion</h2>
+  <div class="caluContainer" id="id_main_container">
+    <button class="course-accordion">Weight / Mass</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol">
+          <label>Gram</label>
+          <input id="gm" type="text" class="formControl" onkeyup="wightFunction(event,'gm')">
         </div>
-        <button class="course-accordion">Distance</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol">
-              <label>Statute Miles</label>
-              <input id="stm" type="text" class="formControl" onkeyup="distanceFunction(event,'stm')">
-            </div>
-            <div class="caluCol">
-              <label>Nautical Miles</label>
-              <input id="ntm" type="text" class="formControl" onkeyup="distanceFunction(event,'ntm')">
-            </div>
-            <div class="caluCol">
-              <label>Kilometers</label>
-              <input id="kmt" type="text" class="formControl" onkeyup="distanceFunction(event,'kmt')">
-            </div>
-            <div class="caluCol">
-              <label>Meters</label>
-              <input id="mtr" type="text" class="formControl" onkeyup="distanceFunction(event,'mtr')">
-            </div>
-            <div class="caluCol">
-              <label>Yards</label>
-              <input id="yrd" type="text" class="formControl" onkeyup="distanceFunction(event,'yrd')">
-            </div>
-            <div class="caluCol">
-              <label>Feet</label>
-              <input id="ft" type="text" class="formControl" onkeyup="distanceFunction(event,'ft')">
-            </div>
-          </div>
+        <div class="caluCol">
+          <label>Miligram</label>
+          <input id="mgm" type="text" class="formControl" onkeyup="wightFunction(event,'mgm')">
         </div>
-        <button class="course-accordion">Temperature</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol">
-              <label>Farenheit</label>
-              <input id="farenheit" type="text" class="formControl" onkeyup="temperatureFunction(event,'fht')">
-            </div>
-            <div class="caluCol">
-              <label>Celsius</label>
-              <input id="celsius" type="text" class="formControl" onkeyup="temperatureFunction(event,'cel')">
-            </div>
-            <div class="caluCol">
-              <label>Kelvin</label>
-              <input id="kelvin" type="text" class="formControl" onkeyup="temperatureFunction(event,'kel')">
-            </div>
-          </div>
+        <div class="caluCol">
+          <label>Kilogram</label>
+          <input id="kgm" type="text" class="formControl" onkeyup="wightFunction(event,'kgm')">
         </div>
-        <button class="course-accordion">Reciprocal Heading Converter</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol">
-              <label>Heading</label>
-              <input id="heading" type="text" class="formControl" onkeyup="reciprocalHeadingFunction(event,'heading')">
-            </div>
-            <div class="caluCol">
-              <label>Reciprocal</label>
-              <input id="reciprocal" type="text" class="formControl"
-                onkeyup="reciprocalHeadingFunction(event,'reciprocal')">
-            </div>
-
-          </div>
+        <div class="caluCol">
+          <label>Ounce</label>
+          <input id="oun" type="text" class="formControl" onkeyup="wightPoundFunction(event,'oun')">
+        </div>
+        <div class="caluCol">
+          <label>Pound</label>
+          <input id="pnd" type="text" class="formControl" onkeyup="wightPoundFunction(event,'pnd')">
+        </div>
+        <div class="caluCol">
+          <label>Metric Ton</label>
+          <input id="mt" type="text" class="formControl" onkeyup="wightPoundFunction(event,'mt')">
         </div>
       </div>
-      <div class="rowColDiv">
-        <div class="course-panel-box">
-          <h2 class="sub-hd"><br />Pressure Altitude Calculator</h2>
-          <div class="borderBox">
-            <div class="caluColnew">
-              <label>Field Elevation / Indicated Altitude (ft)</label>
-              <input id="fele" type="text" class="formControl" onkeyup="altitudeFunction(event,'fele')">
-            </div>
-            <div class="caluColnew">
-              <label>Altimeter Setting (hPa)</label>
-              <input id="alti" type="text" class="formControl" onkeyup="altitudeFunction(event,'alti')">
-            </div>
-            <div class="caluColnew">
-              <label style="color: green;"><b>Pressure Altitude (ft)</b></label>
-              <input id="pAlti" type="text" class="formControl" readonly>
-            </div>
-          </div>
+    </div>
+    <button class="course-accordion">Distance</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol">
+          <label>Statute Miles</label>
+          <input id="stm" type="text" class="formControl" onkeyup="distanceFunction(event,'stm')">
         </div>
-        <div class="course-panel-box">
-          <h2 class="sub-hd"><br />Density Altitude Calculator</h2>
-          <div class="borderBox">
-            <div class="caluColnew">
-              <label>Standard ISA Temperature (°C)</label>
-              <input id="isa" disabled value="15" type="text" class="formControl"
-                onkeyup="densityAltitudeFunction(event,'isa')">
-            </div>
-            <div class="caluColnew">
-              <label> Outside Air Temperature (°C)</label>
-              <input id="airtemp" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'airtemp')">
-            </div>
-            <div class="caluColnew">
-              <label>Pressure Altitude (ft)</label>
-              <input id="pAlti2" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'pAlti2')">
-            </div>
-            <div class="caluColnew">
-              <label>True Altitude (up to 10,000 ft)</label>
-              <input id="tAlti" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'tAlti')">
-            </div>
-            <div class="caluColnew">
-              <label style="color: green;"><b>Density Altitude (ft)</b></label>
-              <input id="dAlti" type="text" class="formControl" readonly>
-            </div>
-          </div>
+        <div class="caluCol">
+          <label>Nautical Miles</label>
+          <input id="ntm" type="text" class="formControl" onkeyup="distanceFunction(event,'ntm')">
+        </div>
+        <div class="caluCol">
+          <label>Kilometers</label>
+          <input id="kmt" type="text" class="formControl" onkeyup="distanceFunction(event,'kmt')">
+        </div>
+        <div class="caluCol">
+          <label>Meters</label>
+          <input id="mtr" type="text" class="formControl" onkeyup="distanceFunction(event,'mtr')">
+        </div>
+        <div class="caluCol">
+          <label>Yards</label>
+          <input id="yrd" type="text" class="formControl" onkeyup="distanceFunction(event,'yrd')">
+        </div>
+        <div class="caluCol">
+          <label>Feet</label>
+          <input id="ft" type="text" class="formControl" onkeyup="distanceFunction(event,'ft')">
+        </div>
+      </div>
+    </div>
+    <button class="course-accordion">Temperature</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol">
+          <label>Farenheit</label>
+          <input id="farenheit" type="text" class="formControl" onkeyup="temperatureFunction(event,'fht')">
+        </div>
+        <div class="caluCol">
+          <label>Celsius</label>
+          <input id="celsius" type="text" class="formControl" onkeyup="temperatureFunction(event,'cel')">
+        </div>
+        <div class="caluCol">
+          <label>Kelvin</label>
+          <input id="kelvin" type="text" class="formControl" onkeyup="temperatureFunction(event,'kel')">
+        </div>
+      </div>
+    </div>
+    <button class="course-accordion">Speed</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol">
+          <label>Knots</label>
+          <input id="knots" type="text" class="formControl" onkeyup="speedFunction(event,'s_knots')">
+        </div>
+        <div class="caluCol">
+          <label>Miles per hour</label>
+          <input id="milesPerHour" type="text" class="formControl" onkeyup="speedFunction(event,'s_mph')">
+        </div>
+        <div class="caluCol">
+          <label style="min-width: 170px;">Kilometers per hour</label>
+          <input style="padding-left: 200px;" id="kilometersPerHour" type="text" class="formControl"
+            onkeyup="speedFunction(event,'s_kph')">
+        </div>
+      </div>
+    </div>
+    <button class="course-accordion">Reciprocal Heading Converter</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol">
+          <label>Heading</label>
+          <input id="heading" type="text" class="formControl" onkeyup="reciprocalHeadingFunction(event,'heading')">
+        </div>
+        <div class="caluCol">
+          <label>Reciprocal</label>
+          <input id="reciprocal" type="text" class="formControl"
+            onkeyup="reciprocalHeadingFunction(event,'reciprocal')">
         </div>
 
       </div>
-      <h2 class="sub-hd"><br>1:60 Rule Calculators</h2>
-      <div class="caluContainer" id="id_main_container2">
-        <button class="course-accordion">Track Error (TE)</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol2">
-              <label>Distance Gone (DG)</label>
-              <input id="dg1" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dg1')">
-            </div>
-            <div class="caluCol2">
-              <label>Distance Off Track (DOT)</label>
-              <input id="dot1" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dot1')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Track Error (TE)</label>
-              <input id="te1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-
-            <div class="caluCol2">
-              <label>Track Error (TE)</label>
-              <input id="te2" type="text" class="formControl-lg te" onkeyup="trackErrorFunction(event,'te2')">
-            </div>
-            <div class="caluCol2">
-              <label>Distance Off Track (DOT)</label>
-              <input id="dot2" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dot2')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Distance Gone (DG)</label>
-              <input id="dg2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-
-            <div class="caluCol2">
-              <label>Distance Gone (DG)</label>
-              <input id="dg3" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dg3')">
-            </div>
-            <div class="caluCol2">
-              <label>Track Error (TE)</label>
-              <input id="te3" type="text" class="formControl-lg te" onkeyup="trackErrorFunction(event,'te3')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Distance Off Track (DOT)</label>
-              <input id="dot3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-          </div>
+    </div>
+  </div>
+  <div class="rowColDiv">
+    <div class="course-panel-box">
+      <h2 class="sub-hd"><br />Pressure Altitude Calculator</h2>
+      <div class="borderBox">
+        <div class="caluColnew">
+          <label>Field Elevation / Indicated Altitude (ft)</label>
+          <input id="fele" type="text" class="formControl" onkeyup="altitudeFunction(event,'fele')">
         </div>
-        <button class="course-accordion">Closing Angle (CA)</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-            <div class="caluCol2">
-              <label>Distance To Go (DTG)</label>
-              <input id="dtg1" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'dtg1')">
-            </div>
-            <div class="caluCol2">
-              <label>Distance Off Track (DOT)</label>
-              <input id="ca_dot1" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca_dot1')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Closing Angle (CA)</label>
-              <input id="ca1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-
-            <div class="caluCol2">
-              <label>Closing Angle (CA)</label>
-              <input id="ca2" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca2')">
-            </div>
-            <div class="caluCol2">
-              <label>Distance Off Track (DOT)</label>
-              <input id="ca_dot2" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca_dot2')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;"> Distance To Go (DTG)</label>
-              <input id="dtg2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-            <div class="caluCol2">
-              <label> Distance To Go (DTG)</label>
-              <input id="dtg3" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'dtg3')">
-            </div>
-            <div class="caluCol2">
-              <label>Closing Angle (CA)</label>
-              <input id="ca3" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca3')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;"> Distance Off Track (DOT)</label>
-              <input id="ca_dot3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-          </div>
+        <div class="caluColnew">
+          <label>Altimeter Setting (hPa)</label>
+          <input id="alti" type="text" class="formControl" onkeyup="altitudeFunction(event,'alti')">
         </div>
-        <button class="course-accordion">Total Correction (TC)</button>
-        <div class="course-panel">
-          <div class="insideDIv">
-
-            <div class="caluCol2">
-              <label>Track Error (TE)</label>
-              <input id="tc_te1" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_te1')">
-            </div>
-            <div class="caluCol2">
-              <label>Closing Angle (CA)</label>
-              <input id="tc_ca1" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_ca1')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Total Correction (TC)</label>
-              <input id="tc1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-
-            <div class="caluCol2">
-              <label>Total Correction (TC)</label>
-              <input id="tc2" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc2')">
-            </div>
-            <div class="caluCol2">
-              <label>Closing Angle (CA)</label>
-              <input id="tc_ca2" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_ca2')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Track Error (TE)</label>
-              <input id="tc_te2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="separate"></div>
-            <div class="caluCol2">
-              <label> Total Correction (TC)</label>
-              <input id="tc3" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc3')">
-            </div>
-            <div class="caluCol2">
-              <label>Track Error (TE)</label>
-              <input id="tc_te3" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_te3')">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;"> Closing Angle (CA)</label>
-              <input id="tc_ca3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-          </div>
-        </div>
-        <button class="course-accordion">New Heading Required</button>
-        <div class="course-panel">
-          <div class="insideDIv insideDIvHeading">
-            <div class="caluCol2">
-              <label> Original Heading (1 to 360)</label>
-              <input onkeyup="newHeadingFunction(event,'original_heading');" onblur="isright(this);"
-                id="original_heading" type="text" class="formControl-lg">
-            </div>
-            <div class="radioDiv radioDivWeb">
-              <div class="caluCol3">
-                <label>Left Of Track <input type="radio" name="track" checked value="left"></label>
-                <label>Right Of Track <input type="radio" name="track" value="right"> </label>
-              </div>
-            </div>
-            <div class="caluCol2 caluCol23">
-              <label> Total Correction (TC)</label>
-              <input id="nh_tc" type="text" class="formControl-lg" onkeyup="newHeadingFunction(event,'nh_tc')">
-            </div>
-            <div class="caluCol2 caluCol24">
-              <label style="color: green;"> New Heading Required</label>
-              <input id="new_heading" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-          </div>
+        <div class="caluColnew">
+          <label style="color: green;"><b>Pressure Altitude (ft)</b></label>
+          <input id="pAlti" type="text" class="formControl" readonly>
         </div>
       </div>
-
-      <h2 class="sub-hd"><br> Wind Components Calculator</h2>
-      <div class="caluContainer" id="id_main_container2">
-        <div class="insideDIv insideDIv50">
-
-          <div class="caluCol2 caluCol50 caluCol50rn">
-            <label>Runway Number (1 to 36)</label>
-            <input onblur="isrightRunwayNumber(this);" min="1" max="36" id="wc_rn" type="number" class="formControl-lg"
-              onchange="windComponentsFunction(event,'wc_rn')" onkeyup="windComponentsFunction(event,'wc_rn')">
-          </div>
-          <div class="caluCol2 caluCol50 caluCol50cw">
-            <label style="color: green;">Cross Wind (knot)</label>
-            <input id="wc_cw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-          </div>
-          <div class="caluCol2 caluCol50 caluCol50wd">
-            <label>Wind Direction (1 to 360)</label>
-            <input onblur="isrightWindDirection(this);" min="001" max="360" id="wc_wd" type="number"
-              class="formControl-lg" onchange="windComponentsFunction(event,'wc_wd')"
-              onkeyup="windComponentsFunction(event,'wc_wd')">
-          </div>
-          <div class="caluCol2 caluCol50 caluCol50hw">
-            <label style="color: green;">Head Wind (knot)</label>
-            <input id="wc_hw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-          </div>
-          <div class="caluCol2 caluCol50 caluCol50ws">
-            <label>Wind Speed (knot)</label>
-            <input onblur="isrightWindSpeed(this);" min="1" max="100" id="wc_ws" type="number" class="formControl-lg"
-              onkeyup="windComponentsFunction(event,'wc_ws')" onchange="windComponentsFunction(event,'wc_ws')">
-          </div>
-          <div class="caluCol2 caluCol50 caluCol50tw">
-            <label style="color: green;">Tail Wind (knot)</label>
-            <input id="wc_tw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-          </div>
+    </div>
+    <div class="course-panel-box">
+      <h2 class="sub-hd"><br />Density Altitude Calculator</h2>
+      <div class="borderBox">
+        <div class="caluColnew">
+          <label>Standard ISA Temperature (°C)</label>
+          <input id="isa" disabled value="15" type="text" class="formControl"
+            onkeyup="densityAltitudeFunction(event,'isa')">
+        </div>
+        <div class="caluColnew">
+          <label> Outside Air Temperature (°C)</label>
+          <input id="airtemp" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'airtemp')">
+        </div>
+        <div class="caluColnew">
+          <label>Pressure Altitude (ft)</label>
+          <input id="pAlti2" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'pAlti2')">
+        </div>
+        <div class="caluColnew">
+          <label>True Altitude (up to 10,000 ft)</label>
+          <input id="tAlti" type="text" class="formControl" onkeyup="densityAltitudeFunction(event,'tAlti')">
+        </div>
+        <div class="caluColnew">
+          <label style="color: green;"><b>Density Altitude (ft)</b></label>
+          <input id="dAlti" type="text" class="formControl" readonly>
         </div>
       </div>
-      <h2 class="sub-hd"><br> Fuel Calculators</h2>
-      <div class="caluContainer" id="id_main_container">
-        <button class="course-accordion">Fuel Converter</button>
-        <div class="course-panel">
-          <div class="insideDIv insideDIvChack insideDIvFuel">
-            <div class="caluCol2">
-              <label>Amount (Litres)</label>
-              <input onkeyup="fuelConverterFunction(event,'fuel_converter');" onblur="isrightFuelConverter(this);"
-                id="fuel_converter" type="text" class="formControl-lg">
-            </div>
+    </div>
 
-            <div class="caluCol2">
-              <label style="color: green;">US Gallons</label>
-              <input id="us_gallons" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Kilograms</label>
-              <input id="kilograms" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-            <div class="radioDiv radioFuel">
-              <div class="caluCol3">
-                <label>AVGAS<input type="radio" name="fuel" checked value="avgas"></label>
-                <label>JET A-1<input type="radio" name="fuel" value="jet"> </label>
-              </div>
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Pounds (lbs)</label>
-              <input id="pounds" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-
-            <div class="caluCol2">
-              <label style="color: green;">Imperial Gallons</label>
-              <input id="imperial_gallons" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-          </div>
+  </div>
+  <h2 class="sub-hd"><br>1:60 Rule Calculators</h2>
+  <div class="caluContainer" id="id_main_container2">
+    <button class="course-accordion">Track Error (TE)</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol2">
+          <label>Distance Gone (DG)</label>
+          <input id="dg1" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dg1')">
         </div>
-        <button class="course-accordion">Amount Burned</button>
-        <div class="course-panel">
-          <div class="insideDIv insideDIvChack insideDIvFuel">
-            <div class="caluCol2">
-              <label>Burn Rate (l/hr)</label>
-              <input onkeyup="amountBurnedFunction(event,'burn_rate');" id="burn_rate" type="number"
-                class="formControl-lg">
-            </div>
-            <div class="caluCol2">
-              <label>Duration (Minutes)</label>
-              <input onkeyup="amountBurnedFunction(event,'duration');" min="1" step="1"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57' id="duration" type="number"
-                class="formControl-lg">
-            </div>
-
-            <div class="caluCol2">
-              <label style="color: green;">Fuel Burned (Litres)</label>
-              <input id="fuelBurned" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-          </div>
+        <div class="caluCol2">
+          <label>Distance Off Track (DOT)</label>
+          <input id="dot1" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dot1')">
         </div>
-        <button class="course-accordion">Consumption</button>
-        <div class="course-panel noArrows">
-          <div class="insideDIv insideDIvChack insideDIvFuel">
-            <div class="caluCol2">
-              <label>Fuel Burned (Litres)</label>
-              <input onkeyup="consumptionFunction(event,'fuel_burned');" id="fuel_burned" type="number"
-                class="formControl-lg">
-            </div>
-            <div class="caluCol2">
-              <label>Duration (Minutes)</label>
-              <input onkeyup="consumptionFunction(event,'duration_minutes');" min="1" step="1"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57 ' id="duration_minutes" type="number"
-                class="formControl-lg">
-            </div>
-
-            <div class="caluCol2">
-              <label style="color: green;">Burn Rate (l/hr)</label>
-              <input id="burn_rate_l/hr" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-          </div>
+        <div class="caluCol2">
+          <label style="color: green;">Track Error (TE)</label>
+          <input id="te1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
         </div>
-        <button class="course-accordion">Duration</button>
-        <div class="course-panel noArrows">
-          <div class="insideDIv insideDIvChack insideDIvFuel">
-            <div class="caluCol2">
-              <label>Fuel Burned (Litres)</label>
-              <input onkeyup="durationFunction(event,'fuel_burned3');" id="fuel_burned3" type="number"
-                class="formControl-lg">
-            </div>
-            <div class="caluCol2">
-              <label>Burn Rate (l/hr)</label>
-              <input onkeyup="durationFunction(event,'burn_rate3');" id="burn_rate3" type="number"
-                class="formControl-lg">
-            </div>
+        <div class="separate"></div>
 
-            <div class="caluCol2">
-              <label style="color: green;">Duration (Minutes)</label>
-              <input id="duration_minutes3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
-
-          </div>
+        <div class="caluCol2">
+          <label>Track Error (TE)</label>
+          <input id="te2" type="text" class="formControl-lg te" onkeyup="trackErrorFunction(event,'te2')">
         </div>
-        <button class="course-accordion">Specific Range</button>
-        <div class="course-panel noArrows">
-          <div class="insideDIv insideDIvChack insideDIvFuel specificRangeFunction">
-            <div class="caluCol2">
-              <label>Fuel On Board (Litres)</label>
-              <input onkeyup="specificRangeFunction(event,'fuelOnBoardSpecificRange');" id="fuelOnBoardSpecificRange"
-                type="number" class="formControl-lg">
-            </div>
-            <div class="caluCol2">
-              <label>Burn Rate (l/hr)</label>
-              <input onkeyup="specificRangeFunction(event,'burnRateSpecificRange');" id="burnRateSpecificRange"
-                type="number" class="formControl-lg">
-            </div>
-            <div class="caluCol2">
-              <label>Ground Speed (kts)</label>
-              <input onkeyup="specificRangeFunction(event,'groundSpeedSpecificRange');" min="1" step="1"
-                onkeypress='return event.charCode >= 48 && event.charCode <= 57 ' id="groundSpeedSpecificRange"
-                type="number" class="formControl-lg">
-            </div>
+        <div class="caluCol2">
+          <label>Distance Off Track (DOT)</label>
+          <input id="dot2" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dot2')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Distance Gone (DG)</label>
+          <input id="dg2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="separate"></div>
 
-            <div class="caluCol2">
-              <label style="color: green;">Endurance (Minutes)</label>
-              <input id="enduranceSpecificRange" type="text" class="formControl-lg" readonly
-                style="background: #d2d2d2;">
-            </div>
-            <div class="caluCol2">
-              <label style="color: green;">Range (nm)</label>
-              <input id="rangeSpecificRange" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
-            </div>
+        <div class="caluCol2">
+          <label>Distance Gone (DG)</label>
+          <input id="dg3" type="text" class="formControl-lg" onkeyup="trackErrorFunction(event,'dg3')">
+        </div>
+        <div class="caluCol2">
+          <label>Track Error (TE)</label>
+          <input id="te3" type="text" class="formControl-lg te" onkeyup="trackErrorFunction(event,'te3')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Distance Off Track (DOT)</label>
+          <input id="dot3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
 
-          </div>
+      </div>
+    </div>
+    <button class="course-accordion">Closing Angle (CA)</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+        <div class="caluCol2">
+          <label>Distance To Go (DTG)</label>
+          <input id="dtg1" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'dtg1')">
+        </div>
+        <div class="caluCol2">
+          <label>Distance Off Track (DOT)</label>
+          <input id="ca_dot1" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca_dot1')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Closing Angle (CA)</label>
+          <input id="ca1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="separate"></div>
+
+        <div class="caluCol2">
+          <label>Closing Angle (CA)</label>
+          <input id="ca2" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca2')">
+        </div>
+        <div class="caluCol2">
+          <label>Distance Off Track (DOT)</label>
+          <input id="ca_dot2" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca_dot2')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;"> Distance To Go (DTG)</label>
+          <input id="dtg2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="separate"></div>
+        <div class="caluCol2">
+          <label> Distance To Go (DTG)</label>
+          <input id="dtg3" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'dtg3')">
+        </div>
+        <div class="caluCol2">
+          <label>Closing Angle (CA)</label>
+          <input id="ca3" type="text" class="formControl-lg" onkeyup="closingAngleFunction(event,'ca3')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;"> Distance Off Track (DOT)</label>
+          <input id="ca_dot3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+
+      </div>
+    </div>
+    <button class="course-accordion">Total Correction (TC)</button>
+    <div class="course-panel">
+      <div class="insideDIv">
+
+        <div class="caluCol2">
+          <label>Track Error (TE)</label>
+          <input id="tc_te1" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_te1')">
+        </div>
+        <div class="caluCol2">
+          <label>Closing Angle (CA)</label>
+          <input id="tc_ca1" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_ca1')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Total Correction (TC)</label>
+          <input id="tc1" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="separate"></div>
+
+        <div class="caluCol2">
+          <label>Total Correction (TC)</label>
+          <input id="tc2" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc2')">
+        </div>
+        <div class="caluCol2">
+          <label>Closing Angle (CA)</label>
+          <input id="tc_ca2" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_ca2')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Track Error (TE)</label>
+          <input id="tc_te2" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="separate"></div>
+        <div class="caluCol2">
+          <label> Total Correction (TC)</label>
+          <input id="tc3" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc3')">
+        </div>
+        <div class="caluCol2">
+          <label>Track Error (TE)</label>
+          <input id="tc_te3" type="text" class="formControl-lg" onkeyup="totalCorrectionFunction(event,'tc_te3')">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;"> Closing Angle (CA)</label>
+          <input id="tc_ca3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
         </div>
       </div>
-      <!-- <script src="script.js"></script> -->
-      <script>
+    </div>
+    <button class="course-accordion">New Heading Required</button>
+    <div class="course-panel">
+      <div class="insideDIv insideDIvHeading">
+        <div class="caluCol2">
+          <label> Original Heading (1 to 360)</label>
+          <input onkeyup="newHeadingFunction(event,'original_heading');" onblur="isright(this);" id="original_heading"
+            type="text" class="formControl-lg">
+        </div>
+        <div class="radioDiv radioDivWeb">
+          <div class="caluCol3">
+            <label>Left Of Track <input type="radio" name="track" checked value="left"></label>
+            <label>Right Of Track <input type="radio" name="track" value="right"> </label>
+          </div>
+        </div>
+        <div class="caluCol2 caluCol23">
+          <label> Total Correction (TC)</label>
+          <input id="nh_tc" type="text" class="formControl-lg" onkeyup="newHeadingFunction(event,'nh_tc')">
+        </div>
+        <div class="caluCol2 caluCol24">
+          <label style="color: green;"> New Heading Required</label>
+          <input id="new_heading" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sub-hd"><br> Wind Components Calculator</h2>
+  <div class="caluContainer" id="id_main_container2">
+    <div class="insideDIv insideDIv50">
+
+      <div class="caluCol2 caluCol50 caluCol50rn">
+        <label>Runway Number (1 to 36)</label>
+        <input onblur="isrightRunwayNumber(this);" min="1" max="36" id="wc_rn" type="number" class="formControl-lg"
+          onchange="windComponentsFunction(event,'wc_rn')" onkeyup="windComponentsFunction(event,'wc_rn')">
+      </div>
+      <div class="caluCol2 caluCol50 caluCol50cw">
+        <label style="color: green;">Cross Wind (knot)</label>
+        <input id="wc_cw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+      </div>
+      <div class="caluCol2 caluCol50 caluCol50wd">
+        <label>Wind Direction (1 to 360)</label>
+        <input onblur="isrightWindDirection(this);" min="001" max="360" id="wc_wd" type="number" class="formControl-lg"
+          onchange="windComponentsFunction(event,'wc_wd')" onkeyup="windComponentsFunction(event,'wc_wd')">
+      </div>
+      <div class="caluCol2 caluCol50 caluCol50hw">
+        <label style="color: green;">Head Wind (knot)</label>
+        <input id="wc_hw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+      </div>
+      <div class="caluCol2 caluCol50 caluCol50ws">
+        <label>Wind Speed (knot)</label>
+        <input onblur="isrightWindSpeed(this);" min="1" max="100" id="wc_ws" type="number" class="formControl-lg"
+          onkeyup="windComponentsFunction(event,'wc_ws')" onchange="windComponentsFunction(event,'wc_ws')">
+      </div>
+      <div class="caluCol2 caluCol50 caluCol50tw">
+        <label style="color: green;">Tail Wind (knot)</label>
+        <input id="wc_tw" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+      </div>
+    </div>
+  </div>
+  <h2 class="sub-hd"><br> Fuel Calculators</h2>
+  <div class="caluContainer" id="id_main_container">
+    <button class="course-accordion">Fuel Converter</button>
+    <div class="course-panel">
+      <div class="insideDIv insideDIvChack insideDIvFuel">
+        <div class="caluCol2">
+          <label>Amount (Litres)</label>
+          <input onkeyup="fuelConverterFunction(event,'fuel_converter');" onblur="isrightFuelConverter(this);"
+            id="fuel_converter" type="text" class="formControl-lg">
+        </div>
+
+        <div class="caluCol2">
+          <label style="color: green;">US Gallons</label>
+          <input id="us_gallons" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Kilograms</label>
+          <input id="kilograms" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="radioDiv radioFuel">
+          <div class="caluCol3">
+            <label>AVGAS<input type="radio" name="fuel" checked value="avgas"></label>
+            <label>JET A-1<input type="radio" name="fuel" value="jet"> </label>
+          </div>
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Pounds (lbs)</label>
+          <input id="pounds" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
 
 
-        function densityAltitudeFunction(e, type) {
-          let value = e.target.value;
-          var tAlti = parseInt(document.getElementById("tAlti").value);
+        <div class="caluCol2">
+          <label style="color: green;">Imperial Gallons</label>
+          <input id="imperial_gallons" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+      </div>
+    </div>
+    <button class="course-accordion">Amount Burned</button>
+    <div class="course-panel">
+      <div class="insideDIv insideDIvChack insideDIvFuel">
+        <div class="caluCol2">
+          <label>Burn Rate (l/hr)</label>
+          <input onkeyup="amountBurnedFunction(event,'burn_rate');" id="burn_rate" type="number" class="formControl-lg">
+        </div>
+        <div class="caluCol2">
+          <label>Duration (Minutes)</label>
+          <input onkeyup="amountBurnedFunction(event,'duration');" min="1" step="1"
+            onkeypress='return event.charCode >= 48 && event.charCode <= 57' id="duration" type="number"
+            class="formControl-lg">
+        </div>
 
-          if (!isNaN(tAlti)) {
+        <div class="caluCol2">
+          <label style="color: green;">Fuel Burned (Litres)</label>
+          <input id="fuelBurned" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
 
-            if (tAlti <= 10000) {
-              var th1 = parseInt(tAlti / 1000) * 1000;
+      </div>
+    </div>
+    <button class="course-accordion">Consumption</button>
+    <div class="course-panel noArrows">
+      <div class="insideDIv insideDIvChack insideDIvFuel">
+        <div class="caluCol2">
+          <label>Fuel Burned (Litres)</label>
+          <input onkeyup="consumptionFunction(event,'fuel_burned');" id="fuel_burned" type="number"
+            class="formControl-lg">
+        </div>
+        <div class="caluCol2">
+          <label>Duration (Minutes)</label>
+          <input onkeyup="consumptionFunction(event,'duration_minutes');" min="1" step="1"
+            onkeypress='return event.charCode >= 48 && event.charCode <= 57 ' id="duration_minutes" type="number"
+            class="formControl-lg">
+        </div>
 
-              var th = tAlti - th1;
+        <div class="caluCol2">
+          <label style="color: green;">Burn Rate (l/hr)</label>
+          <input id="burn_rate_l/hr" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+
+      </div>
+    </div>
+    <button class="course-accordion">Duration</button>
+    <div class="course-panel noArrows">
+      <div class="insideDIv insideDIvChack insideDIvFuel">
+        <div class="caluCol2">
+          <label>Fuel Burned (Litres)</label>
+          <input onkeyup="durationFunction(event,'fuel_burned3');" id="fuel_burned3" type="number"
+            class="formControl-lg">
+        </div>
+        <div class="caluCol2">
+          <label>Burn Rate (l/hr)</label>
+          <input onkeyup="durationFunction(event,'burn_rate3');" id="burn_rate3" type="number" class="formControl-lg">
+        </div>
+
+        <div class="caluCol2">
+          <label style="color: green;">Duration (Minutes)</label>
+          <input id="duration_minutes3" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+
+      </div>
+    </div>
+    <button class="course-accordion">Specific Range</button>
+    <div class="course-panel noArrows">
+      <div class="insideDIv insideDIvChack insideDIvFuel specificRangeFunction">
+        <div class="caluCol2">
+          <label>Fuel On Board (Litres)</label>
+          <input onkeyup="specificRangeFunction(event,'fuelOnBoardSpecificRange');" id="fuelOnBoardSpecificRange"
+            type="number" class="formControl-lg">
+        </div>
+        <div class="caluCol2">
+          <label>Burn Rate (l/hr)</label>
+          <input onkeyup="specificRangeFunction(event,'burnRateSpecificRange');" id="burnRateSpecificRange"
+            type="number" class="formControl-lg">
+        </div>
+        <div class="caluCol2">
+          <label>Ground Speed (kts)</label>
+          <input onkeyup="specificRangeFunction(event,'groundSpeedSpecificRange');" min="1" step="1"
+            onkeypress='return event.charCode >= 48 && event.charCode <= 57 ' id="groundSpeedSpecificRange"
+            type="number" class="formControl-lg">
+        </div>
+
+        <div class="caluCol2">
+          <label style="color: green;">Endurance (Minutes)</label>
+          <input id="enduranceSpecificRange" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+        <div class="caluCol2">
+          <label style="color: green;">Range (nm)</label>
+          <input id="rangeSpecificRange" type="text" class="formControl-lg" readonly style="background: #d2d2d2;">
+        </div>
+
+      </div>
+    </div>
+  </div>
+  <!-- <script src="script.js"></script> -->
+  <script>
 
 
-              var isaCal;
+    function densityAltitudeFunction(e, type) {
+      let value = e.target.value;
+      var tAlti = parseInt(document.getElementById("tAlti").value);
 
-              if (th <= 249) {
+      if (!isNaN(tAlti)) {
 
-                isaCal = 0;
-              }
-              else if (th >= 250 && th <= 500) {
+        if (tAlti <= 10000) {
+          var th1 = parseInt(tAlti / 1000) * 1000;
 
-                isaCal = 500;
+          var th = tAlti - th1;
 
-              }
-              else if (th > 500 && th <= 749) {
 
-                isaCal = 500;
+          var isaCal;
 
-              }
-              else if (th >= 750 && th <= 1000) {
+          if (th <= 249) {
 
-                isaCal = 1000;
+            isaCal = 0;
+          }
+          else if (th >= 250 && th <= 500) {
 
-              }
+            isaCal = 500;
 
-              tAlti = th1 + isaCal;
+          }
+          else if (th > 500 && th <= 749) {
+
+            isaCal = 500;
+
+          }
+          else if (th >= 750 && th <= 1000) {
+
+            isaCal = 1000;
+
+          }
+
+          tAlti = th1 + isaCal;
+
+        }
+        else {
+          tAlti = parseInt(document.getElementById("tAlti").value);
+        }
+
+        console.log('tAlti', tAlti)
+
+
+        if (tAlti < 250) {
+
+          isa = 15;
+        }
+        else if (tAlti >= 250 && tAlti < 1000) {
+          isa = 14;
+        }
+        else if (tAlti == 1000) {
+          isa = 13;
+        }
+        else if (tAlti == 1500) {
+          isa = 12;
+        }
+        else if (tAlti == 2000) {
+          isa = 11;
+        }
+        else if (tAlti == 2500) {
+          isa = 10;
+        }
+        else if (tAlti == 3000) {
+          isa = 9;
+        }
+        else if (tAlti == 3500) {
+          isa = 8;
+        }
+        else if (tAlti == 4000) {
+          isa = 7;
+        }
+        else if (tAlti == 4500) {
+          isa = 6;
+        }
+        else if (tAlti == 5000) {
+          isa = 5;
+        }
+        else if (tAlti == 5500) {
+          isa = 4;
+        }
+        else if (tAlti == 6000) {
+          isa = 3;
+        }
+        else if (tAlti == 6500) {
+          isa = 2;
+        }
+        else if (tAlti == 7000) {
+          isa = 1;
+        }
+        else if (tAlti == 7500) {
+          isa = 0;
+        }
+        else if (tAlti == 8000) {
+          isa = -1;
+        }
+        else if (tAlti == 8500) {
+          isa = -2;
+        }
+        else if (tAlti == 9000) {
+          isa = -3;
+        }
+        else if (tAlti == 9500) {
+          isa = -4;
+        }
+        else if (tAlti == 10000) {
+          isa = -5;
+        }
+        else if (tAlti > 10000) {
+
+          document.getElementById("tAlti").value = '10000';
+          tAlti = 10000;
+          isa = -5;
+
+        }
+
+        document.getElementById("isa").value = parseInt(isa);
+
+        var airtemp = parseInt(document.getElementById("airtemp").value);
+        var pAlti2 = parseInt(document.getElementById("pAlti2").value);
+
+        var DensityAlt = pAlti2 + 120 * (airtemp - isa);
+        if (isNaN(DensityAlt)) {
+          document.getElementById("dAlti").value = '';
+        } else {
+          document.getElementById("dAlti").value = DensityAlt;
+        }
+
+
+      } else {
+        document.getElementById("dAlti").value = '';
+      }
+
+    }
+    function altitudeFunction(e, type) {
+      let value = e.target.value;
+      var fele = parseInt(document.getElementById("fele").value);
+      var alti = parseInt(document.getElementById("alti").value);
+      var PressureAlt = (1013 - alti) * 30 + fele;
+      if (isNaN(PressureAlt)) {
+        document.getElementById("pAlti").value = '';
+      } else {
+        document.getElementById("pAlti").value = PressureAlt;
+      }
+    }
+
+    //this is the button
+    var acc = document.getElementsByClassName("course-accordion");
+    var i;
+
+    for (i = 0; i < acc.length; i++) {
+      //when one of the buttons are clicked run this function
+      acc[i].onclick = function () {
+        //variables
+        var panel = this.nextElementSibling;
+        var coursePanel = document.getElementsByClassName("course-panel");
+        var courseAccordion = document.getElementsByClassName("course-accordion");
+        var courseAccordionActive = document.getElementsByClassName("course-accordion active");
+
+        /*if pannel is already open - minimize*/
+        if (panel.style.maxHeight) {
+          //minifies current pannel if already open
+          panel.style.maxHeight = null;
+          //removes the 'active' class as toggle didnt work on browsers minus chrome
+          this.classList.remove("active");
+        } else { //pannel isnt open...
+          //goes through the buttons and removes the 'active' css (+ and -)
+          for (var ii = 0; ii < courseAccordionActive.length; ii++) {
+            courseAccordionActive[ii].classList.remove("active");
+          }
+          //Goes through and removes 'activ' from the css, also minifies any 'panels' that might be open
+          for (var iii = 0; iii < coursePanel.length; iii++) {
+            this.classList.remove("active");
+            coursePanel[iii].style.maxHeight = null;
+          }
+          //opens the specified pannel
+          panel.style.maxHeight = panel.scrollHeight + "px";
+          //adds the 'active' addition to the css.
+          this.classList.add("active");
+        }
+      }//closing to the acc onclick function
+    }//closing to the for loop.
+
+
+    function wightPoundFunction(e, type) {
+      let value = e.target.value;
+      if (value === '') {
+        // If value is empty, set all fields to empty string
+        document.getElementById("oun").value = '';
+        document.getElementById("pnd").value = '';
+        document.getElementById("mt").value = '';
+        document.getElementById("gm").value = '';
+        document.getElementById("mgm").value = '';
+        document.getElementById("kgm").value = '';
+      } else {
+        if (type == 'oun') {
+          document.getElementById("pnd").value = value * (0.0625);
+          document.getElementById("mt").value = value * (35273.96195);
+
+          document.getElementById("gm").value = value * (28.3495);
+          document.getElementById("mgm").value = value * (28349.500000294);
+          document.getElementById("kgm").value = value * (0.0283495);
+        } else if (type == 'pnd') {
+          document.getElementById("oun").value = value * (16);
+          document.getElementById("mt").value = value * (0.000453592);
+
+          document.getElementById("gm").value = value * (453.592);
+          document.getElementById("mgm").value = value * (453592);
+          document.getElementById("kgm").value = value * (0.453592);
+        } else if (type == 'mt') {
+          document.getElementById("oun").value = value * (35274);
+          document.getElementById("pnd").value = value * (2204.62);
+
+          document.getElementById("gm").value = value * (1e+6);
+          document.getElementById("mgm").value = value * (1e+9);
+          document.getElementById("kgm").value = value * (1000);
+        }
+      }
+
+    }
+    function wightFunction(e, type) {
+      let value = e.target.value;
+      if (value === '') {
+        // If value is empty, set all fields to empty string
+        document.getElementById("oun").value = '';
+        document.getElementById("pnd").value = '';
+        document.getElementById("mt").value = '';
+        document.getElementById("gm").value = '';
+        document.getElementById("mgm").value = '';
+        document.getElementById("kgm").value = '';
+      } else {
+        if (type == 'gm') {
+          document.getElementById("mgm").value = value * 1000;
+          document.getElementById("kgm").value = value * (0.001);
+
+          document.getElementById("oun").value = value * (0.035274);
+          document.getElementById("pnd").value = value * (0.00220462);
+          document.getElementById("mt").value = value * (0.000001);
+        } else if (type == 'mgm') {
+          document.getElementById("gm").value = value * (0.001);
+          document.getElementById("kgm").value = value * (0.000001);
+
+          document.getElementById("oun").value = value * (0.000035274);
+          document.getElementById("pnd").value = value * (2.20462e-6);
+          document.getElementById("mt").value = value * (0.0000000011023);
+        } else if (type == 'kgm') {
+          document.getElementById("gm").value = value * 1000;
+          document.getElementById("mgm").value = value * 1000000;
+
+          document.getElementById("oun").value = value * (35.274);
+          document.getElementById("pnd").value = value * (2.20462);
+          document.getElementById("mt").value = value * (0.0009999988107);
+        }
+      }
+
+    }
+    function distanceFunction(e, type) {
+      let value = e.target.value;
+      if (!value) { // Check if input value is empty
+        document.getElementById("stm").value = "";
+        document.getElementById("ntm").value = "";
+        document.getElementById("kmt").value = "";
+        document.getElementById("mtr").value = "";
+        document.getElementById("yrd").value = "";
+        document.getElementById("ft").value = "";
+        return; // Exit the function if input value is empty
+      } else {
+        if (type == 'stm') {
+          document.getElementById("ntm").value = value * (0.868976);
+          document.getElementById("kmt").value = value * (1.60934);
+          document.getElementById("mtr").value = value * (1609.34);
+          document.getElementById("yrd").value = value * (1760);
+          document.getElementById("ft").value = value * (5280);
+        } else if (type == 'ntm') {
+          document.getElementById("stm").value = value * (1.15078);
+          document.getElementById("kmt").value = value * (1.852);
+          document.getElementById("mtr").value = value * (1852);
+          document.getElementById("yrd").value = value * (2025.37);
+          document.getElementById("ft").value = value * (6076.12);
+        } else if (type == 'kmt') {
+          document.getElementById("stm").value = value * (0.621371);
+          document.getElementById("ntm").value = value * (0.539957);
+          document.getElementById("mtr").value = value * (1000);
+          document.getElementById("yrd").value = value * (1093.61);
+          document.getElementById("ft").value = value * (3280.84);
+        } else if (type == 'mtr') {
+          document.getElementById("stm").value = value * (0.000621371);
+          document.getElementById("ntm").value = value * (0.000539957);
+          document.getElementById("kmt").value = value * (0.001);
+          document.getElementById("yrd").value = value * (1.09361);
+          document.getElementById("ft").value = value * (3.28084);
+        } else if (type == 'yrd') {
+          document.getElementById("stm").value = value * (0.000568182);
+          document.getElementById("ntm").value = value * (0.000493737);
+          document.getElementById("kmt").value = value * (0.0009144);
+          document.getElementById("mtr").value = value * (0.9144);
+          document.getElementById("ft").value = value * (3);
+        } else if (type == 'ft') {
+          document.getElementById("stm").value = value * (0.000189394);
+          document.getElementById("ntm").value = value * (0.000164579);
+          document.getElementById("kmt").value = value * (0.0003048);
+          document.getElementById("mtr").value = value * (0.3048);
+          document.getElementById("yrd").value = value * (0.333333);
+        }
+      }
+
+    }
+    function temperatureFunction(e, type) {
+      let value = e.target.value;
+      var resultC = 0;
+      var resultK = 0;
+      var resultF = 0;
+
+      if (type == 'fht') {
+        if (value != 0 || value != '') {
+          resultC = (value - 32) * (5 / 9);
+          document.getElementById("celsius").value = resultC.toFixed(3);
+          resultK = ((value - 32) / 1.8) + 273.15;
+          document.getElementById("kelvin").value = resultK.toFixed(3);
+        } else {
+          document.getElementById("celsius").value = '';
+          document.getElementById("kelvin").value = '';
+        }
+
+      } else if (type == 'cel') {
+        if (value != 0 || value != '') {
+          resultF = (value * (9 / 5)) + 32;
+          document.getElementById("farenheit").value = resultF.toFixed(3);
+          resultK = +value + (273.15);
+          document.getElementById("kelvin").value = resultK.toFixed(3);
+        }
+        else {
+          document.getElementById("farenheit").value = '';
+          document.getElementById("kelvin").value = '';
+        }
+
+      } else if (type == 'kel') {
+        if (value != 0 || value != '') {
+          resultF = 1.8 * (value - 273.15) + 32;
+          document.getElementById("farenheit").value = resultF.toFixed(3);
+          resultC = +value - 273.15;
+          document.getElementById("celsius").value = resultC.toFixed(3);
+        }
+        else {
+          document.getElementById("farenheit").value = '';
+          document.getElementById("celsius").value = '';
+        }
+
+
+      }
+    }
+
+    function speedFunction(e, type) {
+      let value = e.target.value;
+      var resultKnots = 0;
+      var resultMph = 0;
+      var resultKph = 0;
+
+      if (type == 's_knots') {
+        if (value != 0 || value != '') {
+          resultMph = value * 1.15078;
+          document.getElementById("milesPerHour").value = resultMph.toFixed(2);
+          resultKph = value * 1.852;
+          document.getElementById("kilometersPerHour").value = resultKph.toFixed(2);
+        } else {
+          document.getElementById("milesPerHour").value = '';
+          document.getElementById("kilometersPerHour").value = '';
+        }
+
+      } else if (type == 's_mph') {
+        if (value != 0 || value != '') {
+          resultKnots = value / 1.15078;
+          document.getElementById("knots").value = resultKnots.toFixed(2);
+          resultKph = value * 1.60934;
+          document.getElementById("kilometersPerHour").value = resultKph.toFixed(2);
+        }
+        else {
+          document.getElementById("knots").value = '';
+          document.getElementById("kilometersPerHour").value = '';
+        }
+
+      } else if (type == 's_kph') {
+        if (value != 0 || value != '') {
+          resultKnots = value / 1.852;
+          document.getElementById("knots").value = resultKnots.toFixed(2);
+          resultMph = value / 1.60934;
+          document.getElementById("milesPerHour").value = resultMph.toFixed(2);
+        }
+        else {
+          document.getElementById("knots").value = '';
+          document.getElementById("milesPerHour").value = '';
+        }
+      }
+    }
+
+    function reciprocalHeadingFunction(e, type) {
+      let value = e.target.value;
+      var reciprocal;
+
+      if (+value > 360) {
+        document.getElementById(type).value = 360;
+      }
+      else {
+        if (type == 'heading') {
+          if (value != '') {
+            if (+value <= 180) {
+
+              reciprocal = +value + 180;
 
             }
             else {
-              tAlti = parseInt(document.getElementById("tAlti").value);
-            }
-
-            console.log('tAlti', tAlti)
-
-
-            if (tAlti < 250) {
-
-              isa = 15;
-            }
-            else if (tAlti >= 250 && tAlti < 1000) {
-              isa = 14;
-            }
-            else if (tAlti == 1000) {
-              isa = 13;
-            }
-            else if (tAlti == 1500) {
-              isa = 12;
-            }
-            else if (tAlti == 2000) {
-              isa = 11;
-            }
-            else if (tAlti == 2500) {
-              isa = 10;
-            }
-            else if (tAlti == 3000) {
-              isa = 9;
-            }
-            else if (tAlti == 3500) {
-              isa = 8;
-            }
-            else if (tAlti == 4000) {
-              isa = 7;
-            }
-            else if (tAlti == 4500) {
-              isa = 6;
-            }
-            else if (tAlti == 5000) {
-              isa = 5;
-            }
-            else if (tAlti == 5500) {
-              isa = 4;
-            }
-            else if (tAlti == 6000) {
-              isa = 3;
-            }
-            else if (tAlti == 6500) {
-              isa = 2;
-            }
-            else if (tAlti == 7000) {
-              isa = 1;
-            }
-            else if (tAlti == 7500) {
-              isa = 0;
-            }
-            else if (tAlti == 8000) {
-              isa = -1;
-            }
-            else if (tAlti == 8500) {
-              isa = -2;
-            }
-            else if (tAlti == 9000) {
-              isa = -3;
-            }
-            else if (tAlti == 9500) {
-              isa = -4;
-            }
-            else if (tAlti == 10000) {
-              isa = -5;
-            }
-            else if (tAlti > 10000) {
-
-              document.getElementById("tAlti").value = '10000';
-              tAlti = 10000;
-              isa = -5;
+              reciprocal = +value - 180;
 
             }
-
-            document.getElementById("isa").value = parseInt(isa);
-
-            var airtemp = parseInt(document.getElementById("airtemp").value);
-            var pAlti2 = parseInt(document.getElementById("pAlti2").value);
-
-            var DensityAlt = pAlti2 + 120 * (airtemp - isa);
-            if (isNaN(DensityAlt)) {
-              document.getElementById("dAlti").value = '';
-            } else {
-              document.getElementById("dAlti").value = DensityAlt;
-            }
-
-
-          } else {
-            document.getElementById("dAlti").value = '';
-          }
-
-        }
-        function altitudeFunction(e, type) {
-          let value = e.target.value;
-          var fele = parseInt(document.getElementById("fele").value);
-          var alti = parseInt(document.getElementById("alti").value);
-          var PressureAlt = (1013 - alti) * 30 + fele;
-          if (isNaN(PressureAlt)) {
-            document.getElementById("pAlti").value = '';
-          } else {
-            document.getElementById("pAlti").value = PressureAlt;
-          }
-        }
-
-        //this is the button
-        var acc = document.getElementsByClassName("course-accordion");
-        var i;
-
-        for (i = 0; i < acc.length; i++) {
-          //when one of the buttons are clicked run this function
-          acc[i].onclick = function () {
-            //variables
-            var panel = this.nextElementSibling;
-            var coursePanel = document.getElementsByClassName("course-panel");
-            var courseAccordion = document.getElementsByClassName("course-accordion");
-            var courseAccordionActive = document.getElementsByClassName("course-accordion active");
-
-            /*if pannel is already open - minimize*/
-            if (panel.style.maxHeight) {
-              //minifies current pannel if already open
-              panel.style.maxHeight = null;
-              //removes the 'active' class as toggle didnt work on browsers minus chrome
-              this.classList.remove("active");
-            } else { //pannel isnt open...
-              //goes through the buttons and removes the 'active' css (+ and -)
-              for (var ii = 0; ii < courseAccordionActive.length; ii++) {
-                courseAccordionActive[ii].classList.remove("active");
-              }
-              //Goes through and removes 'activ' from the css, also minifies any 'panels' that might be open
-              for (var iii = 0; iii < coursePanel.length; iii++) {
-                this.classList.remove("active");
-                coursePanel[iii].style.maxHeight = null;
-              }
-              //opens the specified pannel
-              panel.style.maxHeight = panel.scrollHeight + "px";
-              //adds the 'active' addition to the css.
-              this.classList.add("active");
-            }
-          }//closing to the acc onclick function
-        }//closing to the for loop.
-
-
-        function wightPoundFunction(e, type) {
-          let value = e.target.value;
-          if (type == 'oun') {
-            document.getElementById("pnd").value = value * (0.0625);
-            document.getElementById("mt").value = value * (35273.96195);
-
-            document.getElementById("gm").value = value * (28.3495);
-            document.getElementById("mgm").value = value * (28349.500000294);
-            document.getElementById("kgm").value = value * (0.0283495);
-          } else if (type == 'pnd') {
-            document.getElementById("oun").value = value * (16);
-            document.getElementById("mt").value = value * (0.000453592);
-
-            document.getElementById("gm").value = value * (453.592);
-            document.getElementById("mgm").value = value * (453592);
-            document.getElementById("kgm").value = value * (0.453592);
-          } else if (type == 'mt') {
-            document.getElementById("oun").value = value * (35274);
-            document.getElementById("pnd").value = value * (2204.62);
-
-            document.getElementById("gm").value = value * (1e+6);
-            document.getElementById("mgm").value = value * (1e+9);
-            document.getElementById("kgm").value = value * (1000);
-          }
-        }
-        function wightFunction(e, type) {
-          let value = e.target.value;
-          if (type == 'gm') {
-            document.getElementById("mgm").value = value * 1000;
-            document.getElementById("kgm").value = value * (0.001);
-
-            document.getElementById("oun").value = value * (0.035274);
-            document.getElementById("pnd").value = value * (0.00220462);
-            document.getElementById("mt").value = value * (0.000001);
-          } else if (type == 'mgm') {
-            document.getElementById("gm").value = value * (0.001);
-            document.getElementById("kgm").value = value * (0.000001);
-
-            document.getElementById("oun").value = value * (0.000035274);
-            document.getElementById("pnd").value = value * (2.20462e-6);
-            document.getElementById("mt").value = value * (0.0000000011023);
-          } else if (type == 'kgm') {
-            document.getElementById("gm").value = value * 1000;
-            document.getElementById("mgm").value = value * 1000000;
-
-            document.getElementById("oun").value = value * (35.274);
-            document.getElementById("pnd").value = value * (2.20462);
-            document.getElementById("mt").value = value * (0.0009999988107);
-          }
-        }
-        function distanceFunction(e, type) {
-          let value = e.target.value;
-          if (type == 'stm') {
-            document.getElementById("ntm").value = value * (0.868976);
-            document.getElementById("kmt").value = value * (1.60934);
-            document.getElementById("mtr").value = value * (1609.34);
-            document.getElementById("yrd").value = value * (1760);
-            document.getElementById("ft").value = value * (5280);
-          } else if (type == 'ntm') {
-            document.getElementById("stm").value = value * (1.15078);
-            document.getElementById("kmt").value = value * (1.852);
-            document.getElementById("mtr").value = value * (1852);
-            document.getElementById("yrd").value = value * (2025.37);
-            document.getElementById("ft").value = value * (6076.12);
-          } else if (type == 'kmt') {
-            document.getElementById("stm").value = value * (0.621371);
-            document.getElementById("ntm").value = value * (0.539957);
-            document.getElementById("mtr").value = value * (1000);
-            document.getElementById("yrd").value = value * (1093.61);
-            document.getElementById("ft").value = value * (3280.84);
-          } else if (type == 'mtr') {
-            document.getElementById("stm").value = value * (0.000621371);
-            document.getElementById("ntm").value = value * (0.000539957);
-            document.getElementById("kmt").value = value * (0.001);
-            document.getElementById("yrd").value = value * (1.09361);
-            document.getElementById("ft").value = value * (3.28084);
-          } else if (type == 'yrd') {
-            document.getElementById("stm").value = value * (0.000568182);
-            document.getElementById("ntm").value = value * (0.000493737);
-            document.getElementById("kmt").value = value * (0.0009144);
-            document.getElementById("mtr").value = value * (0.9144);
-            document.getElementById("ft").value = value * (3);
-          } else if (type == 'ft') {
-            document.getElementById("stm").value = value * (0.000189394);
-            document.getElementById("ntm").value = value * (0.000164579);
-            document.getElementById("kmt").value = value * (0.0003048);
-            document.getElementById("mtr").value = value * (0.3048);
-            document.getElementById("yrd").value = value * (0.333333);
-          }
-        }
-        function temperatureFunction(e, type) {
-          let value = e.target.value;
-          var resultC = 0;
-          var resultK = 0;
-          var resultF = 0;
-
-          if (type == 'fht') {
-            if (value != 0 || value != '') {
-              resultC = (value - 32) * (5 / 9);
-              document.getElementById("celsius").value = resultC.toFixed(3);
-              resultK = ((value - 32) / 1.8) + 273.15;
-              document.getElementById("kelvin").value = resultK.toFixed(3);
-            } else {
-              document.getElementById("celsius").value = 0;
-              document.getElementById("kelvin").value = 0;
-            }
-
-          } else if (type == 'cel') {
-            if (value != 0 || value != '') {
-              resultF = (value * (9 / 5)) + 32;
-              document.getElementById("farenheit").value = resultF.toFixed(3);
-              resultK = +value + (273.15);
-              document.getElementById("kelvin").value = resultK.toFixed(3);
-            }
-            else {
-              document.getElementById("farenheit").value = 0;
-              document.getElementById("kelvin").value = 0;
-            }
-
-          } else if (type == 'kel') {
-            if (value != 0 || value != '') {
-              resultF = 1.8 * (value - 273.15) + 32;
-              document.getElementById("farenheit").value = resultF.toFixed(3);
-              resultC = +value - 273.15;
-              document.getElementById("celsius").value = resultC.toFixed(3);
-            }
-            else {
-              document.getElementById("farenheit").value = 0;
-              document.getElementById("celsius").value = 0;
-            }
-
-
-          }
-        }
-
-        function reciprocalHeadingFunction(e, type) {
-          let value = e.target.value;
-          var reciprocal;
-
-          if (+value > 360) {
-            document.getElementById(type).value = 360;
+            document.getElementById("reciprocal").value = reciprocal;
           }
           else {
-            if (type == 'heading') {
-              if (value != '') {
-                if (+value <= 180) {
 
-                  reciprocal = +value + 180;
-
-                }
-                else {
-                  reciprocal = +value - 180;
-
-                }
-                document.getElementById("reciprocal").value = reciprocal;
-              }
-              else {
-
-                document.getElementById("reciprocal").value = '';
-              }
-            }
-
-            else if (type == 'reciprocal') {
-
-              if (value != '') {
-                if (+value <= 180) {
-
-                  reciprocal = +value + 180;
-
-                }
-                else {
-                  reciprocal = +value - 180;
-
-                }
-                document.getElementById("heading").value = reciprocal;
-              }
-              else {
-
-                document.getElementById("heading").value = '';
-              }
-
-            }
-          }
-
-        }
-
-
-
-        function trackErrorFunction(e, type) {
-
-          let value = e.target.value;
-
-          if (type == 'dot1' || type == 'dg1') {
-
-            var dg = parseFloat(document.getElementById("dg1").value);
-
-            var dot = parseFloat(document.getElementById("dot1").value);
-
-            var TE = (60 / dg) * dot;
-
-            if (isNaN(TE)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("te1").value = '';
-              document.getElementById("dot1").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("te1").value = TE.toFixed(2)
-            }
-          }
-
-
-          if (type == 'dot2' || type == 'te2') {
-
-            var TE = parseFloat(document.getElementById("te2").value);
-
-            var dot = parseFloat(document.getElementById("dot2").value);
-
-            //  var TE = (60/dg)*dot;
-
-            var dg = (dot / TE) * 60;
-
-            if (isNaN(dg)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("dg2").value = '';
-              document.getElementById("dot2").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("dg2").value = dg.toFixed(2)
-            }
-          }
-
-
-          if (type == 'dg3' || type == 'te3') {
-
-            var TE = parseFloat(document.getElementById("te3").value);
-
-            var dg = parseFloat(document.getElementById("dg3").value);
-
-            //  var TE = (60/dg)*dot;
-
-            var dot = (dg / 60) * TE;
-
-            if (isNaN(dot)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("dot3").value = '';
-              document.getElementById("te3").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("dot3").value = dot.toFixed(2)
-            }
-          }
-
-
-
-        }
-
-
-        function closingAngleFunction(e, type) {
-
-          let value = e.target.value;
-
-          if (type == 'ca_dot1' || type == 'dtg1') {
-
-            var dtg = parseFloat(document.getElementById("dtg1").value);
-
-            var dot = parseFloat(document.getElementById("ca_dot1").value);
-
-            var CA = (60 / dtg) * dot;
-
-            if (isNaN(CA)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("ca1").value = '';
-              document.getElementById("dot1").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("ca1").value = CA.toFixed(2)
-            }
-          }
-
-
-          if (type == 'ca_dot2' || type == 'ca2') {
-
-            var CA = parseFloat(document.getElementById("ca2").value);
-
-            var dot = parseFloat(document.getElementById("ca_dot2").value);
-
-            //  var TE = (60/dg)*dot;
-
-            var dtg = (60 / CA) * dot;
-
-            if (isNaN(dtg)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("dtg2").value = '';
-              document.getElementById("ca_dot2").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("dtg2").value = dtg.toFixed(2)
-            }
-          }
-
-
-          if (type == 'dtg3' || type == 'ca3') {
-
-            var CA = parseFloat(document.getElementById("ca3").value);
-
-            var dtg = parseFloat(document.getElementById("dtg3").value);
-
-            //  var TE = (60/dg)*dot;
-
-            var dot = (60 / dtg) * CA;
-
-            if (isNaN(dot)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("ca_dot3").value = '';
-              document.getElementById("ca3").value = '';
-
-            } else {
-              //document.getElementsByClassName("te").value = TE;
-              document.getElementById("ca_dot3").value = dot.toFixed(2)
-            }
-          }
-
-
-
-        }
-
-
-        function totalCorrectionFunction(e, type) {
-
-          let value = e.target.value;
-
-          if (type == 'tc_te1' || type == 'tc_ca1') {
-
-            var TE = parseFloat(document.getElementById("tc_te1").value);
-
-            var CA = parseFloat(document.getElementById("tc_ca1").value);
-
-            var TC = TE + CA
-
-            if (isNaN(TC)) {
-
-              document.getElementById("tc1").value = '';
-              document.getElementById("tc_ca1").value = '';
-
-            } else {
-
-              document.getElementById("tc1").value = TC.toFixed(2)
-            }
-          }
-
-
-          if (type == 'tc_ca2' || type == 'tc2') {
-
-            var CA = parseFloat(document.getElementById("tc_ca2").value);
-
-            var TC = parseFloat(document.getElementById("tc2").value);
-
-            var TE = TC - CA;
-
-            if (isNaN(TE)) {
-              //document.getElementsByClassName("te").value = '';
-              document.getElementById("tc_te2").value = '';
-              document.getElementById("tc_ca2").value = '';
-
-            } else {
-
-              document.getElementById("tc_te2").value = TE.toFixed(2)
-            }
-          }
-
-
-          if (type == 'tc_te3' || type == 'tc3') {
-
-            var TC = parseFloat(document.getElementById("tc3").value);
-
-            var TE = parseFloat(document.getElementById("tc_te3").value);
-
-            var CA = TC - TE;
-
-            if (isNaN(CA)) {
-              document.getElementById("tc_te3").value = '';
-              document.getElementById("tc_ca3").value = '';
-            } else {
-              document.getElementById("tc_ca3").value = CA.toFixed(2)
-            }
-          }
-        }
-        function isright(obj) {
-          var value = +obj.value.replace(/\D/g, '') || 0;
-          if (value > 360) value = 360;
-          if (value < 1) value = '';
-          obj.value = value
-        }
-        var Track = 'left';
-
-        document.getElementsByName('track').forEach(function (chk) {
-          chk.addEventListener('click', function () {
-            if (this.checked) {
-              //  console.log(this.value);
-              Track = this.value;
-            }
-            newHeadingFunction(event, 'nh_tc')
-          });
-        });
-
-        function newHeadingFunction(e, type) {
-
-          let value = e.target.value;
-
-
-          if (type == 'nh_tc' || type == 'original_heading') {
-
-            var OH = parseFloat(document.getElementById("original_heading").value);
-
-            var TC = parseFloat(document.getElementById("nh_tc").value);
-
-            var NewHeading;
-
-            if (Track == 'left') {
-              NewHeading = OH + TC;
-
-            }
-            else if (Track == 'right') {
-              NewHeading = OH - TC + 360;
-            }
-
-            if (NewHeading > 360) {
-              NewHeading = NewHeading - 360;
-            }
-
-            if (NewHeading < 10) {
-              NewHeading = '00' + NewHeading;
-            }
-
-            if (isNaN(NewHeading)) {
-              document.getElementById("new_heading").value = '';
-              document.getElementById("nh_tc").value = '';
-
-            } else {
-
-              document.getElementById("new_heading").value = NewHeading;
-            }
+            document.getElementById("reciprocal").value = '';
           }
         }
 
-        function isrightRunwayNumber(obj) {
-          var value = +obj.value.replace(/\D/g, '') || 0;
-          if (value > 36) value = 36;
-          if (value < 1) value = '';
-          obj.value = value
-        }
+        else if (type == 'reciprocal') {
 
-        function isrightWindDirection(obj) {
-          var value = +obj.value.replace(/\D/g, '') || 0;
-          if (value > 360) value = 360;
-          if ((value < 100) && (value >= 10)) {
-            value = '0' + value;
+          if (value != '') {
+            if (+value <= 180) {
+
+              reciprocal = +value + 180;
+
+            }
+            else {
+              reciprocal = +value - 180;
+
+            }
+            document.getElementById("heading").value = reciprocal;
           }
-          if (value < 10) {
-            value = '00' + value;
+          else {
+
+            document.getElementById("heading").value = '';
           }
-          if (value < 1) value = '';
-          obj.value = value
+
+        }
+      }
+
+    }
+
+
+
+    function trackErrorFunction(e, type) {
+
+      let value = e.target.value;
+
+      if (type == 'dot1' || type == 'dg1') {
+
+        var dg = parseFloat(document.getElementById("dg1").value);
+
+        var dot = parseFloat(document.getElementById("dot1").value);
+
+        var TE = (60 / dg) * dot;
+
+        if (isNaN(TE)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("te1").value = '';
+          document.getElementById("dot1").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("te1").value = TE.toFixed(2)
+        }
+      }
+
+
+      if (type == 'dot2' || type == 'te2') {
+
+        var TE = parseFloat(document.getElementById("te2").value);
+
+        var dot = parseFloat(document.getElementById("dot2").value);
+
+        //  var TE = (60/dg)*dot;
+
+        var dg = (dot / TE) * 60;
+
+        if (isNaN(dg)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("dg2").value = '';
+          document.getElementById("dot2").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("dg2").value = dg.toFixed(2)
+        }
+      }
+
+
+      if (type == 'dg3' || type == 'te3') {
+
+        var TE = parseFloat(document.getElementById("te3").value);
+
+        var dg = parseFloat(document.getElementById("dg3").value);
+
+        //  var TE = (60/dg)*dot;
+
+        var dot = (dg / 60) * TE;
+
+        if (isNaN(dot)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("dot3").value = '';
+          document.getElementById("te3").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("dot3").value = dot.toFixed(2)
+        }
+      }
+
+
+
+    }
+
+
+    function closingAngleFunction(e, type) {
+
+      let value = e.target.value;
+
+      if (type == 'ca_dot1' || type == 'dtg1') {
+
+        var dtg = parseFloat(document.getElementById("dtg1").value);
+
+        var dot = parseFloat(document.getElementById("ca_dot1").value);
+
+        var CA = (60 / dtg) * dot;
+
+        if (isNaN(CA)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("ca1").value = '';
+          document.getElementById("dot1").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("ca1").value = CA.toFixed(2)
+        }
+      }
+
+
+      if (type == 'ca_dot2' || type == 'ca2') {
+
+        var CA = parseFloat(document.getElementById("ca2").value);
+
+        var dot = parseFloat(document.getElementById("ca_dot2").value);
+
+        //  var TE = (60/dg)*dot;
+
+        var dtg = (60 / CA) * dot;
+
+        if (isNaN(dtg)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("dtg2").value = '';
+          document.getElementById("ca_dot2").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("dtg2").value = dtg.toFixed(2)
+        }
+      }
+
+
+      if (type == 'dtg3' || type == 'ca3') {
+
+        var CA = parseFloat(document.getElementById("ca3").value);
+
+        var dtg = parseFloat(document.getElementById("dtg3").value);
+
+        //  var TE = (60/dg)*dot;
+
+        var dot = (60 / dtg) * CA;
+
+        if (isNaN(dot)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("ca_dot3").value = '';
+          document.getElementById("ca3").value = '';
+
+        } else {
+          //document.getElementsByClassName("te").value = TE;
+          document.getElementById("ca_dot3").value = dot.toFixed(2)
+        }
+      }
+
+
+
+    }
+
+
+    function totalCorrectionFunction(e, type) {
+
+      let value = e.target.value;
+
+      if (type == 'tc_te1' || type == 'tc_ca1') {
+
+        var TE = parseFloat(document.getElementById("tc_te1").value);
+
+        var CA = parseFloat(document.getElementById("tc_ca1").value);
+
+        var TC = TE + CA
+
+        if (isNaN(TC)) {
+
+          document.getElementById("tc1").value = '';
+          document.getElementById("tc_ca1").value = '';
+
+        } else {
+
+          document.getElementById("tc1").value = TC.toFixed(2)
+        }
+      }
+
+
+      if (type == 'tc_ca2' || type == 'tc2') {
+
+        var CA = parseFloat(document.getElementById("tc_ca2").value);
+
+        var TC = parseFloat(document.getElementById("tc2").value);
+
+        var TE = TC - CA;
+
+        if (isNaN(TE)) {
+          //document.getElementsByClassName("te").value = '';
+          document.getElementById("tc_te2").value = '';
+          document.getElementById("tc_ca2").value = '';
+
+        } else {
+
+          document.getElementById("tc_te2").value = TE.toFixed(2)
+        }
+      }
+
+
+      if (type == 'tc_te3' || type == 'tc3') {
+
+        var TC = parseFloat(document.getElementById("tc3").value);
+
+        var TE = parseFloat(document.getElementById("tc_te3").value);
+
+        var CA = TC - TE;
+
+        if (isNaN(CA)) {
+          document.getElementById("tc_te3").value = '';
+          document.getElementById("tc_ca3").value = '';
+        } else {
+          document.getElementById("tc_ca3").value = CA.toFixed(2)
+        }
+      }
+    }
+    function isright(obj) {
+      var value = +obj.value.replace(/\D/g, '') || 0;
+      if (value > 360) value = 360;
+      if (value < 1) value = '';
+      obj.value = value
+    }
+    var Track = 'left';
+
+    document.getElementsByName('track').forEach(function (chk) {
+      chk.addEventListener('click', function () {
+        if (this.checked) {
+          //  console.log(this.value);
+          Track = this.value;
+        }
+        newHeadingFunction(event, 'nh_tc')
+      });
+    });
+
+    function newHeadingFunction(e, type) {
+
+      let value = e.target.value;
+
+
+      if (type == 'nh_tc' || type == 'original_heading') {
+
+        var OH = parseFloat(document.getElementById("original_heading").value);
+
+        var TC = parseFloat(document.getElementById("nh_tc").value);
+
+        var NewHeading;
+
+        if (Track == 'left') {
+          NewHeading = OH + TC;
+
+        }
+        else if (Track == 'right') {
+          NewHeading = OH - TC + 360;
         }
 
-        function isrightWindSpeed(obj) {
-          var value = +obj.value.replace(/\D/g, '') || 0;
-          if (value > 100) value = 100;
-          if (value < 1) value = '';
-          obj.value = value
+        if (NewHeading > 360) {
+          NewHeading = NewHeading - 360;
         }
 
+        if (NewHeading < 10) {
+          NewHeading = '00' + NewHeading;
+        }
 
-        function windComponentsFunction(e, type) {
-          let value = e.target.value;
-          if (type == 'wc_rn' || type == 'wc_wd' || type == 'wc_ws') {
-            var rwy = Number(document.getElementById("wc_rn").value);
-            var windir = Number(document.getElementById("wc_wd").value);
-            var windspeed = Number(document.getElementById("wc_ws").value);
-            var runwayDirection = rwy * 10;
-            var angle = runwayDirection - windir;
-            var pi = (Math.PI / 180);
-            var sinFactor = Math.sin(angle * pi);
-            var cross = windspeed * sinFactor;
-            var cosFactor = Math.cos(angle * pi);
-            var head = windspeed * cosFactor;
-            if ((!(head)) || (!(cross)) || (!(rwy)) || (!(windir)) || (!(windspeed))) {
-              document.getElementById("wc_hw").value = '';
-              document.getElementById("wc_tw").value = '';
-              document.getElementById("wc_cw").value = '';
-            } else {
-              if (head >= 0) {
-                document.getElementById("wc_hw").value = Math.abs(head * (-1)).toFixed(1);
-                document.getElementById("wc_tw").value = '';
-              } else {
-                document.getElementById("wc_tw").value = Math.abs(head * (-1)).toFixed(1);
-                document.getElementById("wc_hw").value = '';
-              }
-              document.getElementById("wc_cw").value = Math.abs(cross * (-1)).toFixed(1)
-            }
+        if (isNaN(NewHeading)) {
+          document.getElementById("new_heading").value = '';
+          document.getElementById("nh_tc").value = '';
+
+        } else {
+
+          document.getElementById("new_heading").value = NewHeading;
+        }
+      }
+    }
+
+    function isrightRunwayNumber(obj) {
+      var value = +obj.value.replace(/\D/g, '') || 0;
+      if (value > 36) value = 36;
+      if (value < 1) value = '';
+      obj.value = value
+    }
+
+    function isrightWindDirection(obj) {
+      var value = +obj.value.replace(/\D/g, '') || 0;
+      if (value > 360) value = 360;
+      if ((value < 100) && (value >= 10)) {
+        value = '0' + value;
+      }
+      if (value < 10) {
+        value = '00' + value;
+      }
+      if (value < 1) value = '';
+      obj.value = value
+    }
+
+    function isrightWindSpeed(obj) {
+      var value = +obj.value.replace(/\D/g, '') || 0;
+      if (value > 100) value = 100;
+      if (value < 1) value = '';
+      obj.value = value
+    }
+
+
+    function windComponentsFunction(e, type) {
+      let value = e.target.value;
+      if (type == 'wc_rn' || type == 'wc_wd' || type == 'wc_ws') {
+        var rwy = Number(document.getElementById("wc_rn").value);
+        var windir = Number(document.getElementById("wc_wd").value);
+        var windspeed = Number(document.getElementById("wc_ws").value);
+        var runwayDirection = rwy * 10;
+        var angle = runwayDirection - windir;
+        var pi = (Math.PI / 180);
+        var sinFactor = Math.sin(angle * pi);
+        var cross = windspeed * sinFactor;
+        var cosFactor = Math.cos(angle * pi);
+        var head = windspeed * cosFactor;
+        if ((!(head)) || (!(cross)) || (!(rwy)) || (!(windir)) || (!(windspeed))) {
+          document.getElementById("wc_hw").value = '';
+          document.getElementById("wc_tw").value = '';
+          document.getElementById("wc_cw").value = '';
+        } else {
+          if (head >= 0) {
+            document.getElementById("wc_hw").value = Math.abs(head * (-1)).toFixed(1);
+            document.getElementById("wc_tw").value = '';
+          } else {
+            document.getElementById("wc_tw").value = Math.abs(head * (-1)).toFixed(1);
+            document.getElementById("wc_hw").value = '';
           }
+          document.getElementById("wc_cw").value = Math.abs(cross * (-1)).toFixed(1)
         }
+      }
+    }
 
-        function isrightFuelConverter(obj) {
-          var value = +obj.value.replace(/\D/g, '') || 0;
-          if (value > 400000) value = 400000;
-          if (value < 1) value = '';
-          obj.value = value
+    function isrightFuelConverter(obj) {
+      var value = +obj.value.replace(/\D/g, '') || 0;
+      if (value > 400000) value = 400000;
+      if (value < 1) value = '';
+      obj.value = value
+    }
+
+    var Fuel = 'avgas';
+
+    document.getElementsByName('fuel').forEach(function (chk) {
+      chk.addEventListener('click', function () {
+        if (this.checked) {
+          /* console.log(this.value); */
+          Fuel = this.value;
         }
+        fuelConverterFunction(event, 'fuel_converter')
+      });
+    });
 
-        var Fuel = 'avgas';
+    function fuelConverterFunction(e, type) {
 
-        document.getElementsByName('fuel').forEach(function (chk) {
-          chk.addEventListener('click', function () {
-            if (this.checked) {
-              /* console.log(this.value); */
-              Fuel = this.value;
-            }
-            fuelConverterFunction(event, 'fuel_converter')
-          });
-        });
-
-        function fuelConverterFunction(e, type) {
-
-          let value = e.target.value;
+      let value = e.target.value;
 
 
-          if (type == 'fuel_converter') {
+      if (type == 'fuel_converter') {
 
-            var FC = document.getElementById("fuel_converter").value;
+        var FC = document.getElementById("fuel_converter").value;
 
-            var us_gallons;
-            var pounds;
-            var kilograms;
-            var imperial_gallons;
+        var us_gallons;
+        var pounds;
+        var kilograms;
+        var imperial_gallons;
 
 
-            if (Fuel == 'avgas') {
-              us_gallons = FC / 3.78;
-              pounds = FC * 1.58;
-              kilograms = FC * 0.72;
-              imperial_gallons = FC / 4.54;
+        if (Fuel == 'avgas') {
+          us_gallons = FC / 3.78;
+          pounds = FC * 1.58;
+          kilograms = FC * 0.72;
+          imperial_gallons = FC / 4.54;
 
-            }
-            else if (Fuel == 'jet') {
-              us_gallons = FC / 3.78;
-              pounds = FC * 1.76;
-              kilograms = FC * 0.80;
-              imperial_gallons = FC / 4.54;
-            }
-            if (!(us_gallons)) {
-              document.getElementById("us_gallons").value = '';
-              document.getElementById("pounds").value = '';
-              document.getElementById("kilograms").value = '';
-              document.getElementById("imperial_gallons").value = '';
-            } else {
-              document.getElementById("us_gallons").value = us_gallons.toFixed(2);
-              document.getElementById("pounds").value = pounds.toFixed(2);
-              document.getElementById("kilograms").value = kilograms.toFixed(2);
-              document.getElementById("imperial_gallons").value = imperial_gallons.toFixed(2);
-            }
-          }
         }
-
-        function amountBurnedFunction(e, type) {
-
-          let value = e.target.value;
-
-          if (type == 'duration' || type == 'burn_rate') {
-
-            var BR = parseFloat(document.getElementById("burn_rate").value);
-
-            var DR = parseFloat(document.getElementById("duration").value);
-
-            var FB = (BR / 60).toFixed(2) * DR
-
-            if (isNaN(FB)) {
-
-              document.getElementById("fuelBurned").value = '';
-
-            } else {
-
-              document.getElementById("fuelBurned").value = FB.toFixed(1)
-            }
-          }
+        else if (Fuel == 'jet') {
+          us_gallons = FC / 3.78;
+          pounds = FC * 1.76;
+          kilograms = FC * 0.80;
+          imperial_gallons = FC / 4.54;
         }
-
-        function consumptionFunction(e, type) {
-
-          let value = e.target.value;
-
-          if (type == 'duration_minutes' || type == 'fuel_burned') {
-
-            var FB = parseFloat(document.getElementById("fuel_burned").value);
-
-            var DR = parseFloat(document.getElementById("duration_minutes").value);
-
-            var BR = (FB * 60).toFixed(2) / DR
-
-            if (isNaN(BR)) {
-
-              document.getElementById("burn_rate_l/hr").value = '';
-
-            } else {
-
-              document.getElementById("burn_rate_l/hr").value = BR.toFixed(2)
-            }
-          }
+        if (!(us_gallons)) {
+          document.getElementById("us_gallons").value = '';
+          document.getElementById("pounds").value = '';
+          document.getElementById("kilograms").value = '';
+          document.getElementById("imperial_gallons").value = '';
+        } else {
+          document.getElementById("us_gallons").value = us_gallons.toFixed(2);
+          document.getElementById("pounds").value = pounds.toFixed(2);
+          document.getElementById("kilograms").value = kilograms.toFixed(2);
+          document.getElementById("imperial_gallons").value = imperial_gallons.toFixed(2);
         }
+      }
+    }
 
-        function durationFunction(e, type) {
+    function amountBurnedFunction(e, type) {
 
-          let value = e.target.value;
+      let value = e.target.value;
 
-          if (type == 'burn_rate3' || type == 'fuel_burned3') {
+      if (type == 'duration' || type == 'burn_rate') {
 
-            var FB = parseFloat(document.getElementById("fuel_burned3").value);
+        var BR = parseFloat(document.getElementById("burn_rate").value);
 
-            var BR = parseFloat(document.getElementById("burn_rate3").value);
+        var DR = parseFloat(document.getElementById("duration").value);
 
-            var DM = (FB / BR) * 60
+        var FB = (BR / 60).toFixed(2) * DR
 
-            if (isNaN(DM)) {
+        if (isNaN(FB)) {
 
-              document.getElementById("duration_minutes3").value = '';
+          document.getElementById("fuelBurned").value = '';
 
-            } else {
+        } else {
 
-              document.getElementById("duration_minutes3").value = DM.toFixed(0)
-            }
-          }
+          document.getElementById("fuelBurned").value = FB.toFixed(1)
         }
+      }
+    }
 
-        function specificRangeFunction(e, type) {
+    function consumptionFunction(e, type) {
 
-          let value = e.target.value;
+      let value = e.target.value;
 
-          if (type == 'fuelOnBoardSpecificRange' || type == 'burnRateSpecificRange' || type == 'groundSpeedSpecificRange') {
+      if (type == 'duration_minutes' || type == 'fuel_burned') {
 
-            var FOBSR = parseFloat(document.getElementById("fuelOnBoardSpecificRange").value);
+        var FB = parseFloat(document.getElementById("fuel_burned").value);
 
-            var BRSR = parseFloat(document.getElementById("burnRateSpecificRange").value);
+        var DR = parseFloat(document.getElementById("duration_minutes").value);
 
-            var GSSR = parseFloat(document.getElementById("groundSpeedSpecificRange").value);
+        var BR = (FB * 60).toFixed(2) / DR
 
+        if (isNaN(BR)) {
 
-            var ESR = (FOBSR / BRSR) * 60
+          document.getElementById("burn_rate_l/hr").value = '';
 
-            var RSR = (GSSR * ESR) / 60
+        } else {
 
-
-            if (isNaN(ESR) || isNaN(RSR)) {
-
-              document.getElementById("enduranceSpecificRange").value = '';
-              document.getElementById("rangeSpecificRange").value = '';
-
-
-            } else {
-
-              document.getElementById("enduranceSpecificRange").value = ESR.toFixed(0)
-              document.getElementById("rangeSpecificRange").value = RSR.toFixed(2)
-
-            }
-          }
+          document.getElementById("burn_rate_l/hr").value = BR.toFixed(2)
         }
-      </script>
-    </div>
-</body>
+      }
+    }
 
-</htm
+    function durationFunction(e, type) {
+
+      let value = e.target.value;
+
+      if (type == 'burn_rate3' || type == 'fuel_burned3') {
+
+        var FB = parseFloat(document.getElementById("fuel_burned3").value);
+
+        var BR = parseFloat(document.getElementById("burn_rate3").value);
+
+        var DM = (FB / BR) * 60
+
+        if (isNaN(DM)) {
+
+          document.getElementById("duration_minutes3").value = '';
+
+        } else {
+
+          document.getElementById("duration_minutes3").value = DM.toFixed(0)
+        }
+      }
+    }
+
+    function specificRangeFunction(e, type) {
+
+      let value = e.target.value;
+
+      if (type == 'fuelOnBoardSpecificRange' || type == 'burnRateSpecificRange' || type == 'groundSpeedSpecificRange') {
+
+        var FOBSR = parseFloat(document.getElementById("fuelOnBoardSpecificRange").value);
+
+        var BRSR = parseFloat(document.getElementById("burnRateSpecificRange").value);
+
+        var GSSR = parseFloat(document.getElementById("groundSpeedSpecificRange").value);
+
+
+        var ESR = (FOBSR / BRSR) * 60
+
+        var RSR = (GSSR * ESR) / 60
+
+
+        if (isNaN(ESR) || isNaN(RSR)) {
+
+          document.getElementById("enduranceSpecificRange").value = '';
+          document.getElementById("rangeSpecificRange").value = '';
+
+
+        } else {
+
+          document.getElementById("enduranceSpecificRange").value = ESR.toFixed(0)
+          document.getElementById("rangeSpecificRange").value = RSR.toFixed(2)
+
+        }
+      }
+    }
+
+
+  </script>
+</div>

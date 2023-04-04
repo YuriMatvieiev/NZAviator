@@ -11,31 +11,24 @@ var currentIndex = 0;
 
 function nextBlocks() {
   if (blocks.length === 0) return;
-
   hideBlock(currentIndex);
-
   currentIndex++;
   if (currentIndex >= blocks.length) {
     currentIndex = 0;
   }
-
   showBlock(currentIndex);
 }
 
 function previousBlock() {
   if (blocks.length === 0) return;
-
   hideBlock(currentIndex);
-
   currentIndex--;
   if (currentIndex < 0) {
     currentIndex = blocks.length - 1;
   }
-
   showBlock(currentIndex);
 }
 
-// Get a reference to the rows that you want to display
 const allRows = document.querySelectorAll('.row-4, .row-5, .row-6, .row-7, .row-8, .row-9, .row-10, .row-11, .row-12');
 const rows = [document.querySelectorAll('.row-4'), document.querySelectorAll('.row-5'), document.querySelectorAll('.row-6'), document.querySelectorAll('.row-7'), document.querySelectorAll('.row-8'), document.querySelectorAll('.row-9'), document.querySelectorAll('.row-10'), document.querySelectorAll('.row-11'), document.querySelectorAll('.row-12')];
 let clickCounter = 0;
@@ -57,7 +50,6 @@ function clearRows() {
 document.addEventListener("input", function () {
   const inputs = [];
   const maxRows = 24;
-
   for (let i = 1; i <= maxRows; i++) {
     inputs.push({
       cas: document.getElementsByClassName("cas" + i)[0],
@@ -77,20 +69,17 @@ document.addEventListener("input", function () {
       fuelOnBoard: document.getElementsByClassName("fuel_on_board" + i)[0],
     });
 
-    // Add event listeners and input calculations for each input field
-
     if (inputs[i - 1].cas) {
       inputs[i - 1].cas.addEventListener("input", calculateTasKts);
-      inputs[i - 1].cas.addEventListener("input", updateGSandHDG); // add event listener for 'CAS' input field
+      inputs[i - 1].cas.addEventListener("input", updateGSandHDG);
       inputs[i - 1].feet.addEventListener("input", calculateTasKts);
       inputs[i - 1].trkT.addEventListener("input", calculateHdg);
-      calculateHdg(); // call calculateHdg() once here to set initial values
-      calculateGsKts(); // call calculateGsKts() once here to set initial values
+      calculateHdg();
+      calculateGsKts();
     }
 
     if (inputs[i - 1].windT) {
       inputs[i - 1].windT.addEventListener("input", calculateHdg);
-
       inputs[i - 1].windKts.addEventListener("input", calculateHdg);
       inputs[i - 1].varEW.addEventListener("input", calculateHdg);
     }
@@ -104,21 +93,17 @@ document.addEventListener("input", function () {
       inputs[i - 1].fuelBurn.addEventListener("input", calculateLegFuel);
     }
 
-
     if (inputs[i - 1].windT) {
       inputs[i - 1].windT.addEventListener("input", calculateGsKts);
       inputs[i - 1].tasKts.addEventListener("input", calculateGsKts);
       inputs[i - 1].trkT.addEventListener("input", calculateGsKts);
       inputs[i - 1].windKts.addEventListener("input", calculateGsKts);
-
     }
+
     if (inputs[i - 1].fuelOnBoard) {
       inputs[i - 1].fuelOnBoard.addEventListener("input", calculateLegFuel);
-
     }
   }
-
-
 
   function calculateTasKts() {
     const index = inputs.findIndex(input => input.cas === this || input.feet === this);
@@ -165,7 +150,6 @@ document.addEventListener("input", function () {
       const windAngle = (windKtsInput !== 0) ? Math.atan((windKtsInput * Math.sin((windTInput - trkTInput) * Math.PI / 180)) / tasKtsInput) : 0;
       const windAngleDeg = windAngle * 180 / Math.PI;
       const HDG = trkTInput + varEWValInput + windAngleDeg;
-
       if (HDG < 0) {
         let newHDG = 360 + HDG;
         inputs[index].hdg.value = newHDG.toFixed(0).padStart(3, '0');
@@ -188,6 +172,7 @@ document.addEventListener("input", function () {
     calculateGsKts();
     calculateHdg();
   }
+
   function calculateGsKts() {
     const index = inputs.findIndex(input =>
       (input.cas === this) ||
@@ -205,7 +190,6 @@ document.addEventListener("input", function () {
     const windTInput = parseFloat(inputs[index]?.windT?.value);
     const windKtsInput = parseFloat(inputs[index]?.windKts?.value);
     const feetInput = parseFloat(inputs[index]?.feet?.value);
-
     if (!isNaN(tasKtsInput) && !isNaN(trkTInput) && !isNaN(windTInput) && !isNaN(windKtsInput) && !isNaN(feetInput)) {
       const radians = Math.PI / 180;
       const term1 = tasKtsInput * Math.sqrt(1 - Math.pow((windKtsInput / tasKtsInput) * Math.sin((windTInput - trkTInput) * radians), 2));
@@ -276,8 +260,6 @@ document.addEventListener("input", function () {
       }
     }
   }
-
-
 });
 
 
@@ -296,21 +278,14 @@ inputs.forEach(input => {
   });
 });
 
-// Get the input field element
 const sartimeInput = document.getElementById("sartime");
 
-// Add an event listener to the input field for the "keypress" event
 sartimeInput.addEventListener("keypress", function (event) {
-  // Get the character code of the pressed key
   const charCode = event.which || event.keyCode;
-
-  // Allow numbers (48-57), colon (58), dot (46), and comma (44)
   if (charCode >= 48 && charCode <= 57 || charCode === 58 || charCode === 46 || charCode === 44) {
     // Allow the character to be typed
     return true;
   }
-
-  // Prevent the character from being typed
   event.preventDefault();
   return false;
 });

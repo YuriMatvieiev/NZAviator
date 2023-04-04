@@ -1,0 +1,131 @@
+<div class="search">
+  <div class="search__container">
+    <div class="search__block">
+      <div class="search__title">Location</div>
+      <div class="search__items">
+        <select id="websites" class="search__select" name="websites">
+          <option value="https://www.nzaviator.co.nz/northland-flight-schools">Northland</option>
+          <option selected value="https://www.nzaviator.co.nz/auckland-flight-schools">Auckland</option>
+          <option value="https://www.nzaviator.co.nz/waikato-flight-schools">Waikato</option>
+          <option value="https://www.nzaviator.co.nz/bay-of-plenty-flight-schools">Bay Of Plenty</option>
+          <option value="https://www.nzaviator.co.nz/gisborne-flight-schools">Gisborne</option>
+          <option value="https://www.nzaviator.co.nz/hawkes-bay-flight-schools">Hawke's Bay</option>
+          <option value="https://www.nzaviator.co.nz/taranaki-flight-schools">Taranaki</option>
+          <option value="https://www.nzaviator.co.nz/manawatu-whanganui-flight-schools">Manawatu / Whanganui</option>
+          <option value="https://www.nzaviator.co.nz/wellington-flight-schools">Wellington</option>
+          <option value="https://www.nzaviator.co.nz/nelson-tasman-flight-schools">Nelson</option>
+          <option value="https://www.nzaviator.co.nz/marlborough-flight-schools">Marlborough</option>
+          <option value="https://www.nzaviator.co.nz/west-coast-flight-schools">West Coast</option>
+          <option value="https://www.nzaviator.co.nz/canterbury-flight-schools">Canterbury</option>
+          <option value="https://www.nzaviator.co.nz/otago-flight-schools">Otago</option>
+          <option value="https://www.nzaviator.co.nz/southland-flight-schools">Southland</option>
+        </select>
+        <button class="search__button" onclick="goToWebsite()">Search</button>
+      </div>
+    </div>
+  </div>
+</div>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  .search__container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+    max-width: 1180px;
+  }
+
+  @media (max-width: 375px) {
+    .search__container {
+      padding-left: 0px;
+      padding-right: 0px;
+    }
+  }
+
+  .search__block {
+    margin-right: auto;
+    margin-left: auto;
+    width: 600px;
+    font-size: 16px;
+  }
+
+  .search__items {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    margin-top: 5px;
+  }
+
+  .search__select {
+    width: 100%;
+    font-size: 18px;
+    border: 2px solid #000000;
+    padding: 10px;
+    outline: none;
+    color: #000;
+    border-radius: 0px;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    background-image:
+      linear-gradient(45deg, transparent 50%, #000 50%),
+      linear-gradient(135deg, #000 50%, transparent 50%);
+    background-position:
+      calc(100% - 20px) calc(1em + 2px),
+      calc(100% - 15px) calc(1em + 2px);
+    background-size:
+      5px 5px,
+      5px 5px;
+    background-repeat: no-repeat;
+  }
+
+  .search__select::before {
+    outline: none;
+  }
+
+  .search__select::after {
+    outline: none;
+  }
+
+  .search__button {
+    width: 100%;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    padding: 10px 0;
+    background-color: #053285;
+    border: 1px solid #4d4d4d;
+  }
+
+  @media (max-width: 768px) {
+    .search__block {
+      width: 100%;
+    }
+
+    .search__items {
+      -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+    }
+  }
+
+  @media (any-hover: hover) {
+    .search__button:hover {
+      background-color: #000000;
+      border: 1px solid #000000;
+      -webkit-transition: all 0.3s ease 0s;
+      -o-transition: all 0.3s ease 0s;
+      transition: all 0.3s ease 0s;
+    }
+  }
+</style>
+<script>
+  function goToWebsite() {
+    var selectBox = document.getElementById("websites");
+    var selectedValue = selectBox.options[selectBox.selectedIndex].value;
+    window.location = selectedValue;
+  }
+</script>

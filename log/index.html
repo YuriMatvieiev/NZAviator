@@ -1,19 +1,12 @@
-<html lang="en">
-
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Log</title>
-
-  <link href="css/style.css" rel="stylesheet">
-</head>
-
+<style>
+ 
+</style>
+<link rel="stylesheet" href="css/style.css">
 <body class="log">
   <div class="log__container">
     <div class="log__block">
       <div class="log__header">
-        <h2 class="log__title">VFR Navigation Flight Log</h2>
+        <h2 class="log__title">VFR Flight Planner</h2>
         <div class="log__sartime">
           <label>Sartime</label>
           <input type="text" id="sartime">
@@ -26,20 +19,20 @@
             <th rowspan="2">TO</th>
             <th rowspan="2">MSA</th>
             <th rowspan="2">CAS</th>
-            <th colspan="2">ALTITUDE</th>
+            <th class="log__table-half" colspan="2">ALTITUDE</th>
             <th rowspan="2" class="log__readonly">TAS <br>
               kts</th>
             <th rowspan="2">TRK <br>
               °T
             </th>
-            <th colspan="2">WIND</th>
+            <th class="log__table-half" colspan="2">WIND</th>
             <th rowspan="2">VAR <br>(-E &nbsp; +W)</th>
           </tr>
           <tr>
-            <th>FEET</th>
-            <th>TEMP</th>
-            <th>°T</th>
-            <th>kts</th>
+            <th class="log__table-half">FEET</th>
+            <th class="log__table-half">TEMP</th>
+            <th class="log__table-half">°T</th>
+            <th class="log__table-half">kts</th>
           </tr>
           <tr>
             <td><input class="from1" type="text"></td>
@@ -435,7 +428,7 @@
           </table>
           <table id="table4" class="table4">
             <tr>
-              <th rowspan="2">CLEARANCES / NOTES</th>
+              <th rowspan="2">NOTES</th>
             </tr>
             <tr>
             </tr>
@@ -485,7 +478,7 @@
         </div>
         <div class="log__buttons">
           <button class="log__button-add" onclick="addRows()" type="submit">Add New Line</button>
-          <button class="log__button-clear" onclick="clearRows()" type="reset">CLEAR</button>
+          <button id="clear" class="log__button-clear" onclick="clearRows()" type="reset">CLEAR</button>
         </div>
       </div>
       <div class="log__table mobile">
@@ -575,13 +568,13 @@
           </table>
           <table id="mobile2" class="mobile2">
             <tr>
-              <th colspan="2">ALTITUDE</th>
+              <th class="log__table-half" colspan="2">ALTITUDE</th>
               <th rowspan="2" class="log__readonly">TAS <br>kts</th>
               <th rowspan="2">TRK <br>°T</th>
             </tr>
             <tr>
-              <th>FEET</th>
-              <th>TEMP</th>
+              <th class="log__table-half">FEET</th>
+              <th class="log__table-half">TEMP</th>
             </tr>
             <tr>
               <td><input class="feet13" type="number"></td>
@@ -671,13 +664,13 @@
         <div class="log__table-mobile" style="display: none;">
           <table id="mobile3" class="mobile3">
             <tr>
-              <th colspan="2">WIND</th>
+              <th class="log__table-half" colspan="2">WIND</th>
               <th rowspan="2">VAR <br>(-E &nbsp; +W)</th>
               <th rowspan="2" class="log__readonly">HDG <br> °M</th>
             </tr>
             <tr>
-              <th>°T</th>
-              <th>kts</th>
+              <th class="log__table-half">°T</th>
+              <th class="log__table-half">kts</th>
             </tr>
             <tr>
               <td><input class="wind_t13" type="number"></td>
@@ -1041,7 +1034,7 @@
         <div class="log__table-mobile" style="display: none;">
           <table id="mobile7" class="mobile7">
             <tr>
-              <th rowspan="2">CLEARANCES / NOTES</th>
+              <th rowspan="2">NOTES</th>
             </tr>
             <tr>
             </tr>
@@ -1092,9 +1085,7 @@
       </div>
     </div>
   </div>
-  <script src="js/main.js"></script>
+  <script src="main.js">
+
+  </script>
 </body>
-
-
-
-</html>

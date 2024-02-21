@@ -2,6 +2,27 @@ function isLargeScreen() {
   return window.matchMedia("(min-width: 560px)").matches;
 }
 var windowInnerWidth = window.innerWidth;
+function scopeE6BSetup(tutorialItem) {
+  $(".sidebar").hide(),
+    "slide" == scope && $("#middle_circle"),
+    "wind" == scope ? $(".wind-side").show() : $(".sliderule-side").show();
+}
+
+function loadSide(tutorialItem) {
+  var q = "sliderule" == (currentScope = scope) ? "wind" : "sliderule",
+    svg =
+      ($("#flight-computer").remove(),
+      getSVG(q, "svg/", {
+        slideRule: "e6-b-sliderule.svg",
+        wind: "e6-b-wind.svg",
+      }));
+  (scope = q || "sliderule"),
+    $("body").addClass(scope),
+    (z = Snap("#wrap")),
+    Snap.load(svg, loadSVG),
+    scopeE6BSetup(tutorialItem);
+}
+
 function loadSVG(fragment) {
   $("#outer").attr("class", ""); // Очищаємо всі класи у елементу з id="outer"
   $("#outer").addClass(scope); // Додаємо клас, що відповідає поточному scope
@@ -5334,24 +5355,3 @@ if ("undefined" == typeof jQuery)
       }
     });
   });
-
-function scopeE6BSetup(tutorialItem) {
-  $(".sidebar").hide(),
-    "slide" == scope && $("#middle_circle"),
-    "wind" == scope ? $(".wind-side").show() : $(".sliderule-side").show();
-}
-
-function loadSide(tutorialItem) {
-  var q = "sliderule" == (currentScope = scope) ? "wind" : "sliderule",
-    svg =
-      ($("#flight-computer").remove(),
-      getSVG(q, "svg/", {
-        slideRule: "e6-b-sliderule.svg",
-        wind: "e6-b-wind.svg",
-      }));
-  (scope = q || "sliderule"),
-    $("body").addClass(scope),
-    (z = Snap("#wrap")),
-    Snap.load(svg, loadSVG),
-    scopeE6BSetup(tutorialItem);
-}

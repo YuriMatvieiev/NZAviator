@@ -1,149 +1,128 @@
 <html lang="en" class="svg">
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Flight computer</title>
 
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Flight computer</title>
+    <link href="css/computer.css" rel="stylesheet" />
 
-  <link href="css/computer.css" rel="stylesheet">
+    <script type="text/javascript">
+      /* Enable our transformations on SVG elements in IE11 */
+      window.MSPointerEvent = undefined;
+      window.PointerEvent = undefined;
+    </script>
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+      <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+      <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <style>
+    /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
+    html {
+      font-family: sans-serif;
+      -ms-text-size-adjust: 100%;
+      -webkit-text-size-adjust: 100%;
+    }
 
-  <script type="text/javascript">
-    /* Enable our transformations on SVG elements in IE11 */
-    window.MSPointerEvent = undefined;
-    window.PointerEvent = undefined;
-  </script>
-  <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-  <!--[if lt IE 9]>
-  <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-  <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-  <![endif]-->
-</head>
-<style>
-  /*! normalize.css v3.0.0 | MIT License | git.io/normalize */
-  html {
-    font-family: sans-serif;
-    -ms-text-size-adjust: 100%;
-    -webkit-text-size-adjust: 100%;
-  }
+    body {
+      margin: 0;
+    }
 
-  body {
-    margin: 0;
-  }
+    nav {
+      display: block;
+    }
 
-  nav {
-    display: block;
-  }
+    [hidden] {
+      display: none;
+    }
 
-  [hidden] {
-    display: none;
-  }
+    a {
+      background: 0 0;
+    }
 
-  a {
-    background: 0 0;
-  }
+    a:active,
+    a:hover {
+      outline: 0;
+    }
 
-  a:active,
-  a:hover {
-    outline: 0;
-  }
+    b {
+      font-weight: 700;
+    }
 
-  b {
-    font-weight: 700;
-  }
+    h1 {
+      font-size: 2em;
+      margin: 0.67em 0;
+    }
 
-  h1 {
-    font-size: 2em;
-    margin: .67em 0;
-  }
+    svg:not(:root) {
+      overflow: hidden;
+    }
 
-  svg:not(:root) {
-    overflow: hidden;
-  }
+    * {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
 
-  * {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+    :after,
+    :before {
+      -webkit-box-sizing: border-box;
+      box-sizing: border-box;
+    }
 
-  :after,
-  :before {
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-  }
+    html {
+      font-size: 62.5%;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-  html {
-    font-size: 62.5%;
-    -webkit-tap-highlight-color: transparent;
-  }
+    body {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 20px;
+      line-height: 1.42857143;
+      color: #fff;
+      background-color: #fff;
+    }
 
-  body {
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 20px;
-    line-height: 1.42857143;
-    color: #fff;
-    background-color: #fff;
-  }
+    a {
+      color: #f90;
+      text-decoration: none;
+    }
 
-  a {
-    color: #f90;
-    text-decoration: none;
-  }
+    a:focus,
+    a:hover {
+      color: #ff671f;
+      text-decoration: underline;
+    }
 
-  a:focus,
-  a:hover {
-    color: #ff671f;
-    text-decoration: underline;
-  }
+    a:focus {
+      outline: thin dotted;
+      outline: 5px auto -webkit-focus-ring-color;
+      outline-offset: -2px;
+    }
 
-  a:focus {
-    outline: thin dotted;
-    outline: 5px auto -webkit-focus-ring-color;
-    outline-offset: -2px;
-  }
+    .container {
+      margin-right: auto;
+      margin-left: auto;
+      padding-left: 15px;
+      padding-right: 15px;
+    }
 
-  .container {
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
+    .container-fluid {
+      margin-right: auto;
+      margin-left: auto;
+      padding-left: 15px;
+      padding-right: 15px;
+      display: -webkit-box;
+      display: -ms-flexbox;
+      display: flex;
+    }
 
-  .container-fluid {
-    margin-right: auto;
-    margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-  }
-
-  .row {
-    margin-left: -15px;
-    margin-right: -15px;
-  }
-
-  .col-md-1,
-  .col-md-10,
-  .col-md-11,
-  .col-md-12,
-  .col-md-2,
-  .col-md-3,
-  .col-md-4,
-  .col-md-5,
-  .col-md-6,
-  .col-md-7,
-  .col-md-8,
-  .col-md-9 {
-    position: relative;
-    min-height: 1px;
-    padding-left: 15px;
-    padding-right: 15px;
-  }
-
-  @media (min-width: 992px) {
+    .row {
+      margin-left: -15px;
+      margin-right: -15px;
+    }
 
     .col-md-1,
     .col-md-10,
@@ -157,415 +136,528 @@
     .col-md-7,
     .col-md-8,
     .col-md-9 {
-      float: left;
+      position: relative;
+      min-height: 1px;
+      padding-left: 15px;
+      padding-right: 15px;
     }
 
-    .col-md-12 {
-      width: 100%;
-      margin-top: 10px;
+    @media (min-width: 992px) {
+      .col-md-1,
+      .col-md-10,
+      .col-md-11,
+      .col-md-12,
+      .col-md-2,
+      .col-md-3,
+      .col-md-4,
+      .col-md-5,
+      .col-md-6,
+      .col-md-7,
+      .col-md-8,
+      .col-md-9 {
+        float: left;
+      }
+
+      .col-md-12 {
+        width: 100%;
+        margin-top: 10px;
+      }
+
+      .col-md-11 {
+        width: 91.66666667%;
+      }
+
+      .col-md-10 {
+        width: 83.33333333%;
+      }
+
+      .col-md-9 {
+        width: 75%;
+      }
+
+      .col-md-8 {
+        width: 66.66666667%;
+      }
+
+      .col-md-7 {
+        width: 58.33333333%;
+      }
+
+      .col-md-6 {
+        width: 50%;
+      }
+
+      .col-md-5 {
+        width: 41.66666667%;
+      }
+
+      .col-md-4 {
+        width: 33.33333333%;
+      }
+
+      .col-md-3 {
+        width: 25%;
+      }
+
+      .col-md-2 {
+        width: 16.66666667%;
+      }
+
+      .col-md-1 {
+        width: 8.33333333%;
+      }
     }
 
-    .col-md-11 {
-      width: 91.66666667%;
+    .nav {
+      margin-bottom: 0;
+      padding-left: 0;
+      list-style: none;
     }
 
-    .col-md-10 {
-      width: 83.33333333%;
+    .nav > li {
+      position: relative;
+      display: block;
     }
 
-    .col-md-9 {
-      width: 75%;
+    .nav > li > a {
+      position: relative;
+      display: block;
+      padding: 10px 15px;
     }
 
-    .col-md-8 {
-      width: 66.66666667%;
+    .nav > li > a:focus,
+    .nav > li > a:hover {
+      text-decoration: none;
+      background-color: #eee;
     }
 
-    .col-md-7 {
-      width: 58.33333333%;
+    .nav > li.disabled > a {
+      color: #999;
     }
 
-    .col-md-6 {
-      width: 50%;
+    .nav > li.disabled > a:focus,
+    .nav > li.disabled > a:hover {
+      color: #999;
+      text-decoration: none;
+      background-color: transparent;
+      cursor: not-allowed;
     }
 
-    .col-md-5 {
-      width: 41.66666667%;
-    }
-
-    .col-md-4 {
-      width: 33.33333333%;
-    }
-
-    .col-md-3 {
-      width: 25%;
-    }
-
-    .col-md-2 {
-      width: 16.66666667%;
-    }
-
-    .col-md-1 {
-      width: 8.33333333%;
-    }
-  }
-
-  .nav {
-    margin-bottom: 0;
-    padding-left: 0;
-    list-style: none;
-  }
-
-  .nav>li {
-    position: relative;
-    display: block;
-  }
-
-  .nav>li>a {
-    position: relative;
-    display: block;
-    padding: 10px 15px;
-  }
-
-  .nav>li>a:focus,
-  .nav>li>a:hover {
-    text-decoration: none;
-    background-color: #eee;
-  }
-
-  .nav>li.disabled>a {
-    color: #999;
-  }
-
-  .nav>li.disabled>a:focus,
-  .nav>li.disabled>a:hover {
-    color: #999;
-    text-decoration: none;
-    background-color: transparent;
-    cursor: not-allowed;
-  }
-
-  .navbar {
-    position: relative;
-    min-height: 50px;
-    margin-bottom: 20px;
-    border: 1px solid transparent;
-  }
-
-  @media (min-width: 768px) {
     .navbar {
-      border-radius: 4px;
+      position: relative;
+      min-height: 50px;
+      margin-bottom: 20px;
+      border: 1px solid transparent;
     }
-  }
 
-  .navbar-nav {
-    margin: 7.5px -15px;
-  }
+    @media (min-width: 768px) {
+      .navbar {
+        border-radius: 4px;
+      }
+    }
 
-  .navbar-nav>li>a {
-    padding-top: 10px;
-    padding-bottom: 10px;
-    line-height: 20px;
-  }
-
-  @media (min-width: 768px) {
     .navbar-nav {
-      float: left;
-      margin: 0;
+      margin: 7.5px -15px;
     }
 
-    .navbar-nav>li {
-      float: left;
+    .navbar-nav > li > a {
+      padding-top: 10px;
+      padding-bottom: 10px;
+      line-height: 20px;
     }
 
-    .navbar-nav>li>a {
-      padding-top: 15px;
-      padding-bottom: 15px;
+    @media (min-width: 768px) {
+      .navbar-nav {
+        float: left;
+        margin: 0;
+      }
+
+      .navbar-nav > li {
+        float: left;
+      }
+
+      .navbar-nav > li > a {
+        padding-top: 15px;
+        padding-bottom: 15px;
+      }
     }
-  }
 
-  .navbar-text {
-    margin-top: 15px;
-    margin-bottom: 15px;
-  }
-
-  @media (min-width: 768px) {
     .navbar-text {
-      float: left;
-      margin-left: 15px;
-      margin-right: 15px;
+      margin-top: 15px;
+      margin-bottom: 15px;
     }
-  }
 
-  .navbar-default {
-    background-color: #27438e;
-    border-color: #000;
-  }
+    @media (min-width: 768px) {
+      .navbar-text {
+        float: left;
+        margin-left: 15px;
+        margin-right: 15px;
+      }
+    }
 
-  .navbar-default .navbar-text {
-    color: #777;
-  }
+    .navbar-default {
+      background-color: #27438e;
+      border-color: #000;
+    }
 
-  .navbar-default .navbar-nav>li>a {
-    color: #fff;
-  }
+    .navbar-default .navbar-text {
+      color: #777;
+    }
 
-  .navbar-default .navbar-nav>li>a:focus,
-  .navbar-default .navbar-nav>li>a:hover {
-    color: #ff671f;
-    background-color: transparent;
-  }
+    .navbar-default .navbar-nav > li > a {
+      color: #fff;
+    }
 
-  .navbar-default .navbar-nav>.disabled>a,
-  .navbar-default .navbar-nav>.disabled>a:focus,
-  .navbar-default .navbar-nav>.disabled>a:hover {
-    color: rgba(255, 255, 255, 0.329);
-    background-color: transparent;
-  }
+    .navbar-default .navbar-nav > li > a:focus,
+    .navbar-default .navbar-nav > li > a:hover {
+      color: #ff671f;
+      background-color: transparent;
+    }
 
-  .navbar-default .navbar-link {
-    color: #fff;
-  }
+    .navbar-default .navbar-nav > .disabled > a,
+    .navbar-default .navbar-nav > .disabled > a:focus,
+    .navbar-default .navbar-nav > .disabled > a:hover {
+      color: rgba(255, 255, 255, 0.329);
+      background-color: transparent;
+    }
 
-  .navbar-default .navbar-link:hover {
-    color: #ff671f;
-  }
+    .navbar-default .navbar-link {
+      color: #fff;
+    }
 
-  .jumbotron {
-    padding: 30px;
-    margin-bottom: 30px;
-    color: inherit;
-    background-color: #fff;
-  }
+    .navbar-default .navbar-link:hover {
+      color: #ff671f;
+    }
 
-  .jumbotron .h1,
-  .jumbotron h1 {
-    color: inherit;
-  }
-
-  .jumbotron p {
-    margin-bottom: 15px;
-    font-size: 21px;
-    font-weight: 200;
-  }
-
-  .container .jumbotron {
-    border-radius: 6px;
-  }
-
-  .jumbotron .container {
-    max-width: 100%;
-  }
-
-  @media screen and (min-width: 768px) {
     .jumbotron {
-      padding-top: 48px;
-      padding-bottom: 48px;
-    }
-
-    .container .jumbotron {
-      padding-left: 60px;
-      padding-right: 60px;
+      padding: 30px;
+      margin-bottom: 30px;
+      color: inherit;
+      background-color: #fff;
     }
 
     .jumbotron .h1,
     .jumbotron h1 {
-      font-size: 63px;
+      color: inherit;
     }
-  }
 
-  .container-fluid:after,
-  .container-fluid:before,
-  .container:after,
-  .container:before,
-  .nav:after,
-  .nav:before,
-  .navbar:after,
-  .navbar:before,
-  .row:after,
-  .row:before {
-    content: " ";
-    display: table;
-  }
+    .jumbotron p {
+      margin-bottom: 15px;
+      font-size: 21px;
+      font-weight: 200;
+    }
 
-  .container-fluid:after,
-  .container:after,
-  .nav:after,
-  .navbar:after,
-  .row:after {
-    clear: both;
-  }
+    .container .jumbotron {
+      border-radius: 6px;
+    }
 
-  .hidden {
-    display: none !important;
-    visibility: hidden !important;
-  }
+    .jumbotron .container {
+      max-width: 100%;
+    }
 
-  @media (min-width: 992px) and (max-width: 1199px) {
-    .hidden-md {
+    @media screen and (min-width: 768px) {
+      .jumbotron {
+        padding-top: 48px;
+        padding-bottom: 48px;
+      }
+
+      .container .jumbotron {
+        padding-left: 60px;
+        padding-right: 60px;
+      }
+
+      .jumbotron .h1,
+      .jumbotron h1 {
+        font-size: 63px;
+      }
+    }
+
+    .container-fluid:after,
+    .container-fluid:before,
+    .container:after,
+    .container:before,
+    .nav:after,
+    .nav:before,
+    .navbar:after,
+    .navbar:before,
+    .row:after,
+    .row:before {
+      content: " ";
+      display: table;
+    }
+
+    .container-fluid:after,
+    .container:after,
+    .nav:after,
+    .navbar:after,
+    .row:after {
+      clear: both;
+    }
+
+    .hidden {
       display: none !important;
+      visibility: hidden !important;
     }
-  }
 
-  .svg-message {
-    display: none;
-    color: #000;
-  }
+    @media (min-width: 992px) and (max-width: 1199px) {
+      .hidden-md {
+        display: none !important;
+      }
+    }
 
-  #outer {
-    background-color: #fff;
-    border-radius: 6px;
-    min-height: 640px;
-    max-width: 640px;
-    overflow: hidden;
-    position: relative;
-    z-index: 1000;
-    border: #000 solid 2px;
-    margin-left: auto;
-    margin-right: auto;
-  }
+    .svg-message {
+      display: none;
+      color: #000;
+    }
 
-  .sliderule #outer {
-    height: 640px;
-  }
+    #outer {
+      background-color: #fff;
+      border-radius: 6px;
+      min-height: 640px;
+      max-width: 640px;
+      overflow: hidden;
+      position: relative;
+      z-index: 1000;
+      border: #000 solid 2px;
+      margin-left: auto;
+      margin-right: auto;
+    }
 
-  #pan-layer {
-    background-color: #fff;
-    border-radius: 6px;
-    position: absolute;
-    top: -500px;
-    bottom: -500px;
-    left: -500px;
-    right: -500px;
-    z-index: 0;
-    -webkit-transform: none;
-    transform: none;
-  }
-
-  @media (max-width: 560px) {
     #pan-layer {
-      scale: 0.9;
+      background-color: #fff;
+      border-radius: 6px;
+      position: absolute;
+      top: -500px;
+      bottom: -500px;
+      left: -500px;
+      right: -500px;
+      z-index: 0;
+      -webkit-transform: none;
+      transform: none;
     }
-  }
 
-  #wrap {
-    margin: 525px auto 0 auto;
-    position: relative;
-    float: left;
-    left: 50%;
-  }
-
-  #flight-computer {
-    vertical-align: middle;
-    position: relative;
-    right: 50%;
-  }
-
-  .navbar {
-    border: none;
-    border-radius: 6px;
-    margin-top: 10px;
-  }
-
-  .navbar-nav {
-    margin: auto;
-  }
-
-  .buttons>li {
-    float: left;
-    text-align: center;
-  }
-
-  .buttons>li>a {
-    line-height: 1.42857143;
-  }
-
-  @media (min-width: 992px) {
-    .buttons>li>a {
-      line-height: 43px;
+    @media (max-width: 560px) {
+      #pan-layer {
+        scale: 0.9;
+      }
     }
-  }
 
-  .buttons>li {
-    width: 33.333%;
-  }
-
-  @media (min-width: 768px) {
-    .buttons>li {
-      text-align: left;
-      width: auto;
+    #wrap {
+      margin: 525px auto 0 auto;
+      position: relative;
+      float: left;
+      left: 50%;
     }
-  }
-</style>
 
-<body class="sliderule" style="">
+    #flight-computer {
+      vertical-align: middle;
+      position: relative;
+      right: 50%;
+    }
 
-  <div class="container">
+    .navbar {
+      border: none;
+      border-radius: 6px;
+      margin-top: 10px;
+    }
 
-    <div class="row">
-      <div class="col-md-12">
+    .navbar-nav {
+      margin: auto;
+    }
 
-        <nav class="navbar navbar-default" role="navigation">
-          <div class="container-fluid">
-            <ul class="nav navbar-nav buttons">
-              <li class="zoom-in"><a href="#">Zoom In</a></li>
-              <li class="zoom-out disabled"><a href="#">Zoom Out</a></li>
-              <li class="reset"><a href="#">Reset</a></li>
+    .buttons > li {
+      float: left;
+      text-align: center;
+    }
+
+    .buttons > li > a {
+      line-height: 1.42857143;
+    }
+
+    @media (min-width: 992px) {
+      .buttons > li > a {
+        line-height: 43px;
+      }
+    }
+
+    .buttons > li {
+      width: 33.333%;
+    }
+
+    .sliderule #outer {
+      height: 640px;
+    }
+    .sliderule #outer.wind {
+      height: 1050px;
+    }
+
+    .nav-buttons .container-fluid {
+      margin-bottom: 16px;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .flipside-btn.active {
+      background-color: #27438e;
+      color: #fff;
+    }
+    .flipside-btn {
+      background-color: #fff;
+      padding: 8px 16px;
+      font-size: 20px;
+      line-height: 200%;
+      color: #000;
+      border: 1px solid #27438e;
+      cursor: pointer;
+    }
+    .flipside-btn:hover {
+      color: #fff;
+      transition: all 0.3s;
+      background-color: #3d5390;
+    }
+    .nav-buttons-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+    }
+    @media (min-width: 768px) {
+      .buttons > li {
+        text-align: left;
+        width: auto;
+      }
+    }
+    @media (max-width: 560px) {
+      .sliderule #outer.wind {
+        height: 990px;
+      }
+      .flipside-btn {
+        padding: 8px 12px;
+        font-size: 20px;
+        line-height: 150%;
+      }
+      .nav li a {
+        padding: 10px 8px;
+        line-height: 150%;
+      }
+      .nav {
+        width: 100%;
+      }
+    }
+  </style>
+
+  <body class="sliderule" style="">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="navbar navbar-default" role="navigation">
+            <div class="container-fluid">
+              <ul class="nav navbar-nav buttons">
+                <li class="zoom-in"><a href="#">Zoom In</a></li>
+                <li class="zoom-out disabled"><a href="#">Zoom Out</a></li>
+                <li class="reset"><a href="#">Reset</a></li>
+              </ul>
+            </div>
+          </nav>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12">
+          <nav class="nav-buttons">
+            <div class="container-fluid">
+              <div class="nav-buttons-wrap">
+                <button id="flip-slide" class="flipside-btn active">
+                  Slide Rule Side
+                </button>
+                <svg
+                  style="height: 40px; width: 40px"
+                  version="1.1"
+                  id="ios7_x5F_arrows_1_"
+                  xmlns="http://www.w3.org/2000/svg"
+                  x="0"
+                  y="0"
+                  viewBox="0 0 128 128"
+                  style="enable-background: new 0 0 128 128"
+                  xml:space="preserve"
+                >
+                  <style>
+                    .st0 {
+                      display: none;
+                    }
+                    .st1 {
+                      display: inline;
+                    }
+                  </style>
+                  <g id="_x33_4_1_">
+                    <path
+                      d="M33.8 53.3 30 49.5-.1 79.7 30 109.9l3.8-3.8L10 82.3h63.2v-5.2H10l23.8-23.8zm94.1-5.1L97.8 18.1 94 21.9l23.8 23.8h-63v5.2h63L94.1 74.8l3.8 3.8L128 48.5v-.3h-.1z"
+                      id="icon_8_"
+                    />
+                  </g>
+                </svg>
+                <button id="flip-wind" class="flipside-btn">Wind Side</button>
+              </div>
+            </div>
+          </nav>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-md-12">
+          <div class="svg-message jumbotron">
+            <h1>SVG support required!</h1>
+            <p>
+              Your internet browser does not support SVG and this application
+              requires SVG in order to work. According to
+              <a
+                href="http://caniuse.com/svg"
+                title="View the internet browser SVG support chart."
+                >caniuse.com/svg</a
+              >
+              you will need the minimum version of the following internet
+              browsers to support SVG.
+            </p>
+            <p>
+              We suggest
+              <a
+                href="https://www.google.com/intl/en-US/chrome/browser/"
+                title="Download Google Chrome"
+                >Google Chrome</a
+              >
+              or
+              <a
+                href="http://www.mozilla.org/en-US/firefox/new/"
+                title="Download Mozilla Firefox"
+                >Mozilla Firefox</a
+              >
+              for a desktop internet browser.
+            </p>
+
+            <h2>Desktop</h2>
+            <ul>
+              <li>Internet Explorer 9+</li>
+              <li>Mozilla Firefox 3+</li>
+              <li>Google Chrome 4+</li>
+              <li>Apple Safari 3.2+</li>
+              <li>Opera 9+</li>
             </ul>
 
+            <h2>Mobile</h2>
+            <ul>
+              <li>Android Browser 3+</li>
+              <li>iOS Safari 3.2+</li>
+            </ul>
           </div>
-        </nav>
-
-      </div>
-    </div>
-
-    <div class="row">
-
-      <div class="col-md-12">
-
-        <div class="svg-message jumbotron">
-
-          <h1>SVG support required!</h1>
-          <p>
-            Your internet browser does not support SVG and this application requires SVG in order to work. According to
-            <a href="http://caniuse.com/svg" title="View the internet browser SVG support chart.">caniuse.com/svg</a>
-            you will need the minimum version of the following internet browsers to support SVG.
-          </p>
-          <p>
-            We suggest
-            <a href="https://www.google.com/intl/en-US/chrome/browser/" title="Download Google Chrome">Google Chrome</a>
-            or <a href="http://www.mozilla.org/en-US/firefox/new/" title="Download Mozilla Firefox">Mozilla Firefox</a>
-            for a desktop internet browser.
-          </p>
-
-          <h2>Desktop</h2>
-          <ul>
-            <li>Internet Explorer 9+</li>
-            <li>Mozilla Firefox 3+</li>
-            <li>Google Chrome 4+</li>
-            <li>Apple Safari 3.2+</li>
-            <li>Opera 9+</li>
-          </ul>
-
-          <h2>Mobile</h2>
-          <ul>
-            <li>Android Browser 3+</li>
-            <li>iOS Safari 3.2+</li>
-          </ul>
-        </div>
-        <div id="outer" style="overflow: hidden;">
-          <div id="pan-layer" style=" transform-origin: 50% 50%; ">
-            <div id="wrap">
+          <div id="outer" style="overflow: hidden">
+            <div id="pan-layer" style="transform-origin: 50% 50%; cursor: move">
+              <div id="wrap"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- jQuery (necessary for E6-B Flight Computer) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <script src="js/computer.js"></script>
-
-</body>
-
+    <!-- jQuery (necessary for E6-B Flight Computer) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="js/computer.js"></script>
+  </body>
 </html>

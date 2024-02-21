@@ -1,8 +1,11 @@
 function isLargeScreen() {
-  return window.matchMedia("(min-width: 560px)").matches
+  return window.matchMedia("(min-width: 560px)").matches;
 }
 var windowInnerWidth = window.innerWidth;
 function loadSVG(fragment) {
+  $("#outer").attr("class", ""); // Очищаємо всі класи у елементу з id="outer"
+  $("#outer").addClass(scope); // Додаємо клас, що відповідає поточному scope
+  z.append(fragment);
   switch ((z.append(fragment), (s = z.select("#flight-computer")), scope)) {
     case "wind":
       $(".wind-link").toggleClass("active"),
@@ -43,13 +46,29 @@ function loadSVG(fragment) {
     $(window).on("resize", function () {
       margin = getLeftMargin();
     }),
-    $pan.panzoom({ contain: !1, minScale: minScale, maxScale: maxScale, $zoomIn: $zoomInBtn, $zoomOut: $zoomOutBtn, $reset: $resetBtn, onZoom: updateZoom, onReset: updateZoom }),
+    $pan.panzoom({
+      contain: !1,
+      minScale: minScale,
+      maxScale: maxScale,
+      $zoomIn: $zoomInBtn,
+      $zoomOut: $zoomOutBtn,
+      $reset: $resetBtn,
+      onZoom: updateZoom,
+      onReset: updateZoom,
+    }),
     $pan.on("mousewheel.focal", function (e) {
       e.preventDefault();
       var delta = e.delta || e.originalEvent.wheelDelta,
         zoomOut = delta ? 0 > delta : e.originalEvent.deltaY > 0,
-        focalXY = { clientX: e.clientX - margin, clientY: e.clientY - panAdjust.left };
-      $pan.panzoom("zoom", zoomOut, { increment: 0.25, animate: !1, focal: focalXY });
+        focalXY = {
+          clientX: e.clientX - margin,
+          clientY: e.clientY - panAdjust.left,
+        };
+      $pan.panzoom("zoom", zoomOut, {
+        increment: 0.25,
+        animate: !1,
+        focal: focalXY,
+      });
     }),
     webkitRedraw();
   resetApp();
@@ -74,13 +93,16 @@ function dirControl() {
   $pan.panzoom("pan", x, y, { relative: !0 });
 }
 function dragPlotArea(dx, dy, x, y, e) {
-  minDragMove < Math.abs(dx) || minDragMove < Math.abs(dy) ? this.data("plot", !1) : this.data("endTouchEvent", e);
+  minDragMove < Math.abs(dx) || minDragMove < Math.abs(dy)
+    ? this.data("plot", !1)
+    : this.data("endTouchEvent", e);
 }
 function startPlotArea(x, y, e) {
   this.data("plot", !0), this.data("endTouchEvent", e);
 }
 function stopPlotArea(e) {
-  this.data("plot") && ("touchend" == e.type && (e = this.data("endTouchEvent")), plotDot(e));
+  this.data("plot") &&
+    ("touchend" == e.type && (e = this.data("endTouchEvent")), plotDot(e));
 }
 function dragTrueIndex(dx, dy) {
   if (!$pan.panzoom("isPanning")) {
@@ -89,11 +111,18 @@ function dragTrueIndex(dx, dy) {
       dTran = dot.data("origTransform"),
       scale = pzMatrix[0],
       scaleDY = dy / scale;
-    (yShift = scaleDY), trueIndex.transform(tiTran + (tiTran ? "T" : "t") + [0, scaleDY]), plotGroup.transform(pgTran + (pgTran ? "T" : "t") + [0, scaleDY]), dot.transform(dTran + (dTran ? "T" : "t") + [0, scaleDY]);
+    (yShift = scaleDY),
+      trueIndex.transform(tiTran + (tiTran ? "T" : "t") + [0, scaleDY]),
+      plotGroup.transform(pgTran + (pgTran ? "T" : "t") + [0, scaleDY]),
+      dot.transform(dTran + (dTran ? "T" : "t") + [0, scaleDY]);
   }
 }
 function startTrueIndex() {
-  $pan.panzoom("disable"), (yShift = 0), trueIndex.data("origTransform", trueIndex.transform().local), plotGroup.data("origTransform", plotGroup.transform().local), dot.data("origTransform", dot.transform().local);
+  $pan.panzoom("disable"),
+    (yShift = 0),
+    trueIndex.data("origTransform", trueIndex.transform().local),
+    plotGroup.data("origTransform", plotGroup.transform().local),
+    dot.data("origTransform", dot.transform().local);
 }
 function stopTrueIndex() {
   $pan.panzoom("enable"), webkitRedraw(), (yStart += yShift);
@@ -103,12 +132,17 @@ function dragCompass(dx, dy, x, y, e) {
     a = Snap.angle(xStart, yStart, coords.x, coords.y) - startAngle,
     pgTran = plotGroup.data("origTransform"),
     dotTran = dot.data("origTransform");
-  (lastAngle = a), plotGroup.transform(pgTran + (pgTran ? "R" : "r") + [a, xStart, yStart]), dot.transform(dotTran + (dotTran ? "R" : "r") + [a, xStart, yStart]);
+  (lastAngle = a),
+    plotGroup.transform(pgTran + (pgTran ? "R" : "r") + [a, xStart, yStart]),
+    dot.transform(dotTran + (dotTran ? "R" : "r") + [a, xStart, yStart]);
 }
 function startCompass(x, y, e) {
   $pan.panzoom("disable");
   var coords = getXYCoords(e);
-  (startAngle = Snap.angle(xStart, yStart, coords.x, coords.y)), (lastAngle = angle), plotGroup.data("origTransform", plotGroup.transform().local), dot.data("origTransform", dot.transform().local);
+  (startAngle = Snap.angle(xStart, yStart, coords.x, coords.y)),
+    (lastAngle = angle),
+    plotGroup.data("origTransform", plotGroup.transform().local),
+    dot.data("origTransform", dot.transform().local);
 }
 function stopCompass() {
   $pan.panzoom("enable"), webkitRedraw(), (angle = lastAngle);
@@ -118,18 +152,23 @@ function plotDot(e) {
     a = Snap.angle(xStart, yStart, coords.x, coords.y),
     r = "r" + [a, coords.x, coords.y],
     attr = { id: "plot-dot", fill: "red", cx: coords.x, cy: coords.y };
-  (dot = s.select("#plot-dot")), dot && dot.remove(), (dot = s.circle(xStart, yStart, 2.5).attr(attr)), dot.transform(r);
+  (dot = s.select("#plot-dot")),
+    dot && dot.remove(),
+    (dot = s.circle(xStart, yStart, 2.5).attr(attr)),
+    dot.transform(r);
 }
 function dragDial(dx, dy, x, y, e) {
   var coords = getXYCoords(e),
     a = Snap.angle(xStart, yStart, coords.x, coords.y) - startAngle,
     dialTran = tasDial.data("origTransform");
-  (lastAngle = a), tasDial.transform(dialTran + (dialTran ? "R" : "r") + [a, xStart, yStart]);
+  (lastAngle = a),
+    tasDial.transform(dialTran + (dialTran ? "R" : "r") + [a, xStart, yStart]);
 }
 function startDial(x, y, e) {
   $pan.panzoom("disable");
   var coords = getXYCoords(e);
-  (startAngle = Snap.angle(xStart, yStart, coords.x, coords.y)), tasDial.data("origTransform", tasDial.transform().local);
+  (startAngle = Snap.angle(xStart, yStart, coords.x, coords.y)),
+    tasDial.data("origTransform", tasDial.transform().local);
 }
 function stopDial() {
   $pan.panzoom("enable"), webkitRedraw(), (angle = lastAngle);
@@ -138,11 +177,20 @@ function getXYCoords(e) {
   var box = $wrap.offset(),
     scale = pzMatrix[0],
     relLeft = ($wrap.width() / 2) * scale,
-    coords = { x: (e.pageX - box.left + relLeft) / scale, y: (e.pageY - box.top) / scale };
+    coords = {
+      x: (e.pageX - box.left + relLeft) / scale,
+      y: (e.pageY - box.top) / scale,
+    };
   return coords;
 }
 function getQueryVariable(variable) {
-  for (var query = window.location.search.substring(1), vars = query.split("&"), i = 0; i < vars.length; i++) {
+  for (
+    var query = window.location.search.substring(1),
+      vars = query.split("&"),
+      i = 0;
+    i < vars.length;
+    i++
+  ) {
     var pair = vars[i].split("=");
     if (pair[0] == variable) return pair[1];
   }
@@ -175,12 +223,19 @@ function getLeftMargin() {
   return margin;
 }
 function webkitRedraw() {
-  ($pan[0].style.webkitBackfaceVisibility = ""), ($pan[0].style.backfaceVisibility = "");
+  ($pan[0].style.webkitBackfaceVisibility = ""),
+    ($pan[0].style.backfaceVisibility = "");
 }
 function updateZoom() {
   pzMatrix = $pan.panzoom("getMatrix");
   var disabled_class = "disabled";
-  pzMatrix[0] == minScale ? $zoomOutBtn.addClass(disabled_class) : $zoomOutBtn.removeClass(disabled_class), pzMatrix[0] == maxScale ? $zoomInBtn.addClass(disabled_class) : $zoomInBtn.removeClass(disabled_class), webkitRedraw();
+  pzMatrix[0] == minScale
+    ? $zoomOutBtn.addClass(disabled_class)
+    : $zoomOutBtn.removeClass(disabled_class),
+    pzMatrix[0] == maxScale
+      ? $zoomInBtn.addClass(disabled_class)
+      : $zoomInBtn.removeClass(disabled_class),
+    webkitRedraw();
 }
 function resetApp() {
   switch (scope) {
@@ -196,16 +251,27 @@ function resetApp() {
         dot.attr({ cx: 0, cy: 0, fill: "white", opacity: 0 });
       break;
     case "sliderule":
-      (xStart = tasDial.getBBox().cx), (yStart = tasDial.getBBox().cy), (angle = 0), (lastAngle = 0), (startAngle = 0), (resetItems = [tasDial]);
+      (xStart = tasDial.getBBox().cx),
+        (yStart = tasDial.getBBox().cy),
+        (angle = 0),
+        (lastAngle = 0),
+        (startAngle = 0),
+        (resetItems = [tasDial]);
   }
   for (var i = 0; i < resetItems.length; i++) resetItems[i].transform("");
   updateZoom();
 }
 function getPanLayerPositioning() {
-  for (var values = ["top", "right", "bottom", "left"], position = {}, i = 0; i < values.length; i++) position[values[i]] = parseFloat($pan.css(values[i]));
+  for (
+    var values = ["top", "right", "bottom", "left"], position = {}, i = 0;
+    i < values.length;
+    i++
+  )
+    position[values[i]] = parseFloat($pan.css(values[i]));
   return position;
 }
-if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaScript requires jQuery");
+if ("undefined" == typeof jQuery)
+  throw new Error("E6-B Flight Compputer's JavaScript requires jQuery");
 !(function (a) {
   var b,
     c,
@@ -213,7 +279,7 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
     e = "hasOwnProperty",
     f = /[\.\/]/,
     g = "*",
-    h = function () { },
+    h = function () {},
     i = function (a, b) {
       return a - b;
     },
@@ -230,8 +296,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         n = [],
         o = b;
       (b = a), (c = 0);
-      for (var p = 0, q = h.length; q > p; p++) "zIndex" in h[p] && (l.push(h[p].zIndex), h[p].zIndex < 0 && (m[h[p].zIndex] = h[p]));
-      for (l.sort(i); l[j] < 0;) if (((e = m[l[j++]]), n.push(e.apply(d, g)), c)) return (c = f), n;
+      for (var p = 0, q = h.length; q > p; p++)
+        "zIndex" in h[p] &&
+          (l.push(h[p].zIndex), h[p].zIndex < 0 && (m[h[p].zIndex] = h[p]));
+      for (l.sort(i); l[j] < 0; )
+        if (((e = m[l[j++]]), n.push(e.apply(d, g)), c)) return (c = f), n;
       for (p = 0; q > p; p++)
         if (((e = h[p]), "zIndex" in e))
           if (e.zIndex == l[j]) {
@@ -257,15 +326,20 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         o = [n],
         p = [];
       for (e = 0, h = m.length; h > e; e++) {
-        for (l = [], i = 0, k = o.length; k > i; i++) for (n = o[i].n, c = [n[m[e]], n[g]], d = 2; d--;) (b = c[d]), b && (l.push(b), (p = p.concat(b.f || [])));
+        for (l = [], i = 0, k = o.length; k > i; i++)
+          for (n = o[i].n, c = [n[m[e]], n[g]], d = 2; d--; )
+            (b = c[d]), b && (l.push(b), (p = p.concat(b.f || [])));
         o = l;
       }
       return p;
     }),
     (k.on = function (a, b) {
-      if (((a = String(a)), "function" != typeof b)) return function () { };
-      for (var c = a.split(f), d = j, e = 0, g = c.length; g > e; e++) (d = d.n), (d = (d.hasOwnProperty(c[e]) && d[c[e]]) || (d[c[e]] = { n: {} }));
-      for (d.f = d.f || [], e = 0, g = d.f.length; g > e; e++) if (d.f[e] == b) return h;
+      if (((a = String(a)), "function" != typeof b)) return function () {};
+      for (var c = a.split(f), d = j, e = 0, g = c.length; g > e; e++)
+        (d = d.n),
+          (d = (d.hasOwnProperty(c[e]) && d[c[e]]) || (d[c[e]] = { n: {} }));
+      for (d.f = d.f || [], e = 0, g = d.f.length; g > e; e++)
+        if (d.f[e] == b) return h;
       return (
         d.f.push(b),
         function (a) {
@@ -288,51 +362,53 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
     (k.nts = function () {
       return b.split(f);
     }),
-    (k.off = k.unbind = function (a, b) {
-      if (!a) return void (k._events = j = { n: {} });
-      var c,
-        d,
-        h,
-        i,
-        l,
-        m,
-        n,
-        o = a.split(f),
-        p = [j];
-      for (i = 0, l = o.length; l > i; i++)
-        for (m = 0; m < p.length; m += h.length - 2) {
-          if (((h = [m, 1]), (c = p[m].n), o[i] != g)) c[o[i]] && h.push(c[o[i]]);
-          else for (d in c) c[e](d) && h.push(c[d]);
-          p.splice.apply(p, h);
-        }
-      for (i = 0, l = p.length; l > i; i++)
-        for (c = p[i]; c.n;) {
-          if (b) {
-            if (c.f) {
-              for (m = 0, n = c.f.length; n > m; m++)
-                if (c.f[m] == b) {
-                  c.f.splice(m, 1);
-                  break;
-                }
-              !c.f.length && delete c.f;
-            }
-            for (d in c.n)
-              if (c.n[e](d) && c.n[d].f) {
-                var q = c.n[d].f;
-                for (m = 0, n = q.length; n > m; m++)
-                  if (q[m] == b) {
-                    q.splice(m, 1);
+    (k.off = k.unbind =
+      function (a, b) {
+        if (!a) return void (k._events = j = { n: {} });
+        var c,
+          d,
+          h,
+          i,
+          l,
+          m,
+          n,
+          o = a.split(f),
+          p = [j];
+        for (i = 0, l = o.length; l > i; i++)
+          for (m = 0; m < p.length; m += h.length - 2) {
+            if (((h = [m, 1]), (c = p[m].n), o[i] != g))
+              c[o[i]] && h.push(c[o[i]]);
+            else for (d in c) c[e](d) && h.push(c[d]);
+            p.splice.apply(p, h);
+          }
+        for (i = 0, l = p.length; l > i; i++)
+          for (c = p[i]; c.n; ) {
+            if (b) {
+              if (c.f) {
+                for (m = 0, n = c.f.length; n > m; m++)
+                  if (c.f[m] == b) {
+                    c.f.splice(m, 1);
                     break;
                   }
-                !q.length && delete c.n[d].f;
+                !c.f.length && delete c.f;
               }
-          } else {
-            delete c.f;
-            for (d in c.n) c.n[e](d) && c.n[d].f && delete c.n[d].f;
+              for (d in c.n)
+                if (c.n[e](d) && c.n[d].f) {
+                  var q = c.n[d].f;
+                  for (m = 0, n = q.length; n > m; m++)
+                    if (q[m] == b) {
+                      q.splice(m, 1);
+                      break;
+                    }
+                  !q.length && delete c.n[d].f;
+                }
+            } else {
+              delete c.f;
+              for (d in c.n) c.n[e](d) && c.n[d].f && delete c.n[d].f;
+            }
+            c = c.n;
           }
-          c = c.n;
-        }
-    }),
+      }),
     (k.once = function (a, b) {
       var c = function () {
         return k.unbind(a, c), b.apply(this, arguments);
@@ -346,82 +422,87 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
     "undefined" != typeof module && module.exports
       ? (module.exports = k)
       : "undefined" != typeof define
-        ? define("eve", [], function () {
+      ? define("eve", [], function () {
           return k;
         })
-        : (a.eve = k);
+      : (a.eve = k);
 })(this),
   (function (a, b) {
     "function" == typeof define && define.amd
       ? define(["eve"], function (c) {
-        return b(a, c);
-      })
+          return b(a, c);
+        })
       : b(a, a.eve);
   })(this, function (a, b) {
     var c = (function (b) {
-      var c = {},
-        d =
-          a.requestAnimationFrame ||
-          a.webkitRequestAnimationFrame ||
-          a.mozRequestAnimationFrame ||
-          a.oRequestAnimationFrame ||
-          a.msRequestAnimationFrame ||
-          function (a) {
-            setTimeout(a, 16);
+        var c = {},
+          d =
+            a.requestAnimationFrame ||
+            a.webkitRequestAnimationFrame ||
+            a.mozRequestAnimationFrame ||
+            a.oRequestAnimationFrame ||
+            a.msRequestAnimationFrame ||
+            function (a) {
+              setTimeout(a, 16);
+            },
+          e =
+            Array.isArray ||
+            function (a) {
+              return (
+                a instanceof Array ||
+                "[object Array]" == Object.prototype.toString.call(a)
+              );
+            },
+          f = 0,
+          g = "M" + (+new Date()).toString(36),
+          h = function () {
+            return g + (f++).toString(36);
           },
-        e =
-          Array.isArray ||
-          function (a) {
-            return a instanceof Array || "[object Array]" == Object.prototype.toString.call(a);
+          i =
+            Date.now ||
+            function () {
+              return +new Date();
+            },
+          j = function (a) {
+            var b = this;
+            if (null == a) return b.s;
+            var c = b.s - a;
+            (b.b += b.dur * c), (b.B += b.dur * c), (b.s = a);
           },
-        f = 0,
-        g = "M" + (+new Date()).toString(36),
-        h = function () {
-          return g + (f++).toString(36);
-        },
-        i =
-          Date.now ||
-          function () {
-            return +new Date();
+          k = function (a) {
+            var b = this;
+            return null == a ? b.spd : void (b.spd = a);
           },
-        j = function (a) {
-          var b = this;
-          if (null == a) return b.s;
-          var c = b.s - a;
-          (b.b += b.dur * c), (b.B += b.dur * c), (b.s = a);
-        },
-        k = function (a) {
-          var b = this;
-          return null == a ? b.spd : void (b.spd = a);
-        },
-        l = function (a) {
-          var b = this;
-          return null == a ? b.dur : ((b.s = (b.s * a) / b.dur), void (b.dur = a));
-        },
-        m = function () {
-          var a = this;
-          delete c[a.id], b("mina.stop." + a.id, a);
-        },
-        n = function () {
-          var a = this;
-          a.pdif || (delete c[a.id], (a.pdif = a.get() - a.b));
-        },
-        o = function () {
-          var a = this;
-          a.pdif && ((a.b = a.get() - a.pdif), delete a.pdif, (c[a.id] = a));
-        },
-        p = function () {
-          var a = 0;
-          for (var f in c)
-            if (c.hasOwnProperty(f)) {
-              var g,
-                h = c[f],
-                i = h.get();
-              if (
-                (a++,
+          l = function (a) {
+            var b = this;
+            return null == a
+              ? b.dur
+              : ((b.s = (b.s * a) / b.dur), void (b.dur = a));
+          },
+          m = function () {
+            var a = this;
+            delete c[a.id], b("mina.stop." + a.id, a);
+          },
+          n = function () {
+            var a = this;
+            a.pdif || (delete c[a.id], (a.pdif = a.get() - a.b));
+          },
+          o = function () {
+            var a = this;
+            a.pdif && ((a.b = a.get() - a.pdif), delete a.pdif, (c[a.id] = a));
+          },
+          p = function () {
+            var a = 0;
+            for (var f in c)
+              if (c.hasOwnProperty(f)) {
+                var g,
+                  h = c[f],
+                  i = h.get();
+                if (
+                  (a++,
                   (h.s = (i - h.b) / (h.dur / h.spd)),
                   h.s >= 1 &&
-                  (delete c[f],
+                    (delete c[f],
                     (h.s = 1),
                     a--,
                     (function (a) {
@@ -430,72 +511,104 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                       });
                     })(h)),
                   e(h.start))
-              ) {
-                g = [];
-                for (var j = 0, k = h.start.length; k > j; j++) g[j] = +h.start[j] + (h.end[j] - h.start[j]) * h.easing(h.s);
-              } else g = +h.start + (h.end - h.start) * h.easing(h.s);
-              h.set(g);
-            }
-          a && d(p);
-        },
-        q = function (a, b, e, f, g, i, r) {
-          var s = { id: h(), start: a, end: b, b: e, s: 0, dur: f - e, spd: 1, get: g, set: i, easing: r || q.linear, status: j, speed: k, duration: l, stop: m, pause: n, resume: o };
-          c[s.id] = s;
-          var t,
-            u = 0;
-          for (t in c) if (c.hasOwnProperty(t) && (u++, 2 == u)) break;
-          return 1 == u && d(p), s;
-        };
-      return (
-        (q.time = i),
-        (q.getById = function (a) {
-          return c[a] || null;
-        }),
-        (q.linear = function (a) {
-          return a;
-        }),
-        (q.easeout = function (a) {
-          return Math.pow(a, 1.7);
-        }),
-        (q.easein = function (a) {
-          return Math.pow(a, 0.48);
-        }),
-        (q.easeinout = function (a) {
-          if (1 == a) return 1;
-          if (0 == a) return 0;
-          var b = 0.48 - a / 1.04,
-            c = Math.sqrt(0.1734 + b * b),
-            d = c - b,
-            e = Math.pow(Math.abs(d), 1 / 3) * (0 > d ? -1 : 1),
-            f = -c - b,
-            g = Math.pow(Math.abs(f), 1 / 3) * (0 > f ? -1 : 1),
-            h = e + g + 0.5;
-          return 3 * (1 - h) * h * h + h * h * h;
-        }),
-        (q.backin = function (a) {
-          if (1 == a) return 1;
-          var b = 1.70158;
-          return a * a * ((b + 1) * a - b);
-        }),
-        (q.backout = function (a) {
-          if (0 == a) return 0;
-          a -= 1;
-          var b = 1.70158;
-          return a * a * ((b + 1) * a + b) + 1;
-        }),
-        (q.elastic = function (a) {
-          return a == !!a ? a : Math.pow(2, -10 * a) * Math.sin((2 * (a - 0.075) * Math.PI) / 0.3) + 1;
-        }),
-        (q.bounce = function (a) {
-          var b,
-            c = 7.5625,
-            d = 2.75;
-          return 1 / d > a ? (b = c * a * a) : 2 / d > a ? ((a -= 1.5 / d), (b = c * a * a + 0.75)) : 2.5 / d > a ? ((a -= 2.25 / d), (b = c * a * a + 0.9375)) : ((a -= 2.625 / d), (b = c * a * a + 0.984375)), b;
-        }),
-        (a.mina = q),
-        q
-      );
-    })("undefined" == typeof b ? function () { } : b),
+                ) {
+                  g = [];
+                  for (var j = 0, k = h.start.length; k > j; j++)
+                    g[j] =
+                      +h.start[j] + (h.end[j] - h.start[j]) * h.easing(h.s);
+                } else g = +h.start + (h.end - h.start) * h.easing(h.s);
+                h.set(g);
+              }
+            a && d(p);
+          },
+          q = function (a, b, e, f, g, i, r) {
+            var s = {
+              id: h(),
+              start: a,
+              end: b,
+              b: e,
+              s: 0,
+              dur: f - e,
+              spd: 1,
+              get: g,
+              set: i,
+              easing: r || q.linear,
+              status: j,
+              speed: k,
+              duration: l,
+              stop: m,
+              pause: n,
+              resume: o,
+            };
+            c[s.id] = s;
+            var t,
+              u = 0;
+            for (t in c) if (c.hasOwnProperty(t) && (u++, 2 == u)) break;
+            return 1 == u && d(p), s;
+          };
+        return (
+          (q.time = i),
+          (q.getById = function (a) {
+            return c[a] || null;
+          }),
+          (q.linear = function (a) {
+            return a;
+          }),
+          (q.easeout = function (a) {
+            return Math.pow(a, 1.7);
+          }),
+          (q.easein = function (a) {
+            return Math.pow(a, 0.48);
+          }),
+          (q.easeinout = function (a) {
+            if (1 == a) return 1;
+            if (0 == a) return 0;
+            var b = 0.48 - a / 1.04,
+              c = Math.sqrt(0.1734 + b * b),
+              d = c - b,
+              e = Math.pow(Math.abs(d), 1 / 3) * (0 > d ? -1 : 1),
+              f = -c - b,
+              g = Math.pow(Math.abs(f), 1 / 3) * (0 > f ? -1 : 1),
+              h = e + g + 0.5;
+            return 3 * (1 - h) * h * h + h * h * h;
+          }),
+          (q.backin = function (a) {
+            if (1 == a) return 1;
+            var b = 1.70158;
+            return a * a * ((b + 1) * a - b);
+          }),
+          (q.backout = function (a) {
+            if (0 == a) return 0;
+            a -= 1;
+            var b = 1.70158;
+            return a * a * ((b + 1) * a + b) + 1;
+          }),
+          (q.elastic = function (a) {
+            return a == !!a
+              ? a
+              : Math.pow(2, -10 * a) *
+                  Math.sin((2 * (a - 0.075) * Math.PI) / 0.3) +
+                  1;
+          }),
+          (q.bounce = function (a) {
+            var b,
+              c = 7.5625,
+              d = 2.75;
+            return (
+              1 / d > a
+                ? (b = c * a * a)
+                : 2 / d > a
+                ? ((a -= 1.5 / d), (b = c * a * a + 0.75))
+                : 2.5 / d > a
+                ? ((a -= 2.25 / d), (b = c * a * a + 0.9375))
+                : ((a -= 2.625 / d), (b = c * a * a + 0.984375)),
+              b
+            );
+          }),
+          (a.mina = q),
+          q
+        );
+      })("undefined" == typeof b ? function () {} : b),
       d = (function () {
         function d(a, b) {
           if (a) {
@@ -503,16 +616,30 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             if (a instanceof u) return a;
             if (null == b) return (a = I.doc.querySelector(a)), z(a);
           }
-          return (a = null == a ? "100%" : a), (b = null == b ? "100%" : b), new y(a, b);
+          return (
+            (a = null == a ? "100%" : a),
+            (b = null == b ? "100%" : b),
+            new y(a, b)
+          );
         }
         function e(a, b) {
           if (b) {
             if (("string" == typeof a && (a = e(a)), "string" == typeof b))
-              return "xlink:" == b.substring(0, 6) ? a.getAttributeNS(fb, b.substring(6)) : "xml:" == b.substring(0, 4) ? a.getAttributeNS(gb, b.substring(4)) : a.getAttribute(b);
+              return "xlink:" == b.substring(0, 6)
+                ? a.getAttributeNS(fb, b.substring(6))
+                : "xml:" == b.substring(0, 4)
+                ? a.getAttributeNS(gb, b.substring(4))
+                : a.getAttribute(b);
             for (var c in b)
               if (b[J](c)) {
                 var d = K(b[c]);
-                d ? ("xlink:" == c.substring(0, 6) ? a.setAttributeNS(fb, c.substring(6), d) : "xml:" == c.substring(0, 4) ? a.setAttributeNS(gb, c.substring(4), d) : a.setAttribute(c, d)) : a.removeAttribute(c);
+                d
+                  ? "xlink:" == c.substring(0, 6)
+                    ? a.setAttributeNS(fb, c.substring(6), d)
+                    : "xml:" == c.substring(0, 4)
+                    ? a.setAttributeNS(gb, c.substring(4), d)
+                    : a.setAttribute(c, d)
+                  : a.removeAttribute(c);
               }
           } else a = I.doc.createElementNS(gb, a);
           return a;
@@ -522,9 +649,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             (b = K.prototype.toLowerCase.call(b)),
             "finite" == b
               ? isFinite(a)
-              : "array" == b && (a instanceof Array || (Array.isArray && Array.isArray(a)))
-                ? !0
-                : ("null" == b && null === a) || (b == typeof a && null !== a) || ("object" == b && a === Object(a)) || U.call(a).slice(8, -1).toLowerCase() == b
+              : "array" == b &&
+                (a instanceof Array || (Array.isArray && Array.isArray(a)))
+              ? !0
+              : ("null" == b && null === a) ||
+                (b == typeof a && null !== a) ||
+                ("object" == b && a === Object(a)) ||
+                U.call(a).slice(8, -1).toLowerCase() == b
           );
         }
         function h(a) {
@@ -534,7 +665,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return b;
         }
         function i(a, b) {
-          for (var c = 0, d = a.length; d > c; c++) if (a[c] === b) return a.push(a.splice(c, 1)[0]);
+          for (var c = 0, d = a.length; d > c; c++)
+            if (a[c] === b) return a.push(a.splice(c, 1)[0]);
         }
         function j(a, b, c) {
           function d() {
@@ -542,7 +674,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               f = e.join("␀"),
               g = (d.cache = d.cache || {}),
               h = (d.count = d.count || []);
-            return g[J](f) ? (i(h, f), c ? c(g[f]) : g[f]) : (h.length >= 1e3 && delete g[h.shift()], h.push(f), (g[f] = a.apply(b, e)), c ? c(g[f]) : g[f]);
+            return g[J](f)
+              ? (i(h, f), c ? c(g[f]) : g[f])
+              : (h.length >= 1e3 && delete g[h.shift()],
+                h.push(f),
+                (g[f] = a.apply(b, e)),
+                c ? c(g[f]) : g[f]);
           }
           return d;
         }
@@ -562,8 +699,25 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         function n(a, b, c, d, e, f) {
           return null == b && "[object SVGMatrix]" == U.call(a)
-            ? ((this.a = a.a), (this.b = a.b), (this.c = a.c), (this.d = a.d), (this.e = a.e), void (this.f = a.f))
-            : void (null != a ? ((this.a = +a), (this.b = +b), (this.c = +c), (this.d = +d), (this.e = +e), (this.f = +f)) : ((this.a = 1), (this.b = 0), (this.c = 0), (this.d = 1), (this.e = 0), (this.f = 0)));
+            ? ((this.a = a.a),
+              (this.b = a.b),
+              (this.c = a.c),
+              (this.d = a.d),
+              (this.e = a.e),
+              void (this.f = a.f))
+            : void (null != a
+                ? ((this.a = +a),
+                  (this.b = +b),
+                  (this.c = +c),
+                  (this.d = +d),
+                  (this.e = +e),
+                  (this.f = +f))
+                : ((this.a = 1),
+                  (this.b = 0),
+                  (this.c = 0),
+                  (this.d = 1),
+                  (this.e = 0),
+                  (this.f = 0)));
         }
         function o(a) {
           var b = [];
@@ -572,8 +726,16 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               return (
                 (d = d.split(/\s*,\s*|\s+/)),
                 "rotate" == c && 1 == d.length && d.push(0, 0),
-                "scale" == c && (2 == d.length && d.push(0, 0), 1 == d.length && d.push(d[0], 0, 0)),
-                b.push("skewX" == c ? ["m", 1, 0, N.tan(l(d[0])), 1, 0, 0] : "skewY" == c ? ["m", 1, N.tan(l(d[0])), 0, 1, 0, 0] : [c.charAt(0)].concat(d)),
+                "scale" == c &&
+                  (2 == d.length && d.push(0, 0),
+                  1 == d.length && d.push(d[0], 0, 0)),
+                b.push(
+                  "skewX" == c
+                    ? ["m", 1, 0, N.tan(l(d[0])), 1, 0, 0]
+                    : "skewY" == c
+                    ? ["m", 1, N.tan(l(d[0])), 0, 1, 0, 0]
+                    : [c.charAt(0)].concat(d)
+                ),
                 a
               );
             })),
@@ -598,56 +760,116 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               "t" == o && 2 == m
                 ? d.translate(l[1], 0)
                 : "t" == o && 3 == m
+                ? p
+                  ? ((g = q.x(0, 0)),
+                    (h = q.y(0, 0)),
+                    (i = q.x(l[1], l[2])),
+                    (j = q.y(l[1], l[2])),
+                    d.translate(i - g, j - h))
+                  : d.translate(l[1], l[2])
+                : "r" == o
+                ? 2 == m
+                  ? ((k = k || b),
+                    d.rotate(l[1], k.x + k.width / 2, k.y + k.height / 2))
+                  : 4 == m &&
+                    (p
+                      ? ((i = q.x(l[2], l[3])),
+                        (j = q.y(l[2], l[3])),
+                        d.rotate(l[1], i, j))
+                      : d.rotate(l[1], l[2], l[3]))
+                : "s" == o
+                ? 2 == m || 3 == m
+                  ? ((k = k || b),
+                    d.scale(
+                      l[1],
+                      l[m - 1],
+                      k.x + k.width / 2,
+                      k.y + k.height / 2
+                    ))
+                  : 4 == m
                   ? p
-                    ? ((g = q.x(0, 0)), (h = q.y(0, 0)), (i = q.x(l[1], l[2])), (j = q.y(l[1], l[2])), d.translate(i - g, j - h))
-                    : d.translate(l[1], l[2])
-                  : "r" == o
-                    ? 2 == m
-                      ? ((k = k || b), d.rotate(l[1], k.x + k.width / 2, k.y + k.height / 2))
-                      : 4 == m && (p ? ((i = q.x(l[2], l[3])), (j = q.y(l[2], l[3])), d.rotate(l[1], i, j)) : d.rotate(l[1], l[2], l[3]))
-                    : "s" == o
-                      ? 2 == m || 3 == m
-                        ? ((k = k || b), d.scale(l[1], l[m - 1], k.x + k.width / 2, k.y + k.height / 2))
-                        : 4 == m
-                          ? p
-                            ? ((i = q.x(l[2], l[3])), (j = q.y(l[2], l[3])), d.scale(l[1], l[1], i, j))
-                            : d.scale(l[1], l[1], l[2], l[3])
-                          : 5 == m && (p ? ((i = q.x(l[3], l[4])), (j = q.y(l[3], l[4])), d.scale(l[1], l[2], i, j)) : d.scale(l[1], l[2], l[3], l[4]))
-                      : "m" == o && 7 == m && d.add(l[1], l[2], l[3], l[4], l[5], l[6]);
+                    ? ((i = q.x(l[2], l[3])),
+                      (j = q.y(l[2], l[3])),
+                      d.scale(l[1], l[1], i, j))
+                    : d.scale(l[1], l[1], l[2], l[3])
+                  : 5 == m &&
+                    (p
+                      ? ((i = q.x(l[3], l[4])),
+                        (j = q.y(l[3], l[4])),
+                        d.scale(l[1], l[2], i, j))
+                      : d.scale(l[1], l[2], l[3], l[4]))
+                : "m" == o &&
+                  7 == m &&
+                  d.add(l[1], l[2], l[3], l[4], l[5], l[6]);
             }
           return d;
         }
         function q(a, b) {
           if (null == b) {
             var c = !0;
-            if (((b = a.node.getAttribute("linearGradient" == a.type || "radialGradient" == a.type ? "gradientTransform" : "pattern" == a.type ? "patternTransform" : "transform")), !b)) return new n();
+            if (
+              ((b = a.node.getAttribute(
+                "linearGradient" == a.type || "radialGradient" == a.type
+                  ? "gradientTransform"
+                  : "pattern" == a.type
+                  ? "patternTransform"
+                  : "transform"
+              )),
+              !b)
+            )
+              return new n();
             b = o(b);
-          } else (b = d._.rgTransform.test(b) ? K(b).replace(/\.{3}|\u2026/g, a._.transform || S) : o(b)), f(b, "array") && (b = d.path ? d.path.toString.call(b) : K(b)), (a._.transform = b);
+          } else
+            (b = d._.rgTransform.test(b)
+              ? K(b).replace(/\.{3}|\u2026/g, a._.transform || S)
+              : o(b)),
+              f(b, "array") && (b = d.path ? d.path.toString.call(b) : K(b)),
+              (a._.transform = b);
           var e = p(b, a.getBBox(1));
           return c ? e : void (a.matrix = e);
         }
         function r(a) {
           var b = d._.someDefs;
           if (b && rb(b.ownerDocument.documentElement, b)) return b;
-          var c = (a.node.ownerSVGElement && z(a.node.ownerSVGElement)) || (a.node.parentNode && z(a.node.parentNode)) || d.select("svg") || d(0, 0),
+          var c =
+              (a.node.ownerSVGElement && z(a.node.ownerSVGElement)) ||
+              (a.node.parentNode && z(a.node.parentNode)) ||
+              d.select("svg") ||
+              d(0, 0),
             e = c.select("defs"),
             f = null == e ? !1 : e.node;
           return f || (f = x("defs", c.node).node), (d._.someDefs = f), f;
         }
         function s(a, b, c) {
           function d(a) {
-            return null == a ? S : a == +a ? a : (e(j, { width: a }), j.getBBox().width);
+            return null == a
+              ? S
+              : a == +a
+              ? a
+              : (e(j, { width: a }), j.getBBox().width);
           }
           function f(a) {
-            return null == a ? S : a == +a ? a : (e(j, { height: a }), j.getBBox().height);
+            return null == a
+              ? S
+              : a == +a
+              ? a
+              : (e(j, { height: a }), j.getBBox().height);
           }
           function g(d, e) {
-            null == b ? (i[d] = e(a.attr(d))) : d == b && (i = e(null == c ? a.attr(d) : c));
+            null == b
+              ? (i[d] = e(a.attr(d)))
+              : d == b && (i = e(null == c ? a.attr(d) : c));
           }
           var h = r(a),
             i = {},
             j = h.querySelector(".svg---mgr");
-          switch ((j || ((j = e("rect")), e(j, { width: 10, height: 10, class: "svg---mgr" }), h.appendChild(j)), a.type)) {
+          switch (
+            (j ||
+              ((j = e("rect")),
+              e(j, { width: 10, height: 10, class: "svg---mgr" }),
+              h.appendChild(j)),
+            a.type)
+          ) {
             case "rect":
               g("rx", d), g("ry", f);
             case "image":
@@ -665,7 +887,10 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               g("x1", d), g("x2", d), g("y1", f), g("y2", f);
               break;
             case "marker":
-              g("refX", d), g("markerWidth", d), g("refY", f), g("markerHeight", f);
+              g("refX", d),
+                g("markerWidth", d),
+                g("refY", f),
+                g("markerHeight", f);
               break;
             case "radialGradient":
               g("fx", d), g("fy", f);
@@ -680,12 +905,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         function t(a) {
           f(a, "array") || (a = Array.prototype.slice.call(arguments, 0));
-          for (var b = 0, c = 0, d = this.node; this[b];) delete this[b++];
+          for (var b = 0, c = 0, d = this.node; this[b]; ) delete this[b++];
           for (b = 0; b < a.length; b++)
             "set" == a[b].type
               ? a[b].forEach(function (a) {
-                d.appendChild(a.node);
-              })
+                  d.appendChild(a.node);
+                })
               : d.appendChild(a[b].node);
           var e = d.childNodes;
           for (b = 0; b < e.length; b++) this[c++] = z(e[b]);
@@ -697,14 +922,25 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             c = (this.id = eb());
           try {
             b = a.ownerSVGElement;
-          } catch (d) { }
-          if (((this.node = a), b && (this.paper = new y(b)), (this.type = a.tagName), (this.anims = {}), (this._ = { transform: [] }), (a.snap = c), (hb[c] = this), "g" == this.type)) {
+          } catch (d) {}
+          if (
+            ((this.node = a),
+            b && (this.paper = new y(b)),
+            (this.type = a.tagName),
+            (this.anims = {}),
+            (this._ = { transform: [] }),
+            (a.snap = c),
+            (hb[c] = this),
+            "g" == this.type)
+          ) {
             this.add = t;
-            for (var e in y.prototype) y.prototype[J](e) && (this[e] = y.prototype[e]);
+            for (var e in y.prototype)
+              y.prototype[J](e) && (this[e] = y.prototype[e]);
           }
         }
         function v(a) {
-          for (var b, c = 0, d = a.length; d > c; c++) if ((b = b || a[c])) return b;
+          for (var b, c = 0, d = a.length; d > c; c++)
+            if ((b = b || a[c])) return b;
         }
         function w(a) {
           this.node = a;
@@ -725,16 +961,27 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             (c = new u(a)),
               (d = a.getElementsByTagName("desc")[0]),
               (f = a.getElementsByTagName("defs")[0]),
-              d || ((d = e("desc")), d.appendChild(I.doc.createTextNode("Created with Snap")), c.node.appendChild(d)),
+              d ||
+                ((d = e("desc")),
+                d.appendChild(I.doc.createTextNode("Created with Snap")),
+                c.node.appendChild(d)),
               f || ((f = e("defs")), c.node.appendChild(f)),
               (c.defs = f);
             for (var h in g) g[J](h) && (c[h] = g[h]);
             c.paper = c.root = c;
-          } else (c = x("svg", I.doc.body)), e(c.node, { height: b, version: 1.1, width: a, xmlns: gb });
+          } else
+            (c = x("svg", I.doc.body)),
+              e(c.node, { height: b, version: 1.1, width: a, xmlns: gb });
           return c;
         }
         function z(a) {
-          return a ? (a instanceof u || a instanceof w ? a : "svg" == a.tagName ? new y(a) : new u(a)) : a;
+          return a
+            ? a instanceof u || a instanceof w
+              ? a
+              : "svg" == a.tagName
+              ? new y(a)
+              : new u(a)
+            : a;
         }
         function A() {
           return this.selectAll("stop");
@@ -742,7 +989,14 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         function B(a, b) {
           var c = e("stop"),
             f = { offset: +b + "%" };
-          return (a = d.color(a)), (f["stop-color"] = a.hex), a.opacity < 1 && (f["stop-opacity"] = a.opacity), e(c, f), this.node.appendChild(c), this;
+          return (
+            (a = d.color(a)),
+            (f["stop-color"] = a.hex),
+            a.opacity < 1 && (f["stop-opacity"] = a.opacity),
+            e(c, f),
+            this.node.appendChild(c),
+            this
+          );
         }
         function C() {
           if ("linearGradient" == this.type) {
@@ -759,20 +1013,31 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         function D(a, c) {
           function d(a, b) {
-            for (var c = (b - j) / (a - k), d = k; a > d; d++) h[d].offset = +(+j + c * (d - k)).toFixed(2);
+            for (var c = (b - j) / (a - k), d = k; a > d; d++)
+              h[d].offset = +(+j + c * (d - k)).toFixed(2);
             (k = a), (j = b);
           }
           var f,
             g = v(b("snap.util.grad.parse", null, c));
           if (!g) return null;
-          g.params.unshift(a), (f = "l" == g.type.toLowerCase() ? E.apply(0, g.params) : F.apply(0, g.params)), g.type != g.type.toLowerCase() && e(f.node, { gradientUnits: "userSpaceOnUse" });
+          g.params.unshift(a),
+            (f =
+              "l" == g.type.toLowerCase()
+                ? E.apply(0, g.params)
+                : F.apply(0, g.params)),
+            g.type != g.type.toLowerCase() &&
+              e(f.node, { gradientUnits: "userSpaceOnUse" });
           var h = g.stops,
             i = h.length,
             j = 0,
             k = 0;
           i--;
           for (var l = 0; i > l; l++) "offset" in h[l] && d(l, h[l].offset);
-          for (h[i].offset = h[i].offset || 100, d(i, h[i].offset), l = 0; i >= l; l++) {
+          for (
+            h[i].offset = h[i].offset || 100, d(i, h[i].offset), l = 0;
+            i >= l;
+            l++
+          ) {
             var m = h[l];
             f.addStop(m.color, m.offset);
           }
@@ -780,29 +1045,50 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         function E(a, b, c, d, f) {
           var g = x("linearGradient", a);
-          return (g.stops = A), (g.addStop = B), (g.getBBox = C), null != b && e(g.node, { x1: b, y1: c, x2: d, y2: f }), g;
+          return (
+            (g.stops = A),
+            (g.addStop = B),
+            (g.getBBox = C),
+            null != b && e(g.node, { x1: b, y1: c, x2: d, y2: f }),
+            g
+          );
         }
         function F(a, b, c, d, f, g) {
           var h = x("radialGradient", a);
-          return (h.stops = A), (h.addStop = B), (h.getBBox = C), null != b && e(h.node, { cx: b, cy: c, r: d }), null != f && null != g && e(h.node, { fx: f, fy: g }), h;
+          return (
+            (h.stops = A),
+            (h.addStop = B),
+            (h.getBBox = C),
+            null != b && e(h.node, { cx: b, cy: c, r: d }),
+            null != f && null != g && e(h.node, { fx: f, fy: g }),
+            h
+          );
         }
         function G(a) {
           return function (c) {
             if (
               (b.stop(),
-                c instanceof w &&
+              c instanceof w &&
                 1 == c.node.childNodes.length &&
-                ("radialGradient" == c.node.firstChild.tagName || "linearGradient" == c.node.firstChild.tagName || "pattern" == c.node.firstChild.tagName) &&
+                ("radialGradient" == c.node.firstChild.tagName ||
+                  "linearGradient" == c.node.firstChild.tagName ||
+                  "pattern" == c.node.firstChild.tagName) &&
                 ((c = c.node.firstChild), r(this).appendChild(c), (c = z(c))),
-                c instanceof u)
+              c instanceof u)
             )
-              if ("radialGradient" == c.type || "linearGradient" == c.type || "pattern" == c.type) {
+              if (
+                "radialGradient" == c.type ||
+                "linearGradient" == c.type ||
+                "pattern" == c.type
+              ) {
                 c.node.id || e(c.node, { id: c.id });
                 var f = ib(c.node.id);
               } else f = c.attr(a);
             else if (((f = d.color(c)), f.error)) {
               var g = D(r(this), c);
-              g ? (g.node.id || e(g.node, { id: g.id }), (f = ib(g.node.id))) : (f = c);
+              g
+                ? (g.node.id || e(g.node, { id: g.id }), (f = ib(g.node.id)))
+                : (f = c);
             } else f = K(f);
             var h = {};
             (h[a] = f), e(this.node, h), (this.node.style[a] = S);
@@ -811,7 +1097,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         function H(a) {
           for (var b = [], c = a.childNodes, d = 0, e = c.length; e > d; d++) {
             var f = c[d];
-            3 == f.nodeType && b.push(f.nodeValue), "tspan" == f.tagName && b.push(1 == f.childNodes.length && 3 == f.firstChild.nodeType ? f.firstChild.nodeValue : H(f));
+            3 == f.nodeType && b.push(f.nodeValue),
+              "tspan" == f.tagName &&
+                b.push(
+                  1 == f.childNodes.length && 3 == f.firstChild.nodeType
+                    ? f.firstChild.nodeValue
+                    : H(f)
+                );
           }
           return b;
         }
@@ -834,15 +1126,39 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           S = (N.round, ""),
           T = " ",
           U = Object.prototype.toString,
-          V = /^\s*((#[a-f\d]{6})|(#[a-f\d]{3})|rgba?\(\s*([\d\.]+%?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+%?(?:\s*,\s*[\d\.]+%?)?)\s*\)|hsba?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\)|hsla?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\))\s*$/i,
+          V =
+            /^\s*((#[a-f\d]{6})|(#[a-f\d]{3})|rgba?\(\s*([\d\.]+%?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+%?(?:\s*,\s*[\d\.]+%?)?)\s*\)|hsba?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\)|hsla?\(\s*([\d\.]+(?:deg|\xb0|%)?\s*,\s*[\d\.]+%?\s*,\s*[\d\.]+(?:%?\s*,\s*[\d\.]+)?%?)\s*\))\s*$/i,
           W = /^url\(#?([^)]+)\)$/,
           X = "	\n\f\r   ᠎             　\u2028\u2029",
           Y = new RegExp("[," + X + "]+"),
-          Z = (new RegExp("[" + X + "]", "g"), new RegExp("[" + X + "]*,[" + X + "]*")),
+          Z =
+            (new RegExp("[" + X + "]", "g"),
+            new RegExp("[" + X + "]*,[" + X + "]*")),
           $ = { hs: 1, rg: 1 },
-          _ = new RegExp("([a-z])[" + X + ",]*((-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?[" + X + "]*,?[" + X + "]*)+)", "ig"),
-          ab = new RegExp("([rstm])[" + X + ",]*((-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?[" + X + "]*,?[" + X + "]*)+)", "ig"),
-          bb = new RegExp("(-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?)[" + X + "]*,?[" + X + "]*", "ig"),
+          _ = new RegExp(
+            "([a-z])[" +
+              X +
+              ",]*((-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?[" +
+              X +
+              "]*,?[" +
+              X +
+              "]*)+)",
+            "ig"
+          ),
+          ab = new RegExp(
+            "([rstm])[" +
+              X +
+              ",]*((-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?[" +
+              X +
+              "]*,?[" +
+              X +
+              "]*)+)",
+            "ig"
+          ),
+          bb = new RegExp(
+            "(-?\\d*\\.?\\d*(?:e[\\-+]?\\d+)?)[" + X + "]*,?[" + X + "]*",
+            "ig"
+          ),
           cb = 0,
           db = "S" + (+new Date()).toString(36),
           eb = function () {
@@ -863,7 +1179,10 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 var e = d;
                 return (
                   c.replace(b, function (a, b, c, d, f) {
-                    (b = b || d), e && (b in e && (e = e[b]), "function" == typeof e && f && (e = e()));
+                    (b = b || d),
+                      e &&
+                        (b in e && (e = e[b]),
+                        "function" == typeof e && f && (e = e()));
                   }),
                   (e = (null == e || e == d ? a : e) + "")
                 );
@@ -898,7 +1217,7 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           (d.is = f),
           (d.snapTo = function (a, b, c) {
             if (((c = f(c, "finite") ? c : 10), f(a, "array"))) {
-              for (var d = a.length; d--;) if (Q(a[d] - b) <= c) return a[d];
+              for (var d = a.length; d--; ) if (Q(a[d] - b) <= c) return a[d];
             } else {
               a = +a;
               var e = b % a;
@@ -933,13 +1252,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 ];
               for (
                 a &&
-                a instanceof n &&
-                (m = [
-                  [a.a, a.c, a.e],
-                  [a.b, a.d, a.f],
-                  [0, 0, 1],
-                ]),
-                g = 0;
+                  a instanceof n &&
+                  (m = [
+                    [a.a, a.c, a.e],
+                    [a.b, a.d, a.f],
+                    [0, 0, 1],
+                  ]),
+                  g = 0;
                 3 > g;
                 g++
               )
@@ -947,12 +1266,27 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   for (j = 0, i = 0; 3 > i; i++) j += l[g][i] * m[i][h];
                   k[g][h] = j;
                 }
-              return (this.a = k[0][0]), (this.b = k[1][0]), (this.c = k[0][1]), (this.d = k[1][1]), (this.e = k[0][2]), (this.f = k[1][2]), this;
+              return (
+                (this.a = k[0][0]),
+                (this.b = k[1][0]),
+                (this.c = k[0][1]),
+                (this.d = k[1][1]),
+                (this.e = k[0][2]),
+                (this.f = k[1][2]),
+                this
+              );
             }),
               (a.invert = function () {
                 var a = this,
                   b = a.a * a.d - a.b * a.c;
-                return new n(a.d / b, -a.b / b, -a.c / b, a.a / b, (a.c * a.f - a.d * a.e) / b, (a.b * a.e - a.a * a.f) / b);
+                return new n(
+                  a.d / b,
+                  -a.b / b,
+                  -a.c / b,
+                  a.a / b,
+                  (a.c * a.f - a.d * a.e) / b,
+                  (a.b * a.e - a.a * a.f) / b
+                );
               }),
               (a.clone = function () {
                 return new n(this.a, this.b, this.c, this.d, this.e, this.f);
@@ -961,13 +1295,21 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 return this.add(1, 0, 0, 1, a, b);
               }),
               (a.scale = function (a, b, c, d) {
-                return null == b && (b = a), (c || d) && this.add(1, 0, 0, 1, c, d), this.add(a, 0, 0, b, 0, 0), (c || d) && this.add(1, 0, 0, 1, -c, -d), this;
+                return (
+                  null == b && (b = a),
+                  (c || d) && this.add(1, 0, 0, 1, c, d),
+                  this.add(a, 0, 0, b, 0, 0),
+                  (c || d) && this.add(1, 0, 0, 1, -c, -d),
+                  this
+                );
               }),
               (a.rotate = function (a, b, c) {
                 (a = l(a)), (b = b || 0), (c = c || 0);
                 var d = +N.cos(a).toFixed(9),
                   e = +N.sin(a).toFixed(9);
-                return this.add(d, e, -e, d, b, c), this.add(1, 0, 0, 1, -b, -c);
+                return (
+                  this.add(d, e, -e, d, b, c), this.add(1, 0, 0, 1, -b, -c)
+                );
               }),
               (a.x = function (a, b) {
                 return a * this.a + b * this.c + this.e;
@@ -979,7 +1321,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 return +this[K.fromCharCode(97 + a)].toFixed(4);
               }),
               (a.toString = function () {
-                return "matrix(" + [this.get(0), this.get(1), this.get(2), this.get(3), this.get(4), this.get(5)].join() + ")";
+                return (
+                  "matrix(" +
+                  [
+                    this.get(0),
+                    this.get(1),
+                    this.get(2),
+                    this.get(3),
+                    this.get(4),
+                    this.get(5),
+                  ].join() +
+                  ")"
+                );
               }),
               (a.offset = function () {
                 return [this.e.toFixed(4), this.f.toFixed(4)];
@@ -994,16 +1347,28 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 (a.scalex = N.sqrt(b(d[0]))),
                   c(d[0]),
                   (a.shear = d[0][0] * d[1][0] + d[0][1] * d[1][1]),
-                  (d[1] = [d[1][0] - d[0][0] * a.shear, d[1][1] - d[0][1] * a.shear]),
+                  (d[1] = [
+                    d[1][0] - d[0][0] * a.shear,
+                    d[1][1] - d[0][1] * a.shear,
+                  ]),
                   (a.scaley = N.sqrt(b(d[1]))),
                   c(d[1]),
                   (a.shear /= a.scaley);
                 var e = -d[0][1],
                   f = d[1][1];
                 return (
-                  0 > f ? ((a.rotate = m(N.acos(f))), 0 > e && (a.rotate = 360 - a.rotate)) : (a.rotate = m(N.asin(e))),
-                  (a.isSimple = !(+a.shear.toFixed(9) || (a.scalex.toFixed(9) != a.scaley.toFixed(9) && a.rotate))),
-                  (a.isSuperSimple = !+a.shear.toFixed(9) && a.scalex.toFixed(9) == a.scaley.toFixed(9) && !a.rotate),
+                  0 > f
+                    ? ((a.rotate = m(N.acos(f))),
+                      0 > e && (a.rotate = 360 - a.rotate))
+                    : (a.rotate = m(N.asin(e))),
+                  (a.isSimple = !(
+                    +a.shear.toFixed(9) ||
+                    (a.scalex.toFixed(9) != a.scaley.toFixed(9) && a.rotate)
+                  )),
+                  (a.isSuperSimple =
+                    !+a.shear.toFixed(9) &&
+                    a.scalex.toFixed(9) == a.scaley.toFixed(9) &&
+                    !a.rotate),
                   (a.noRotation = !+a.shear.toFixed(9) && !a.rotate),
                   a
                 );
@@ -1014,15 +1379,50 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   ? ((b.scalex = +b.scalex.toFixed(4)),
                     (b.scaley = +b.scaley.toFixed(4)),
                     (b.rotate = +b.rotate.toFixed(4)),
-                    (b.dx || b.dy ? "t" + [+b.dx.toFixed(4), +b.dy.toFixed(4)] : S) + (1 != b.scalex || 1 != b.scaley ? "s" + [b.scalex, b.scaley, 0, 0] : S) + (b.rotate ? "r" + [+b.rotate.toFixed(4), 0, 0] : S))
-                  : "m" + [this.get(0), this.get(1), this.get(2), this.get(3), this.get(4), this.get(5)];
+                    (b.dx || b.dy
+                      ? "t" + [+b.dx.toFixed(4), +b.dy.toFixed(4)]
+                      : S) +
+                      (1 != b.scalex || 1 != b.scaley
+                        ? "s" + [b.scalex, b.scaley, 0, 0]
+                        : S) +
+                      (b.rotate ? "r" + [+b.rotate.toFixed(4), 0, 0] : S))
+                  : "m" +
+                      [
+                        this.get(0),
+                        this.get(1),
+                        this.get(2),
+                        this.get(3),
+                        this.get(4),
+                        this.get(5),
+                      ];
               });
           })(n.prototype),
           (d.Matrix = n),
           (d.getRGB = j(function (a) {
-            if (!a || (a = K(a)).indexOf("-") + 1) return { r: -1, g: -1, b: -1, hex: "none", error: 1, toString: nb };
-            if ("none" == a) return { r: -1, g: -1, b: -1, hex: "none", toString: nb };
-            if ((!($[J](a.toLowerCase().substring(0, 2)) || "#" == a.charAt()) && (a = kb(a)), !a)) return { r: -1, g: -1, b: -1, hex: "none", error: 1, toString: nb };
+            if (!a || (a = K(a)).indexOf("-") + 1)
+              return {
+                r: -1,
+                g: -1,
+                b: -1,
+                hex: "none",
+                error: 1,
+                toString: nb,
+              };
+            if ("none" == a)
+              return { r: -1, g: -1, b: -1, hex: "none", toString: nb };
+            if (
+              (!($[J](a.toLowerCase().substring(0, 2)) || "#" == a.charAt()) &&
+                (a = kb(a)),
+              !a)
+            )
+              return {
+                r: -1,
+                g: -1,
+                b: -1,
+                hex: "none",
+                error: 1,
+                toString: nb,
+              };
             var b,
               c,
               e,
@@ -1031,10 +1431,16 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               i,
               j = a.match(V);
             return j
-              ? (j[2] && ((e = M(j[2].substring(5), 16)), (c = M(j[2].substring(3, 5), 16)), (b = M(j[2].substring(1, 3), 16))),
-                j[3] && ((e = M((h = j[3].charAt(3)) + h, 16)), (c = M((h = j[3].charAt(2)) + h, 16)), (b = M((h = j[3].charAt(1)) + h, 16))),
+              ? (j[2] &&
+                  ((e = M(j[2].substring(5), 16)),
+                  (c = M(j[2].substring(3, 5), 16)),
+                  (b = M(j[2].substring(1, 3), 16))),
+                j[3] &&
+                  ((e = M((h = j[3].charAt(3)) + h, 16)),
+                  (c = M((h = j[3].charAt(2)) + h, 16)),
+                  (b = M((h = j[3].charAt(1)) + h, 16))),
                 j[4] &&
-                ((i = j[4].split(Z)),
+                  ((i = j[4].split(Z)),
                   (b = L(i[0])),
                   "%" == i[0].slice(-1) && (b *= 2.55),
                   (c = L(i[1])),
@@ -1051,30 +1457,36 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                     "%" == i[1].slice(-1) && (c /= 100),
                     (e = L(i[2])),
                     "%" == i[2].slice(-1) && (e /= 100),
-                    ("deg" == i[0].slice(-3) || "°" == i[0].slice(-1)) && (b /= 360),
+                    ("deg" == i[0].slice(-3) || "°" == i[0].slice(-1)) &&
+                      (b /= 360),
                     "hsba" == j[1].toLowerCase().slice(0, 4) && (g = L(i[3])),
                     i[3] && "%" == i[3].slice(-1) && (g /= 100),
                     d.hsb2rgb(b, c, e, g))
                   : j[6]
-                    ? ((i = j[6].split(Z)),
-                      (b = L(i[0])),
-                      "%" == i[0].slice(-1) && (b /= 100),
-                      (c = L(i[1])),
-                      "%" == i[1].slice(-1) && (c /= 100),
-                      (e = L(i[2])),
-                      "%" == i[2].slice(-1) && (e /= 100),
-                      ("deg" == i[0].slice(-3) || "°" == i[0].slice(-1)) && (b /= 360),
-                      "hsla" == j[1].toLowerCase().slice(0, 4) && (g = L(i[3])),
-                      i[3] && "%" == i[3].slice(-1) && (g /= 100),
-                      d.hsl2rgb(b, c, e, g))
-                    : ((b = P(N.round(b), 255)),
-                      (c = P(N.round(c), 255)),
-                      (e = P(N.round(e), 255)),
-                      (g = P(O(g, 0), 1)),
-                      (j = { r: b, g: c, b: e, toString: nb }),
-                      (j.hex = "#" + (16777216 | e | (c << 8) | (b << 16)).toString(16).slice(1)),
-                      (j.opacity = f(g, "finite") ? g : 1),
-                      j))
+                  ? ((i = j[6].split(Z)),
+                    (b = L(i[0])),
+                    "%" == i[0].slice(-1) && (b /= 100),
+                    (c = L(i[1])),
+                    "%" == i[1].slice(-1) && (c /= 100),
+                    (e = L(i[2])),
+                    "%" == i[2].slice(-1) && (e /= 100),
+                    ("deg" == i[0].slice(-3) || "°" == i[0].slice(-1)) &&
+                      (b /= 360),
+                    "hsla" == j[1].toLowerCase().slice(0, 4) && (g = L(i[3])),
+                    i[3] && "%" == i[3].slice(-1) && (g /= 100),
+                    d.hsl2rgb(b, c, e, g))
+                  : ((b = P(N.round(b), 255)),
+                    (c = P(N.round(c), 255)),
+                    (e = P(N.round(e), 255)),
+                    (g = P(O(g, 0), 1)),
+                    (j = { r: b, g: c, b: e, toString: nb }),
+                    (j.hex =
+                      "#" +
+                      (16777216 | e | (c << 8) | (b << 16))
+                        .toString(16)
+                        .slice(1)),
+                    (j.opacity = f(g, "finite") ? g : 1),
+                    j))
               : { r: -1, g: -1, b: -1, hex: "none", error: 1, toString: nb };
           }, d)),
           (d.hsb = j(function (a, b, c) {
@@ -1088,18 +1500,22 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               var e = N.round;
               return "rgba(" + [e(a), e(b), e(c), +d.toFixed(2)] + ")";
             }
-            return "#" + (16777216 | c | (b << 8) | (a << 16)).toString(16).slice(1);
+            return (
+              "#" + (16777216 | c | (b << 8) | (a << 16)).toString(16).slice(1)
+            );
           }));
         var kb = function (a) {
-          var b = I.doc.getElementsByTagName("head")[0],
-            c = "rgb(255, 0, 0)";
-          return (kb = j(function (a) {
-            if ("red" == a.toLowerCase()) return c;
-            (b.style.color = c), (b.style.color = a);
-            var d = I.doc.defaultView.getComputedStyle(b, S).getPropertyValue("color");
-            return d == c ? null : d;
-          }))(a);
-        },
+            var b = I.doc.getElementsByTagName("head")[0],
+              c = "rgb(255, 0, 0)";
+            return (kb = j(function (a) {
+              if ("red" == a.toLowerCase()) return c;
+              (b.style.color = c), (b.style.color = a);
+              var d = I.doc.defaultView
+                .getComputedStyle(b, S)
+                .getPropertyValue("color");
+              return d == c ? null : d;
+            }))(a);
+          },
           lb = function () {
             return "hsb(" + [this.h, this.s, this.b] + ")";
           },
@@ -1107,42 +1523,106 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             return "hsl(" + [this.h, this.s, this.l] + ")";
           },
           nb = function () {
-            return 1 == this.opacity || null == this.opacity ? this.hex : "rgba(" + [this.r, this.g, this.b, this.opacity] + ")";
+            return 1 == this.opacity || null == this.opacity
+              ? this.hex
+              : "rgba(" + [this.r, this.g, this.b, this.opacity] + ")";
           },
           ob = function (a, b, c) {
-            if ((null == b && f(a, "object") && "r" in a && "g" in a && "b" in a && ((c = a.b), (b = a.g), (a = a.r)), null == b && f(a, string))) {
+            if (
+              (null == b &&
+                f(a, "object") &&
+                "r" in a &&
+                "g" in a &&
+                "b" in a &&
+                ((c = a.b), (b = a.g), (a = a.r)),
+              null == b && f(a, string))
+            ) {
               var e = d.getRGB(a);
               (a = e.r), (b = e.g), (c = e.b);
             }
-            return (a > 1 || b > 1 || c > 1) && ((a /= 255), (b /= 255), (c /= 255)), [a, b, c];
+            return (
+              (a > 1 || b > 1 || c > 1) && ((a /= 255), (b /= 255), (c /= 255)),
+              [a, b, c]
+            );
           },
           pb = function (a, b, c, e) {
-            (a = N.round(255 * a)), (b = N.round(255 * b)), (c = N.round(255 * c));
-            var g = { r: a, g: b, b: c, opacity: f(e, "finite") ? e : 1, hex: d.rgb(a, b, c), toString: nb };
+            (a = N.round(255 * a)),
+              (b = N.round(255 * b)),
+              (c = N.round(255 * c));
+            var g = {
+              r: a,
+              g: b,
+              b: c,
+              opacity: f(e, "finite") ? e : 1,
+              hex: d.rgb(a, b, c),
+              toString: nb,
+            };
             return f(e, "finite") && (g.opacity = e), g;
           };
         (d.color = function (a) {
           var b;
           return (
             f(a, "object") && "h" in a && "s" in a && "b" in a
-              ? ((b = d.hsb2rgb(a)), (a.r = b.r), (a.g = b.g), (a.b = b.b), (a.opacity = 1), (a.hex = b.hex))
+              ? ((b = d.hsb2rgb(a)),
+                (a.r = b.r),
+                (a.g = b.g),
+                (a.b = b.b),
+                (a.opacity = 1),
+                (a.hex = b.hex))
               : f(a, "object") && "h" in a && "s" in a && "l" in a
-                ? ((b = d.hsl2rgb(a)), (a.r = b.r), (a.g = b.g), (a.b = b.b), (a.opacity = 1), (a.hex = b.hex))
-                : (f(a, "string") && (a = d.getRGB(a)),
-                  f(a, "object") && "r" in a && "g" in a && "b" in a && !("error" in a)
-                    ? ((b = d.rgb2hsl(a)), (a.h = b.h), (a.s = b.s), (a.l = b.l), (b = d.rgb2hsb(a)), (a.v = b.b))
-                    : ((a = { hex: "none" }), (a.r = a.g = a.b = a.h = a.s = a.v = a.l = -1), (a.error = 1))),
+              ? ((b = d.hsl2rgb(a)),
+                (a.r = b.r),
+                (a.g = b.g),
+                (a.b = b.b),
+                (a.opacity = 1),
+                (a.hex = b.hex))
+              : (f(a, "string") && (a = d.getRGB(a)),
+                f(a, "object") &&
+                "r" in a &&
+                "g" in a &&
+                "b" in a &&
+                !("error" in a)
+                  ? ((b = d.rgb2hsl(a)),
+                    (a.h = b.h),
+                    (a.s = b.s),
+                    (a.l = b.l),
+                    (b = d.rgb2hsb(a)),
+                    (a.v = b.b))
+                  : ((a = { hex: "none" }),
+                    (a.r = a.g = a.b = a.h = a.s = a.v = a.l = -1),
+                    (a.error = 1))),
             (a.toString = nb),
             a
           );
         }),
           (d.hsb2rgb = function (a, b, c, d) {
-            f(a, "object") && "h" in a && "s" in a && "b" in a && ((c = a.b), (b = a.s), (a = a.h), (d = a.o)), (a *= 360);
+            f(a, "object") &&
+              "h" in a &&
+              "s" in a &&
+              "b" in a &&
+              ((c = a.b), (b = a.s), (a = a.h), (d = a.o)),
+              (a *= 360);
             var e, g, h, i, j;
-            return (a = (a % 360) / 60), (j = c * b), (i = j * (1 - Q((a % 2) - 1))), (e = g = h = c - j), (a = ~~a), (e += [j, i, 0, 0, i, j][a]), (g += [i, j, j, i, 0, 0][a]), (h += [0, 0, i, j, j, i][a]), pb(e, g, h, d);
+            return (
+              (a = (a % 360) / 60),
+              (j = c * b),
+              (i = j * (1 - Q((a % 2) - 1))),
+              (e = g = h = c - j),
+              (a = ~~a),
+              (e += [j, i, 0, 0, i, j][a]),
+              (g += [i, j, j, i, 0, 0][a]),
+              (h += [0, 0, i, j, j, i][a]),
+              pb(e, g, h, d)
+            );
           }),
           (d.hsl2rgb = function (a, b, c, d) {
-            f(a, "object") && "h" in a && "s" in a && "l" in a && ((c = a.l), (b = a.s), (a = a.h)), (a > 1 || b > 1 || c > 1) && ((a /= 360), (b /= 100), (c /= 100)), (a *= 360);
+            f(a, "object") &&
+              "h" in a &&
+              "s" in a &&
+              "l" in a &&
+              ((c = a.l), (b = a.s), (a = a.h)),
+              (a > 1 || b > 1 || c > 1) && ((a /= 360), (b /= 100), (c /= 100)),
+              (a *= 360);
             var e, g, h, i, j;
             return (
               (a = (a % 360) / 60),
@@ -1162,7 +1642,14 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             return (
               (f = O(a, b, c)),
               (g = f - P(a, b, c)),
-              (d = 0 == g ? null : f == a ? (b - c) / g : f == b ? (c - a) / g + 2 : (a - b) / g + 4),
+              (d =
+                0 == g
+                  ? null
+                  : f == a
+                  ? (b - c) / g
+                  : f == b
+                  ? (c - a) / g + 2
+                  : (a - b) / g + 4),
               (d = (60 * ((d + 360) % 6)) / 360),
               (e = 0 == g ? 0 : g / f),
               { h: d, s: e, b: f, toString: lb }
@@ -1175,7 +1662,14 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               (g = O(a, b, c)),
               (h = P(a, b, c)),
               (i = g - h),
-              (d = 0 == i ? null : g == a ? (b - c) / i : g == b ? (c - a) / i + 2 : (a - b) / i + 4),
+              (d =
+                0 == i
+                  ? null
+                  : g == a
+                  ? (b - c) / i
+                  : g == b
+                  ? (c - a) / i + 2
+                  : (a - b) / i + 4),
               (d = (60 * ((d + 360) % 6)) / 360),
               (f = (g + h) / 2),
               (e = 0 == i ? 0 : 0.5 > f ? i / (2 * f) : i / (2 - 2 * f)),
@@ -1186,25 +1680,49 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             if (!a) return null;
             var b = d.path(a);
             if (b.arr) return d.path.clone(b.arr);
-            var c = { a: 7, c: 6, o: 2, h: 1, l: 2, m: 2, r: 4, q: 4, s: 4, t: 2, v: 1, u: 3, z: 0 },
+            var c = {
+                a: 7,
+                c: 6,
+                o: 2,
+                h: 1,
+                l: 2,
+                m: 2,
+                r: 4,
+                q: 4,
+                s: 4,
+                t: 2,
+                v: 1,
+                u: 3,
+                z: 0,
+              },
               e = [];
             return (
               f(a, "array") && f(a[0], "array") && (e = d.path.clone(a)),
               e.length ||
-              K(a).replace(_, function (a, b, d) {
-                var f = [],
-                  g = b.toLowerCase();
-                if (
-                  (d.replace(bb, function (a, b) {
-                    b && f.push(+b);
-                  }),
-                    "m" == g && f.length > 2 && (e.push([b].concat(f.splice(0, 2))), (g = "l"), (b = "m" == b ? "l" : "L")),
+                K(a).replace(_, function (a, b, d) {
+                  var f = [],
+                    g = b.toLowerCase();
+                  if (
+                    (d.replace(bb, function (a, b) {
+                      b && f.push(+b);
+                    }),
+                    "m" == g &&
+                      f.length > 2 &&
+                      (e.push([b].concat(f.splice(0, 2))),
+                      (g = "l"),
+                      (b = "m" == b ? "l" : "L")),
                     "o" == g && 1 == f.length && e.push([b, f[0]]),
                     "r" == g)
-                )
-                  e.push([b].concat(f));
-                else for (; f.length >= c[g] && (e.push([b].concat(f.splice(0, c[g]))), c[g]););
-              }),
+                  )
+                    e.push([b].concat(f));
+                  else
+                    for (
+                      ;
+                      f.length >= c[g] &&
+                      (e.push([b].concat(f.splice(0, c[g]))), c[g]);
+
+                    );
+                }),
               (e.toString = d.path.toString),
               (b.arr = d.path.clone(e)),
               e
@@ -1216,36 +1734,54 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return (
             f(a, "array") && f(a[0], "array") && (b = d.path.clone(a)),
             b.length ||
-            K(a).replace(ab, function (a, c, d) {
-              var e = [];
-              c.toLowerCase(),
-                d.replace(bb, function (a, b) {
-                  b && e.push(+b);
-                }),
-                b.push([c].concat(e));
-            }),
+              K(a).replace(ab, function (a, c, d) {
+                var e = [];
+                c.toLowerCase(),
+                  d.replace(bb, function (a, b) {
+                    b && e.push(+b);
+                  }),
+                  b.push([c].concat(e));
+              }),
             (b.toString = d.path.toString),
             b
           );
         });
-        (d._.svgTransform2string = o), (d._.rgTransform = new RegExp("^[a-z][" + X + "]*-?\\.?\\d", "i")), (d._.transform2matrix = p), (d._unit2px = s);
+        (d._.svgTransform2string = o),
+          (d._.rgTransform = new RegExp("^[a-z][" + X + "]*-?\\.?\\d", "i")),
+          (d._.transform2matrix = p),
+          (d._unit2px = s);
         var rb =
           I.doc.contains || I.doc.compareDocumentPosition
             ? function (a, b) {
-              var c = 9 == a.nodeType ? a.documentElement : a,
-                d = b && b.parentNode;
-              return a == d || !(!d || 1 != d.nodeType || !(c.contains ? c.contains(d) : a.compareDocumentPosition && 16 & a.compareDocumentPosition(d)));
-            }
+                var c = 9 == a.nodeType ? a.documentElement : a,
+                  d = b && b.parentNode;
+                return (
+                  a == d ||
+                  !(
+                    !d ||
+                    1 != d.nodeType ||
+                    !(c.contains
+                      ? c.contains(d)
+                      : a.compareDocumentPosition &&
+                        16 & a.compareDocumentPosition(d))
+                  )
+                );
+              }
             : function (a, b) {
-              if (b) for (; b;) if (((b = b.parentNode), b == a)) return !0;
-              return !1;
-            };
+                if (b) for (; b; ) if (((b = b.parentNode), b == a)) return !0;
+                return !1;
+              };
         (d._.getSomeDefs = r),
           (d.select = function (a) {
             return z(I.doc.querySelector(a));
           }),
           (d.selectAll = function (a) {
-            for (var b = I.doc.querySelectorAll(a), c = (d.set || Array)(), e = 0; e < b.length; e++) c.push(z(b[e]));
+            for (
+              var b = I.doc.querySelectorAll(a), c = (d.set || Array)(), e = 0;
+              e < b.length;
+              e++
+            )
+              c.push(z(b[e]));
             return c;
           }),
           (function (a) {
@@ -1255,26 +1791,42 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 (c = c && c.match(g)),
                   (c = c && c[2]),
                   c &&
-                  "#" == c.charAt() &&
-                  ((c = c.substring(1)),
+                    "#" == c.charAt() &&
+                    ((c = c.substring(1)),
                     c &&
-                    (i[c] = (i[c] || []).concat(function (c) {
-                      var d = {};
-                      (d[b] = ib(c)), e(a.node, d);
-                    })));
+                      (i[c] = (i[c] || []).concat(function (c) {
+                        var d = {};
+                        (d[b] = ib(c)), e(a.node, d);
+                      })));
               }
               function c(a) {
                 var b = e(a.node, "xlink:href");
                 b &&
                   "#" == b.charAt() &&
                   ((b = b.substring(1)),
-                    b &&
+                  b &&
                     (i[b] = (i[b] || []).concat(function (b) {
                       a.attr("xlink:href", "#" + b);
                     })));
               }
-              for (var d, f = a.selectAll("*"), g = /^\s*url\(("|'|)(.*)\1\)\s*$/, h = [], i = {}, j = 0, k = f.length; k > j; j++) {
-                (d = f[j]), b(d, "fill"), b(d, "stroke"), b(d, "filter"), b(d, "mask"), b(d, "clip-path"), c(d);
+              for (
+                var d,
+                  f = a.selectAll("*"),
+                  g = /^\s*url\(("|'|)(.*)\1\)\s*$/,
+                  h = [],
+                  i = {},
+                  j = 0,
+                  k = f.length;
+                k > j;
+                j++
+              ) {
+                (d = f[j]),
+                  b(d, "fill"),
+                  b(d, "stroke"),
+                  b(d, "filter"),
+                  b(d, "mask"),
+                  b(d, "clip-path"),
+                  c(d);
                 var l = e(d.node, "id");
                 l && (e(d.node, { id: d.id }), h.push({ old: l, id: d.id }));
               }
@@ -1294,9 +1846,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 var b = a ? "<" + this.type : "",
                   c = this.node.attributes,
                   d = this.node.childNodes;
-                if (a) for (var e = 0, f = c.length; f > e; e++) b += " " + c[e].name + '="' + c[e].value.replace(/"/g, '\\"') + '"';
+                if (a)
+                  for (var e = 0, f = c.length; f > e; e++)
+                    b +=
+                      " " +
+                      c[e].name +
+                      '="' +
+                      c[e].value.replace(/"/g, '\\"') +
+                      '"';
                 if (d.length) {
-                  for (a && (b += ">"), e = 0, f = d.length; f > e; e++) 3 == d[e].nodeType ? (b += d[e].nodeValue) : 1 == d[e].nodeType && (b += z(d[e]).toString());
+                  for (a && (b += ">"), e = 0, f = d.length; f > e; e++)
+                    3 == d[e].nodeType
+                      ? (b += d[e].nodeValue)
+                      : 1 == d[e].nodeType && (b += z(d[e]).toString());
                   a && (b += "</" + this.type + ">");
                 } else a && (b += "/>");
                 return b;
@@ -1306,7 +1868,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               var d = this;
               if ((d.node, !a)) return d;
               if (f(a, "string")) {
-                if (!(arguments.length > 1)) return v(b("snap.util.getattr." + a, d));
+                if (!(arguments.length > 1))
+                  return v(b("snap.util.getattr." + a, d));
                 var e = {};
                 (e[a] = c), (a = e);
               }
@@ -1318,8 +1881,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 if (("use" == b.type && (b = b.original), b.removed)) return {};
                 var c = b._;
                 return a
-                  ? ((c.bboxwt = d.path.get[b.type] ? d.path.getBBox((b.realPath = d.path.get[b.type](b))) : d._.box(b.node.getBBox())), d._.box(c.bboxwt))
-                  : ((b.realPath = (d.path.get[b.type] || d.path.get.deflt)(b)), (c.bbox = d.path.getBBox(d.path.map(b.realPath, b.matrix))), d._.box(c.bbox));
+                  ? ((c.bboxwt = d.path.get[b.type]
+                      ? d.path.getBBox((b.realPath = d.path.get[b.type](b)))
+                      : d._.box(b.node.getBBox())),
+                    d._.box(c.bboxwt))
+                  : ((b.realPath = (d.path.get[b.type] || d.path.get.deflt)(b)),
+                    (c.bbox = d.path.getBBox(d.path.map(b.realPath, b.matrix))),
+                    d._.box(c.bbox));
               });
             var j = function () {
               return this.string;
@@ -1331,15 +1899,24 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   d = q(this),
                   f = d.toTransformString(),
                   g = K(d) == K(this.matrix) ? b.transform : f;
-                return { string: g, globalMatrix: c, localMatrix: d, diffMatrix: c.clone().add(d.invert()), global: c.toTransformString(), local: f, toString: j };
+                return {
+                  string: g,
+                  globalMatrix: c,
+                  localMatrix: d,
+                  diffMatrix: c.clone().add(d.invert()),
+                  global: c.toTransformString(),
+                  local: f,
+                  toString: j,
+                };
               }
               return (
                 a instanceof n && (a = a.toTransformString()),
                 q(this, a),
                 this.node &&
-                ("linearGradient" == this.type || "radialGradient" == this.type
-                  ? e(this.node, { gradientTransform: this.matrix })
-                  : "pattern" == this.type
+                  ("linearGradient" == this.type ||
+                  "radialGradient" == this.type
+                    ? e(this.node, { gradientTransform: this.matrix })
+                    : "pattern" == this.type
                     ? e(this.node, { patternTransform: this.matrix })
                     : e(this.node, { transform: this.matrix })),
                 this
@@ -1348,21 +1925,24 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               (a.parent = function () {
                 return z(this.node.parentNode);
               }),
-              (a.append = a.add = function (a) {
-                if (a) {
-                  if ("set" == a.type) {
-                    var b = this;
-                    return (
-                      a.forEach(function (a) {
-                        b.add(a);
-                      }),
-                      this
-                    );
+              (a.append = a.add =
+                function (a) {
+                  if (a) {
+                    if ("set" == a.type) {
+                      var b = this;
+                      return (
+                        a.forEach(function (a) {
+                          b.add(a);
+                        }),
+                        this
+                      );
+                    }
+                    (a = z(a)),
+                      this.node.appendChild(a.node),
+                      (a.paper = this.paper);
                   }
-                  (a = z(a)), this.node.appendChild(a.node), (a.paper = this.paper);
-                }
-                return this;
-              }),
+                  return this;
+                }),
               (a.appendTo = function (a) {
                 return a && ((a = z(a)), a.append(this)), this;
               }),
@@ -1370,7 +1950,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 if (a) {
                   a = z(a);
                   var b = a.parent();
-                  this.node.insertBefore(a.node, this.node.firstChild), this.add && this.add(), (a.paper = this.paper), this.parent() && this.parent().add(), b && b.add();
+                  this.node.insertBefore(a.node, this.node.firstChild),
+                    this.add && this.add(),
+                    (a.paper = this.paper),
+                    this.parent() && this.parent().add(),
+                    b && b.add();
                 }
                 return this;
               }),
@@ -1383,7 +1967,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   return (
                     a.forEach(function (a) {
                       var c = a.parent();
-                      b.node.parentNode.insertBefore(a.node, b.node), c && c.add();
+                      b.node.parentNode.insertBefore(a.node, b.node),
+                        c && c.add();
                     }),
                     this.parent().add(),
                     this
@@ -1391,13 +1976,24 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 }
                 a = z(a);
                 var c = a.parent();
-                return this.node.parentNode.insertBefore(a.node, this.node), this.parent() && this.parent().add(), c && c.add(), (a.paper = this.paper), this;
+                return (
+                  this.node.parentNode.insertBefore(a.node, this.node),
+                  this.parent() && this.parent().add(),
+                  c && c.add(),
+                  (a.paper = this.paper),
+                  this
+                );
               }),
               (a.after = function (a) {
                 a = z(a);
                 var b = a.parent();
                 return (
-                  this.node.nextSibling ? this.node.parentNode.insertBefore(a.node, this.node.nextSibling) : this.node.parentNode.appendChild(a.node),
+                  this.node.nextSibling
+                    ? this.node.parentNode.insertBefore(
+                        a.node,
+                        this.node.nextSibling
+                      )
+                    : this.node.parentNode.appendChild(a.node),
                   this.parent() && this.parent().add(),
                   b && b.add(),
                   (a.paper = this.paper),
@@ -1407,22 +2003,48 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               (a.insertBefore = function (a) {
                 a = z(a);
                 var b = this.parent();
-                return a.node.parentNode.insertBefore(this.node, a.node), (this.paper = a.paper), b && b.add(), a.parent() && a.parent().add(), this;
+                return (
+                  a.node.parentNode.insertBefore(this.node, a.node),
+                  (this.paper = a.paper),
+                  b && b.add(),
+                  a.parent() && a.parent().add(),
+                  this
+                );
               }),
               (a.insertAfter = function (a) {
                 a = z(a);
                 var b = this.parent();
-                return a.node.parentNode.insertBefore(this.node, a.node.nextSibling), (this.paper = a.paper), b && b.add(), a.parent() && a.parent().add(), this;
+                return (
+                  a.node.parentNode.insertBefore(this.node, a.node.nextSibling),
+                  (this.paper = a.paper),
+                  b && b.add(),
+                  a.parent() && a.parent().add(),
+                  this
+                );
               }),
               (a.remove = function () {
                 var a = this.parent();
-                return this.node.parentNode && this.node.parentNode.removeChild(this.node), delete this.paper, (this.removed = !0), a && a.add(), this;
+                return (
+                  this.node.parentNode &&
+                    this.node.parentNode.removeChild(this.node),
+                  delete this.paper,
+                  (this.removed = !0),
+                  a && a.add(),
+                  this
+                );
               }),
               (a.select = function (a) {
                 return z(this.node.querySelector(a));
               }),
               (a.selectAll = function (a) {
-                for (var b = this.node.querySelectorAll(a), c = (d.set || Array)(), e = 0; e < b.length; e++) c.push(z(b[e]));
+                for (
+                  var b = this.node.querySelectorAll(a),
+                    c = (d.set || Array)(),
+                    e = 0;
+                  e < b.length;
+                  e++
+                )
+                  c.push(z(b[e]));
                 return c;
               }),
               (a.asPX = function (a, b) {
@@ -1433,7 +2055,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   b = this.node.id;
                 return (
                   b || ((b = this.id), e(this.node, { id: b })),
-                  (a = "linearGradient" == this.type || "radialGradient" == this.type || "pattern" == this.type ? x(this.type, this.node.parentNode) : x("use", this.node.parentNode)),
+                  (a =
+                    "linearGradient" == this.type ||
+                    "radialGradient" == this.type ||
+                    "pattern" == this.type
+                      ? x(this.type, this.node.parentNode)
+                      : x("use", this.node.parentNode)),
                   e(a.node, { "xlink:href": "#" + b }),
                   (a.original = this),
                   a
@@ -1441,7 +2068,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               }),
               (a.clone = function () {
                 var a = z(this.node.cloneNode(!0));
-                return e(a.node, "id") && e(a.node, { id: a.id }), g(a), a.insertAfter(this), a;
+                return (
+                  e(a.node, "id") && e(a.node, { id: a.id }),
+                  g(a),
+                  a.insertAfter(this),
+                  a
+                );
               }),
               (a.toDefs = function () {
                 var a = r(this);
@@ -1451,8 +2083,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 var g = x("pattern", r(this));
                 return (
                   null == a && (a = this.getBBox()),
-                  f(a, "object") && "x" in a && ((b = a.y), (c = a.width), (d = a.height), (a = a.x)),
-                  e(g.node, { x: a, y: b, width: c, height: d, patternUnits: "userSpaceOnUse", id: g.id, viewBox: [a, b, c, d].join(" ") }),
+                  f(a, "object") &&
+                    "x" in a &&
+                    ((b = a.y), (c = a.width), (d = a.height), (a = a.x)),
+                  e(g.node, {
+                    x: a,
+                    y: b,
+                    width: c,
+                    height: d,
+                    patternUnits: "userSpaceOnUse",
+                    id: g.id,
+                    viewBox: [a, b, c, d].join(" "),
+                  }),
                   g.node.appendChild(this.node),
                   g
                 );
@@ -1461,14 +2103,33 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 var i = x("marker", r(this));
                 return (
                   null == a && (a = this.getBBox()),
-                  f(a, "object") && "x" in a && ((b = a.y), (c = a.width), (d = a.height), (g = a.refX || a.cx), (h = a.refY || a.cy), (a = a.x)),
-                  e(i.node, { viewBox: [a, b, c, d].join(T), markerWidth: c, markerHeight: d, orient: "auto", refX: g || 0, refY: h || 0, id: i.id }),
+                  f(a, "object") &&
+                    "x" in a &&
+                    ((b = a.y),
+                    (c = a.width),
+                    (d = a.height),
+                    (g = a.refX || a.cx),
+                    (h = a.refY || a.cy),
+                    (a = a.x)),
+                  e(i.node, {
+                    viewBox: [a, b, c, d].join(T),
+                    markerWidth: c,
+                    markerHeight: d,
+                    orient: "auto",
+                    refX: g || 0,
+                    refY: h || 0,
+                    id: i.id,
+                  }),
                   i.node.appendChild(this.node),
                   i
                 );
               });
             var k = function (a, b, d, e) {
-              "function" != typeof d || d.length || ((e = d), (d = c.linear)), (this.attr = a), (this.dur = b), d && (this.easing = d), e && (this.callback = e);
+              "function" != typeof d || d.length || ((e = d), (d = c.linear)),
+                (this.attr = a),
+                (this.dur = b),
+                d && (this.easing = d),
+                e && (this.callback = e);
             };
             (d.animation = function (a, b, c, d) {
               return new k(a, b, c, d);
@@ -1499,11 +2160,17 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 return h && b.once("mina.finish." + j.id, h), j;
               }),
               (a.stop = function () {
-                for (var a = this.inAnim(), b = 0, c = a.length; c > b; b++) a[b].stop();
+                for (var a = this.inAnim(), b = 0, c = a.length; c > b; b++)
+                  a[b].stop();
                 return this;
               }),
               (a.animate = function (a, d, e, g) {
-                "function" != typeof e || e.length || ((g = e), (e = c.linear)), a instanceof k && ((g = a.callback), (e = a.easing), (d = e.dur), (a = a.attr));
+                "function" != typeof e || e.length || ((g = e), (e = c.linear)),
+                  a instanceof k &&
+                    ((g = a.callback),
+                    (e = a.easing),
+                    (d = e.dur),
+                    (a = a.attr));
                 var i,
                   j,
                   l,
@@ -1514,9 +2181,16 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   q = this;
                 for (var r in a)
                   if (a[J](r)) {
-                    q.equal ? ((m = q.equal(r, K(a[r]))), (i = m.from), (j = m.to), (l = m.f)) : ((i = +q.attr(r)), (j = +a[r]));
+                    q.equal
+                      ? ((m = q.equal(r, K(a[r]))),
+                        (i = m.from),
+                        (j = m.to),
+                        (l = m.f))
+                      : ((i = +q.attr(r)), (j = +a[r]));
                     var s = f(i, "array") ? i.length : 1;
-                    (p[r] = h(n.length, n.length + s, l)), (n = n.concat(i)), (o = o.concat(j));
+                    (p[r] = h(n.length, n.length + s, l)),
+                      (n = n.concat(i)),
+                      (o = o.concat(j));
                   }
                 var t = c.time(),
                   u = c(
@@ -1548,7 +2222,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             var l = {};
             (a.data = function (a, c) {
               var e = (l[this.id] = l[this.id] || {});
-              if (0 == arguments.length) return b("snap.data.get." + this.id, this, e, null), e;
+              if (0 == arguments.length)
+                return b("snap.data.get." + this.id, this, e, null), e;
               if (1 == arguments.length) {
                 if (d.is(a, "object")) {
                   for (var f in a) a[J](f) && this.data(f, a[f]);
@@ -1556,10 +2231,17 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 }
                 return b("snap.data.get." + this.id, this, e[a], a), e[a];
               }
-              return (e[a] = c), b("snap.data.set." + this.id, this, c, a), this;
+              return (
+                (e[a] = c), b("snap.data.set." + this.id, this, c, a), this
+              );
             }),
               (a.removeData = function (a) {
-                return null == a ? (l[this.id] = {}) : l[this.id] && delete l[this.id][a], this;
+                return (
+                  null == a
+                    ? (l[this.id] = {})
+                    : l[this.id] && delete l[this.id][a],
+                  this
+                );
               }),
               (a.outerSVG = a.toString = i(1)),
               (a.innerSVG = i());
@@ -1568,17 +2250,32 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             var b = I.doc.createDocumentFragment(),
               c = !0,
               d = I.doc.createElement("div");
-            if (((a = K(a)), a.match(/^\s*<\s*svg(?:\s|>)/) || ((a = "<svg>" + a + "</svg>"), (c = !1)), (d.innerHTML = a), (a = d.getElementsByTagName("svg")[0])))
+            if (
+              ((a = K(a)),
+              a.match(/^\s*<\s*svg(?:\s|>)/) ||
+                ((a = "<svg>" + a + "</svg>"), (c = !1)),
+              (d.innerHTML = a),
+              (a = d.getElementsByTagName("svg")[0]))
+            )
               if (c) b = a;
-              else for (; a.firstChild;) b.appendChild(a.firstChild);
+              else for (; a.firstChild; ) b.appendChild(a.firstChild);
             return (d.innerHTML = S), new w(b);
           }),
           (w.prototype.select = u.prototype.select),
           (w.prototype.selectAll = u.prototype.selectAll),
           (d.fragment = function () {
-            for (var a = Array.prototype.slice.call(arguments, 0), b = I.doc.createDocumentFragment(), c = 0, e = a.length; e > c; c++) {
+            for (
+              var a = Array.prototype.slice.call(arguments, 0),
+                b = I.doc.createDocumentFragment(),
+                c = 0,
+                e = a.length;
+              e > c;
+              c++
+            ) {
               var f = a[c];
-              f.node && f.node.nodeType && b.appendChild(f.node), f.nodeType && b.appendChild(f), "string" == typeof f && b.appendChild(d.parse(f).node);
+              f.node && f.node.nodeType && b.appendChild(f.node),
+                f.nodeType && b.appendChild(f),
+                "string" == typeof f && b.appendChild(d.parse(f).node);
             }
             return new w(b);
           }),
@@ -1588,11 +2285,24 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             }),
               (a.rect = function (a, b, c, d, e, g) {
                 var h;
-                return null == g && (g = e), f(a, "object") && "x" in a ? (h = a) : null != a && ((h = { x: a, y: b, width: c, height: d }), null != e && ((h.rx = e), (h.ry = g))), this.el("rect", h);
+                return (
+                  null == g && (g = e),
+                  f(a, "object") && "x" in a
+                    ? (h = a)
+                    : null != a &&
+                      ((h = { x: a, y: b, width: c, height: d }),
+                      null != e && ((h.rx = e), (h.ry = g))),
+                  this.el("rect", h)
+                );
               }),
               (a.circle = function (a, b, c) {
                 var d;
-                return f(a, "object") && "cx" in a ? (d = a) : null != a && (d = { cx: a, cy: b, r: c }), this.el("circle", d);
+                return (
+                  f(a, "object") && "cx" in a
+                    ? (d = a)
+                    : null != a && (d = { cx: a, cy: b, r: c }),
+                  this.el("circle", d)
+                );
               }),
               (a.image = function (a, b, c, d, g) {
                 var h = x("image", this.node);
@@ -1603,43 +2313,85 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                     null != d && null != g
                       ? ((i.width = d), (i.height = g))
                       : jb(a, function () {
-                        e(h.node, { width: this.offsetWidth, height: this.offsetHeight });
-                      }),
+                          e(h.node, {
+                            width: this.offsetWidth,
+                            height: this.offsetHeight,
+                          });
+                        }),
                     e(h.node, i);
                 }
                 return h;
               }),
               (a.ellipse = function (a, b, c, d) {
                 var e = x("ellipse", this.node);
-                return f(a, "object") && "cx" in a ? e.attr(a) : null != a && e.attr({ cx: a, cy: b, rx: c, ry: d }), e;
+                return (
+                  f(a, "object") && "cx" in a
+                    ? e.attr(a)
+                    : null != a && e.attr({ cx: a, cy: b, rx: c, ry: d }),
+                  e
+                );
               }),
               (a.path = function (a) {
                 var b = x("path", this.node);
-                return f(a, "object") && !f(a, "array") ? b.attr(a) : a && b.attr({ d: a }), b;
+                return (
+                  f(a, "object") && !f(a, "array")
+                    ? b.attr(a)
+                    : a && b.attr({ d: a }),
+                  b
+                );
               }),
-              (a.group = a.g = function (b) {
-                var c = x("g", this.node);
-                c.add = t;
-                for (var d in a) a[J](d) && (c[d] = a[d]);
-                return 1 == arguments.length && b && !b.type ? c.attr(b) : arguments.length && c.add(Array.prototype.slice.call(arguments, 0)), c;
-              }),
+              (a.group = a.g =
+                function (b) {
+                  var c = x("g", this.node);
+                  c.add = t;
+                  for (var d in a) a[J](d) && (c[d] = a[d]);
+                  return (
+                    1 == arguments.length && b && !b.type
+                      ? c.attr(b)
+                      : arguments.length &&
+                        c.add(Array.prototype.slice.call(arguments, 0)),
+                    c
+                  );
+                }),
               (a.text = function (a, b, c) {
                 var d = x("text", this.node);
-                return f(a, "object") ? d.attr(a) : null != a && d.attr({ x: a, y: b, text: c || "" }), d;
+                return (
+                  f(a, "object")
+                    ? d.attr(a)
+                    : null != a && d.attr({ x: a, y: b, text: c || "" }),
+                  d
+                );
               }),
               (a.line = function (a, b, c, d) {
                 var e = x("line", this.node);
-                return f(a, "object") ? e.attr(a) : null != a && e.attr({ x1: a, x2: c, y1: b, y2: d }), e;
+                return (
+                  f(a, "object")
+                    ? e.attr(a)
+                    : null != a && e.attr({ x1: a, x2: c, y1: b, y2: d }),
+                  e
+                );
               }),
               (a.polyline = function (a) {
-                arguments.length > 1 && (a = Array.prototype.slice.call(arguments, 0));
+                arguments.length > 1 &&
+                  (a = Array.prototype.slice.call(arguments, 0));
                 var b = x("polyline", this.node);
-                return f(a, "object") && !f(a, "array") ? b.attr(a) : null != a && b.attr({ points: a }), b;
+                return (
+                  f(a, "object") && !f(a, "array")
+                    ? b.attr(a)
+                    : null != a && b.attr({ points: a }),
+                  b
+                );
               }),
               (a.polygon = function (a) {
-                arguments.length > 1 && (a = Array.prototype.slice.call(arguments, 0));
+                arguments.length > 1 &&
+                  (a = Array.prototype.slice.call(arguments, 0));
                 var b = x("polygon", this.node);
-                return f(a, "object") && !f(a, "array") ? b.attr(a) : null != a && b.attr({ points: a }), b;
+                return (
+                  f(a, "object") && !f(a, "array")
+                    ? b.attr(a)
+                    : null != a && b.attr({ points: a }),
+                  b
+                );
               }),
               (function () {
                 (a.gradient = function (a) {
@@ -1656,10 +2408,20 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                       b = I.doc.createDocumentFragment(),
                       c = I.doc.createElement("div"),
                       d = this.node.cloneNode(!0);
-                    return b.appendChild(c), c.appendChild(d), e(d, { xmlns: gb }), (a = c.innerHTML), b.removeChild(b.firstChild), a;
+                    return (
+                      b.appendChild(c),
+                      c.appendChild(d),
+                      e(d, { xmlns: gb }),
+                      (a = c.innerHTML),
+                      b.removeChild(b.firstChild),
+                      a
+                    );
                   }),
                   (a.clear = function () {
-                    for (var a, b = this.node.firstChild; b;) (a = b.nextSibling), "defs" != b.tagName && b.parentNode.removeChild(b), (b = a);
+                    for (var a, b = this.node.firstChild; b; )
+                      (a = b.nextSibling),
+                        "defs" != b.tagName && b.parentNode.removeChild(b),
+                        (b = a);
                   });
               })();
           })(y.prototype),
@@ -1670,16 +2432,28 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               if (f(c, "function")) (e = d), (d = c), (c = null);
               else if (f(c, "object")) {
                 var i = [];
-                for (var j in c) c.hasOwnProperty(j) && i.push(encodeURIComponent(j) + "=" + encodeURIComponent(c[j]));
+                for (var j in c)
+                  c.hasOwnProperty(j) &&
+                    i.push(
+                      encodeURIComponent(j) + "=" + encodeURIComponent(c[j])
+                    );
                 c = i.join("&");
               }
               return (
                 g.open(c ? "POST" : "GET", a, !0),
                 g.setRequestHeader("X-Requested-With", "XMLHttpRequest"),
-                c && g.setRequestHeader("Content-type", "application/x-www-form-urlencoded"),
-                d && (b.once("snap.ajax." + h + ".0", d), b.once("snap.ajax." + h + ".200", d), b.once("snap.ajax." + h + ".304", d)),
+                c &&
+                  g.setRequestHeader(
+                    "Content-type",
+                    "application/x-www-form-urlencoded"
+                  ),
+                d &&
+                  (b.once("snap.ajax." + h + ".0", d),
+                  b.once("snap.ajax." + h + ".200", d),
+                  b.once("snap.ajax." + h + ".304", d)),
                 (g.onreadystatechange = function () {
-                  4 == g.readyState && b("snap.ajax." + h + "." + g.status, e, g);
+                  4 == g.readyState &&
+                    b("snap.ajax." + h + "." + g.status, e, g);
                 }),
                 4 == g.readyState ? g : (g.send(c), g)
               );
@@ -1693,17 +2467,32 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           }),
           b.on("snap.util.attr.mask", function (a) {
             if (a instanceof u || a instanceof w) {
-              if ((b.stop(), a instanceof w && 1 == a.node.childNodes.length && ((a = a.node.firstChild), r(this).appendChild(a), (a = z(a))), "mask" == a.type)) var c = a;
-              else (c = x("mask", r(this))), c.node.appendChild(a.node), !c.node.id && e(c.node, { id: c.id });
+              if (
+                (b.stop(),
+                a instanceof w &&
+                  1 == a.node.childNodes.length &&
+                  ((a = a.node.firstChild), r(this).appendChild(a), (a = z(a))),
+                "mask" == a.type)
+              )
+                var c = a;
+              else
+                (c = x("mask", r(this))),
+                  c.node.appendChild(a.node),
+                  !c.node.id && e(c.node, { id: c.id });
               e(this.node, { mask: ib(c.id) });
             }
           }),
           (function (a) {
-            b.on("snap.util.attr.clip", a), b.on("snap.util.attr.clip-path", a), b.on("snap.util.attr.clipPath", a);
+            b.on("snap.util.attr.clip", a),
+              b.on("snap.util.attr.clip-path", a),
+              b.on("snap.util.attr.clipPath", a);
           })(function (a) {
             if (a instanceof u || a instanceof w) {
               if ((b.stop(), "clipPath" == a.type)) var c = a;
-              else (c = x("clipPath", r(this))), c.node.appendChild(a.node), !c.node.id && e(c.node, { id: c.id });
+              else
+                (c = x("clipPath", r(this))),
+                  c.node.appendChild(a.node),
+                  !c.node.id && e(c.node, { id: c.id });
               e(this.node, { "clip-path": ib(c.id) });
             }
           }),
@@ -1732,11 +2521,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           );
         }),
           b.on("snap.util.attr.d", function (a) {
-            b.stop(), f(a, "array") && f(a[0], "array") && (a = d.path.toString.call(a)), (a = K(a)), a.match(/[ruo]/i) && (a = d.path.toAbsolute(a)), e(this.node, { d: a });
+            b.stop(),
+              f(a, "array") &&
+                f(a[0], "array") &&
+                (a = d.path.toString.call(a)),
+              (a = K(a)),
+              a.match(/[ruo]/i) && (a = d.path.toAbsolute(a)),
+              e(this.node, { d: a });
           })(-1),
           b.on("snap.util.attr.#text", function (a) {
             b.stop(), (a = K(a));
-            for (var c = I.doc.createTextNode(a); this.node.firstChild;) this.node.removeChild(this.node.firstChild);
+            for (var c = I.doc.createTextNode(a); this.node.firstChild; )
+              this.node.removeChild(this.node.firstChild);
             this.node.appendChild(c);
           })(-1),
           b.on("snap.util.attr.path", function (a) {
@@ -1744,7 +2540,14 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           })(-1),
           b.on("snap.util.attr.viewBox", function (a) {
             var c;
-            (c = f(a, "object") && "x" in a ? [a.x, a.y, a.width, a.height].join(" ") : f(a, "array") ? a.join(" ") : a), e(this.node, { viewBox: c }), b.stop();
+            (c =
+              f(a, "object") && "x" in a
+                ? [a.x, a.y, a.width, a.height].join(" ")
+                : f(a, "array")
+                ? a.join(" ")
+                : a),
+              e(this.node, { viewBox: c }),
+              b.stop();
           })(-1),
           b.on("snap.util.attr.transform", function (a) {
             this.transform(a), b.stop();
@@ -1756,18 +2559,28 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             if ((b.stop(), "text" == this.type)) {
               var c, d, g;
               if (!a && this.textPath) {
-                for (d = this.textPath; d.node.firstChild;) this.node.appendChild(d.node.firstChild);
+                for (d = this.textPath; d.node.firstChild; )
+                  this.node.appendChild(d.node.firstChild);
                 return d.remove(), void delete this.textPath;
               }
               if (f(a, "string")) {
                 var h = r(this),
                   i = z(h.parentNode).path(a);
                 h.appendChild(i.node), (c = i.id), i.attr({ id: c });
-              } else (a = z(a)), a instanceof u && ((c = a.attr("id")), c || ((c = a.id), a.attr({ id: c })));
+              } else
+                (a = z(a)),
+                  a instanceof u &&
+                    ((c = a.attr("id")), c || ((c = a.id), a.attr({ id: c })));
               if (c)
-                if (((d = this.textPath), (g = this.node), d)) d.attr({ "xlink:href": "#" + c });
+                if (((d = this.textPath), (g = this.node), d))
+                  d.attr({ "xlink:href": "#" + c });
                 else {
-                  for (d = e("textPath", { "xlink:href": "#" + c }); g.firstChild;) d.appendChild(g.firstChild);
+                  for (
+                    d = e("textPath", { "xlink:href": "#" + c });
+                    g.firstChild;
+
+                  )
+                    d.appendChild(g.firstChild);
                   g.appendChild(d), (this.textPath = z(d));
                 }
             }
@@ -1776,17 +2589,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             if ("text" == this.type) {
               for (
                 var c = this.node,
-                d = function (a) {
-                  var b = e("tspan");
-                  if (f(a, "array")) for (var c = 0; c < a.length; c++) b.appendChild(d(a[c]));
-                  else b.appendChild(I.doc.createTextNode(a));
-                  return b.normalize && b.normalize(), b;
-                };
+                  d = function (a) {
+                    var b = e("tspan");
+                    if (f(a, "array"))
+                      for (var c = 0; c < a.length; c++) b.appendChild(d(a[c]));
+                    else b.appendChild(I.doc.createTextNode(a));
+                    return b.normalize && b.normalize(), b;
+                  };
                 c.firstChild;
 
               )
                 c.removeChild(c.firstChild);
-              for (var g = d(a); g.firstChild;) c.appendChild(g.firstChild);
+              for (var g = d(a); g.firstChild; ) c.appendChild(g.firstChild);
             }
             b.stop();
           })(-1);
@@ -1858,8 +2672,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             d = {};
           (c = c.substring(c.lastIndexOf(".") + 1)), (d[c] = a);
           var f = c.replace(/-(\w)/gi, function (a, b) {
-            return b.toUpperCase();
-          }),
+              return b.toUpperCase();
+            }),
             g = c.replace(/[A-Z]/g, function (a) {
               return "-" + a.toLowerCase();
             });
@@ -1875,7 +2689,9 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             function a(a) {
               return function () {
                 b.stop();
-                var c = I.doc.defaultView.getComputedStyle(this.node, null).getPropertyValue("marker-" + a);
+                var c = I.doc.defaultView
+                  .getComputedStyle(this.node, null)
+                  .getPropertyValue("marker-" + a);
                 return "none" == c ? c : d(I.doc.getElementById(c.match(W)[1]));
               };
             }
@@ -1886,7 +2702,10 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 if ("" == c || !c) return void (this.node.style[d] = "none");
                 if ("marker" == c.type) {
                   var f = c.node.id;
-                  return f || e(c.node, { id: c.id }), void (this.node.style[d] = ib(f));
+                  return (
+                    f || e(c.node, { id: c.id }),
+                    void (this.node.style[d] = ib(f))
+                  );
                 }
               };
             }
@@ -1904,7 +2723,10 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               b.on("snap.util.attr.markerMid", c("mid"))(-1);
           })(),
           b.on("snap.util.getattr.r", function () {
-            return "rect" == this.type && e(this.node, "rx") == e(this.node, "ry") ? (b.stop(), e(this.node, "rx")) : void 0;
+            return "rect" == this.type &&
+              e(this.node, "rx") == e(this.node, "ry")
+              ? (b.stop(), e(this.node, "rx"))
+              : void 0;
           })(-1),
           b.on("snap.util.getattr.text", function () {
             if ("text" == this.type || "tspan" == this.type) {
@@ -1935,7 +2757,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             var c = a.replace(/[A-Z]/g, function (a) {
               return "-" + a.toLowerCase();
             });
-            return tb[J](c) ? I.doc.defaultView.getComputedStyle(this.node, null).getPropertyValue(c) : e(this.node, a);
+            return tb[J](c)
+              ? I.doc.defaultView
+                  .getComputedStyle(this.node, null)
+                  .getPropertyValue(c)
+              : e(this.node, a);
           });
         var ub = function (a) {
           var b = a.getBoundingClientRect(),
@@ -1945,7 +2771,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             f = e.clientTop || d.clientTop || 0,
             h = e.clientLeft || d.clientLeft || 0,
             i = b.top + (g.win.pageYOffset || e.scrollTop || d.scrollTop) - f,
-            j = b.left + (g.win.pageXOffset || e.scrollLeft || d.scrollLeft) - h;
+            j =
+              b.left + (g.win.pageXOffset || e.scrollLeft || d.scrollLeft) - h;
           return { y: i, x: j };
         };
         return (
@@ -1975,7 +2802,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return (
             b[a] ? (b[a].sleep = 100) : (b[a] = { sleep: 100 }),
             setTimeout(function () {
-              for (var c in b) b[L](c) && c != a && (b[c].sleep--, !b[c].sleep && delete b[c]);
+              for (var c in b)
+                b[L](c) && c != a && (b[c].sleep--, !b[c].sleep && delete b[c]);
             }),
             b[a]
           );
@@ -2011,7 +2839,9 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return (b.toString = e), b;
         }
         function g(a, b, c, d, e, f, g, h, j) {
-          return null == j ? n(a, b, c, d, e, f, g, h) : i(a, b, c, d, e, f, g, h, o(a, b, c, d, e, f, g, h, j));
+          return null == j
+            ? n(a, b, c, d, e, f, g, h)
+            : i(a, b, c, d, e, f, g, h, o(a, b, c, d, e, f, g, h, j));
         }
         function h(c, d) {
           function e(a) {
@@ -2020,22 +2850,81 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return a._.cacher(
             function (a, f, h) {
               a instanceof b && (a = a.attr("d")), (a = F(a));
-              for (var j, k, l, m, n, o = "", p = {}, q = 0, r = 0, s = a.length; s > r; r++) {
+              for (
+                var j, k, l, m, n, o = "", p = {}, q = 0, r = 0, s = a.length;
+                s > r;
+                r++
+              ) {
                 if (((l = a[r]), "M" == l[0])) (j = +l[1]), (k = +l[2]);
                 else {
-                  if (((m = g(j, k, l[1], l[2], l[3], l[4], l[5], l[6])), q + m > f)) {
+                  if (
+                    ((m = g(j, k, l[1], l[2], l[3], l[4], l[5], l[6])),
+                    q + m > f)
+                  ) {
                     if (d && !p.start) {
-                      if (((n = g(j, k, l[1], l[2], l[3], l[4], l[5], l[6], f - q)), (o += ["C" + e(n.start.x), e(n.start.y), e(n.m.x), e(n.m.y), e(n.x), e(n.y)]), h)) return o;
-                      (p.start = o), (o = ["M" + e(n.x), e(n.y) + "C" + e(n.n.x), e(n.n.y), e(n.end.x), e(n.end.y), e(l[5]), e(l[6])].join()), (q += m), (j = +l[5]), (k = +l[6]);
+                      if (
+                        ((n = g(
+                          j,
+                          k,
+                          l[1],
+                          l[2],
+                          l[3],
+                          l[4],
+                          l[5],
+                          l[6],
+                          f - q
+                        )),
+                        (o += [
+                          "C" + e(n.start.x),
+                          e(n.start.y),
+                          e(n.m.x),
+                          e(n.m.y),
+                          e(n.x),
+                          e(n.y),
+                        ]),
+                        h)
+                      )
+                        return o;
+                      (p.start = o),
+                        (o = [
+                          "M" + e(n.x),
+                          e(n.y) + "C" + e(n.n.x),
+                          e(n.n.y),
+                          e(n.end.x),
+                          e(n.end.y),
+                          e(l[5]),
+                          e(l[6]),
+                        ].join()),
+                        (q += m),
+                        (j = +l[5]),
+                        (k = +l[6]);
                       continue;
                     }
-                    if (!c && !d) return (n = g(j, k, l[1], l[2], l[3], l[4], l[5], l[6], f - q));
+                    if (!c && !d)
+                      return (n = g(
+                        j,
+                        k,
+                        l[1],
+                        l[2],
+                        l[3],
+                        l[4],
+                        l[5],
+                        l[6],
+                        f - q
+                      ));
                   }
                   (q += m), (j = +l[5]), (k = +l[6]);
                 }
                 o += l.shift() + l;
               }
-              return (p.end = o), (n = c ? q : d ? p : i(j, k, l[0], l[1], l[2], l[3], l[4], l[5], 1));
+              return (
+                (p.end = o),
+                (n = c
+                  ? q
+                  : d
+                  ? p
+                  : i(j, k, l[0], l[1], l[2], l[3], l[4], l[5], 1))
+              );
             },
             null,
             a._.clone
@@ -2058,7 +2947,15 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             w = j * e + i * g,
             x = j * f + i * h,
             y = 90 - (180 * O.atan2(q - s, r - t)) / P;
-          return { x: o, y: p, m: { x: q, y: r }, n: { x: s, y: t }, start: { x: u, y: v }, end: { x: w, y: x }, alpha: y };
+          return {
+            x: o,
+            y: p,
+            m: { x: q, y: r },
+            n: { x: s, y: t },
+            start: { x: u, y: v },
+            end: { x: w, y: x },
+            alpha: y,
+          };
         }
         function j(b, c, e, f, g, h, i, j) {
           a.is(b, "array") || (b = [b, c, e, f, g, h, i, j]);
@@ -2066,21 +2963,24 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return d(k.min.x, k.min.y, k.max.x - k.min.x, k.max.y - k.min.y);
         }
         function k(a, b, c) {
-          return b >= a.x && b <= a.x + a.width && c >= a.y && c <= a.y + a.height;
+          return (
+            b >= a.x && b <= a.x + a.width && c >= a.y && c <= a.y + a.height
+          );
         }
         function l(a, b) {
           return (
             (a = d(a)),
             (b = d(b)),
             k(b, a.x, a.y) ||
-            k(b, a.x2, a.y) ||
-            k(b, a.x, a.y2) ||
-            k(b, a.x2, a.y2) ||
-            k(a, b.x, b.y) ||
-            k(a, b.x2, b.y) ||
-            k(a, b.x, b.y2) ||
-            k(a, b.x2, b.y2) ||
-            (((a.x < b.x2 && a.x > b.x) || (b.x < a.x2 && b.x > a.x)) && ((a.y < b.y2 && a.y > b.y) || (b.y < a.y2 && b.y > a.y)))
+              k(b, a.x2, a.y) ||
+              k(b, a.x, a.y2) ||
+              k(b, a.x2, a.y2) ||
+              k(a, b.x, b.y) ||
+              k(a, b.x2, b.y) ||
+              k(a, b.x, b.y2) ||
+              k(a, b.x2, b.y2) ||
+              (((a.x < b.x2 && a.x > b.x) || (b.x < a.x2 && b.x > a.x)) &&
+                ((a.y < b.y2 && a.y > b.y) || (b.y < a.y2 && b.y > a.y)))
           );
         }
         function m(a, b, c, d, e) {
@@ -2092,11 +2992,17 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           null == i && (i = 1), (i = i > 1 ? 1 : 0 > i ? 0 : i);
           for (
             var j = i / 2,
-            k = 12,
-            l = [-0.1252, 0.1252, -0.3678, 0.3678, -0.5873, 0.5873, -0.7699, 0.7699, -0.9041, 0.9041, -0.9816, 0.9816],
-            n = [0.2491, 0.2491, 0.2335, 0.2335, 0.2032, 0.2032, 0.1601, 0.1601, 0.1069, 0.1069, 0.0472, 0.0472],
-            o = 0,
-            p = 0;
+              k = 12,
+              l = [
+                -0.1252, 0.1252, -0.3678, 0.3678, -0.5873, 0.5873, -0.7699,
+                0.7699, -0.9041, 0.9041, -0.9816, 0.9816,
+              ],
+              n = [
+                0.2491, 0.2491, 0.2335, 0.2335, 0.2032, 0.2032, 0.1601, 0.1601,
+                0.1069, 0.1069, 0.0472, 0.0472,
+              ],
+              o = 0,
+              p = 0;
             k > p;
             p++
           ) {
@@ -2115,12 +3021,22 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               l = k / 2,
               m = k - l,
               o = 0.01;
-            for (j = n(a, b, c, d, e, f, g, h, m); T(j - i) > o;) (l /= 2), (m += (i > j ? 1 : -1) * l), (j = n(a, b, c, d, e, f, g, h, m));
+            for (j = n(a, b, c, d, e, f, g, h, m); T(j - i) > o; )
+              (l /= 2),
+                (m += (i > j ? 1 : -1) * l),
+                (j = n(a, b, c, d, e, f, g, h, m));
             return m;
           }
         }
         function p(a, b, c, d, e, f, g, h) {
-          if (!(R(a, c) < Q(e, g) || Q(a, c) > R(e, g) || R(b, d) < Q(f, h) || Q(b, d) > R(f, h))) {
+          if (
+            !(
+              R(a, c) < Q(e, g) ||
+              Q(a, c) > R(e, g) ||
+              R(b, d) < Q(f, h) ||
+              Q(b, d) > R(f, h)
+            )
+          ) {
             var i = (a * d - b * c) * (e - g) - (a - c) * (e * h - f * g),
               j = (a * d - b * c) * (f - h) - (b - d) * (e * h - f * g),
               k = (a - c) * (f - h) - (b - d) * (e - g);
@@ -2149,11 +3065,25 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           var d = j(a),
             e = j(b);
           if (!l(d, e)) return c ? 0 : [];
-          for (var f = n.apply(0, a), g = n.apply(0, b), h = ~~(f / 5), k = ~~(g / 5), m = [], o = [], q = {}, r = c ? 0 : [], s = 0; h + 1 > s; s++) {
+          for (
+            var f = n.apply(0, a),
+              g = n.apply(0, b),
+              h = ~~(f / 5),
+              k = ~~(g / 5),
+              m = [],
+              o = [],
+              q = {},
+              r = c ? 0 : [],
+              s = 0;
+            h + 1 > s;
+            s++
+          ) {
             var t = i.apply(0, a.concat(s / h));
             m.push({ x: t.x, y: t.y, t: s / h });
           }
-          for (s = 0; k + 1 > s; s++) (t = i.apply(0, b.concat(s / k))), o.push({ x: t.x, y: t.y, t: s / k });
+          for (s = 0; k + 1 > s; s++)
+            (t = i.apply(0, b.concat(s / k))),
+              o.push({ x: t.x, y: t.y, t: s / k });
           for (s = 0; h > s; s++)
             for (var u = 0; k > u; u++) {
               var v = m[s],
@@ -2168,7 +3098,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 q[B.x.toFixed(4)] = B.y.toFixed(4);
                 var C = v.t + T((B[z] - v[z]) / (w[z] - v[z])) * (w.t - v.t),
                   D = x.t + T((B[A] - x[A]) / (y[A] - x[A])) * (y.t - x.t);
-                C >= 0 && 1 >= C && D >= 0 && 1 >= D && (c ? r++ : r.push({ x: B.x, y: B.y, t1: C, t2: D }));
+                C >= 0 &&
+                  1 >= C &&
+                  D >= 0 &&
+                  1 >= D &&
+                  (c ? r++ : r.push({ x: B.x, y: B.y, t1: C, t2: D }));
               }
             }
           return r;
@@ -2181,20 +3115,44 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         function t(a, b, c) {
           (a = F(a)), (b = F(b));
-          for (var d, e, f, g, h, i, j, k, l, m, n = c ? 0 : [], o = 0, p = a.length; p > o; o++) {
+          for (
+            var d,
+              e,
+              f,
+              g,
+              h,
+              i,
+              j,
+              k,
+              l,
+              m,
+              n = c ? 0 : [],
+              o = 0,
+              p = a.length;
+            p > o;
+            o++
+          ) {
             var r = a[o];
             if ("M" == r[0]) (d = h = r[1]), (e = i = r[2]);
             else {
-              "C" == r[0] ? ((l = [d, e].concat(r.slice(1))), (d = l[6]), (e = l[7])) : ((l = [d, e, d, e, h, i, h, i]), (d = h), (e = i));
+              "C" == r[0]
+                ? ((l = [d, e].concat(r.slice(1))), (d = l[6]), (e = l[7]))
+                : ((l = [d, e, d, e, h, i, h, i]), (d = h), (e = i));
               for (var s = 0, t = b.length; t > s; s++) {
                 var u = b[s];
                 if ("M" == u[0]) (f = j = u[1]), (g = k = u[2]);
                 else {
-                  "C" == u[0] ? ((m = [f, g].concat(u.slice(1))), (f = m[6]), (g = m[7])) : ((m = [f, g, f, g, j, k, j, k]), (f = j), (g = k));
+                  "C" == u[0]
+                    ? ((m = [f, g].concat(u.slice(1))), (f = m[6]), (g = m[7]))
+                    : ((m = [f, g, f, g, j, k, j, k]), (f = j), (g = k));
                   var v = q(l, m, c);
                   if (c) n += v;
                   else {
-                    for (var w = 0, x = v.length; x > w; w++) (v[w].segment1 = o), (v[w].segment2 = s), (v[w].bez1 = l), (v[w].bez2 = m);
+                    for (var w = 0, x = v.length; x > w; w++)
+                      (v[w].segment1 = o),
+                        (v[w].segment2 = s),
+                        (v[w].bez1 = l),
+                        (v[w].bez2 = m);
                     n = n.concat(v);
                   }
                 }
@@ -2208,15 +3166,15 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return (
             k(d, b, c) &&
             1 ==
-            t(
-              a,
-              [
-                ["M", b, c],
-                ["H", d.x2 + 10],
-              ],
-              1
-            ) %
-            2
+              t(
+                a,
+                [
+                  ["M", b, c],
+                  ["H", d.x2 + 10],
+                ],
+                1
+              ) %
+                2
           );
         }
         function v(a) {
@@ -2224,11 +3182,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           if (b.bbox) return K(b.bbox);
           if (!a) return d();
           a = F(a);
-          for (var e, f = 0, g = 0, h = [], i = [], j = 0, k = a.length; k > j; j++)
-            if (((e = a[j]), "M" == e[0])) (f = e[1]), (g = e[2]), h.push(f), i.push(g);
+          for (
+            var e, f = 0, g = 0, h = [], i = [], j = 0, k = a.length;
+            k > j;
+            j++
+          )
+            if (((e = a[j]), "M" == e[0]))
+              (f = e[1]), (g = e[2]), h.push(f), i.push(g);
             else {
               var l = E(f, g, e[1], e[2], e[3], e[4], e[5], e[6]);
-              (h = h.concat(l.min.x, l.max.x)), (i = i.concat(l.min.y, l.max.y)), (f = e[5]), (g = e[6]);
+              (h = h.concat(l.min.x, l.max.x)),
+                (i = i.concat(l.min.y, l.max.y)),
+                (f = e[5]),
+                (g = e[6]);
             }
           var m = Q.apply(0, h),
             n = Q.apply(0, i),
@@ -2265,28 +3231,48 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 ["M", h, j],
                 ["A", c, c, 0, +(f - d > 180), 0, i, k],
               ];
-          else l = [["M", a, b], ["m", 0, -d], ["a", c, d, 0, 1, 1, 0, 2 * d], ["a", c, d, 0, 1, 1, 0, -2 * d], ["z"]];
+          else
+            l = [
+              ["M", a, b],
+              ["m", 0, -d],
+              ["a", c, d, 0, 1, 1, 0, 2 * d],
+              ["a", c, d, 0, 1, 1, 0, -2 * d],
+              ["z"],
+            ];
           return (l.toString = e), l;
         }
         function y(b) {
           var d = c(b),
             g = String.prototype.toLowerCase;
           if (d.rel) return f(d.rel);
-          (a.is(b, "array") && a.is(b && b[0], "array")) || (b = a.parsePathString(b));
+          (a.is(b, "array") && a.is(b && b[0], "array")) ||
+            (b = a.parsePathString(b));
           var h = [],
             i = 0,
             j = 0,
             k = 0,
             l = 0,
             m = 0;
-          "M" == b[0][0] && ((i = b[0][1]), (j = b[0][2]), (k = i), (l = j), m++, h.push(["M", i, j]));
+          "M" == b[0][0] &&
+            ((i = b[0][1]),
+            (j = b[0][2]),
+            (k = i),
+            (l = j),
+            m++,
+            h.push(["M", i, j]));
           for (var n = m, o = b.length; o > n; n++) {
             var p = (h[n] = []),
               q = b[n];
             if (q[0] != g.call(q[0]))
               switch (((p[0] = g.call(q[0])), p[0])) {
                 case "a":
-                  (p[1] = q[1]), (p[2] = q[2]), (p[3] = q[3]), (p[4] = q[4]), (p[5] = q[5]), (p[6] = +(q[6] - i).toFixed(3)), (p[7] = +(q[7] - j).toFixed(3));
+                  (p[1] = q[1]),
+                    (p[2] = q[2]),
+                    (p[3] = q[3]),
+                    (p[4] = q[4]),
+                    (p[5] = q[5]),
+                    (p[6] = +(q[6] - i).toFixed(3)),
+                    (p[7] = +(q[7] - j).toFixed(3));
                   break;
                 case "v":
                   p[1] = +(q[1] - j).toFixed(3);
@@ -2294,7 +3280,8 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 case "m":
                   (k = q[1]), (l = q[2]);
                 default:
-                  for (var r = 1, s = q.length; s > r; r++) p[r] = +(q[r] - (r % 2 ? i : j)).toFixed(3);
+                  for (var r = 1, s = q.length; s > r; r++)
+                    p[r] = +(q[r] - (r % 2 ? i : j)).toFixed(3);
               }
             else {
               (p = h[n] = []), "m" == q[0] && ((k = q[1] + i), (l = q[2] + j));
@@ -2320,7 +3307,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         function z(b) {
           var d = c(b);
           if (d.abs) return f(d.abs);
-          if (((J(b, "array") && J(b && b[0], "array")) || (b = a.parsePathString(b)), !b || !b.length)) return [["M", 0, 0]];
+          if (
+            ((J(b, "array") && J(b && b[0], "array")) ||
+              (b = a.parsePathString(b)),
+            !b || !b.length)
+          )
+            return [["M", 0, 0]];
           var g,
             h = [],
             i = 0,
@@ -2328,12 +3320,38 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             k = 0,
             l = 0,
             m = 0;
-          "M" == b[0][0] && ((i = +b[0][1]), (j = +b[0][2]), (k = i), (l = j), m++, (h[0] = ["M", i, j]));
-          for (var n, o, p = 3 == b.length && "M" == b[0][0] && "R" == b[1][0].toUpperCase() && "Z" == b[2][0].toUpperCase(), q = m, r = b.length; r > q; q++) {
-            if ((h.push((n = [])), (o = b[q]), (g = o[0]), g != g.toUpperCase()))
+          "M" == b[0][0] &&
+            ((i = +b[0][1]),
+            (j = +b[0][2]),
+            (k = i),
+            (l = j),
+            m++,
+            (h[0] = ["M", i, j]));
+          for (
+            var n,
+              o,
+              p =
+                3 == b.length &&
+                "M" == b[0][0] &&
+                "R" == b[1][0].toUpperCase() &&
+                "Z" == b[2][0].toUpperCase(),
+              q = m,
+              r = b.length;
+            r > q;
+            q++
+          ) {
+            if (
+              (h.push((n = [])), (o = b[q]), (g = o[0]), g != g.toUpperCase())
+            )
               switch (((n[0] = g.toUpperCase()), n[0])) {
                 case "A":
-                  (n[1] = o[1]), (n[2] = o[2]), (n[3] = o[3]), (n[4] = o[4]), (n[5] = o[5]), (n[6] = +(o[6] + i)), (n[7] = +(o[7] + j));
+                  (n[1] = o[1]),
+                    (n[2] = o[2]),
+                    (n[3] = o[3]),
+                    (n[4] = o[4]),
+                    (n[5] = o[5]),
+                    (n[6] = +(o[6] + i)),
+                    (n[7] = +(o[7] + j));
                   break;
                 case "V":
                   n[1] = +o[1] + j;
@@ -2342,23 +3360,45 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   n[1] = +o[1] + i;
                   break;
                 case "R":
-                  for (var s = [i, j].concat(o.slice(1)), t = 2, u = s.length; u > t; t++) (s[t] = +s[t] + i), (s[++t] = +s[t] + j);
+                  for (
+                    var s = [i, j].concat(o.slice(1)), t = 2, u = s.length;
+                    u > t;
+                    t++
+                  )
+                    (s[t] = +s[t] + i), (s[++t] = +s[t] + j);
                   h.pop(), (h = h.concat(H(s, p)));
                   break;
                 case "O":
-                  h.pop(), (s = x(i, j, o[1], o[2])), s.push(s[0]), (h = h.concat(s));
+                  h.pop(),
+                    (s = x(i, j, o[1], o[2])),
+                    s.push(s[0]),
+                    (h = h.concat(s));
                   break;
                 case "U":
-                  h.pop(), (h = h.concat(x(i, j, o[1], o[2], o[3]))), (n = ["U"].concat(h[h.length - 1].slice(-2)));
+                  h.pop(),
+                    (h = h.concat(x(i, j, o[1], o[2], o[3]))),
+                    (n = ["U"].concat(h[h.length - 1].slice(-2)));
                   break;
                 case "M":
                   (k = +o[1] + i), (l = +o[2] + j);
                 default:
-                  for (t = 1, u = o.length; u > t; t++) n[t] = +o[t] + (t % 2 ? i : j);
+                  for (t = 1, u = o.length; u > t; t++)
+                    n[t] = +o[t] + (t % 2 ? i : j);
               }
-            else if ("R" == g) (s = [i, j].concat(o.slice(1))), h.pop(), (h = h.concat(H(s, p))), (n = ["R"].concat(o.slice(-2)));
-            else if ("O" == g) h.pop(), (s = x(i, j, o[1], o[2])), s.push(s[0]), (h = h.concat(s));
-            else if ("U" == g) h.pop(), (h = h.concat(x(i, j, o[1], o[2], o[3]))), (n = ["U"].concat(h[h.length - 1].slice(-2)));
+            else if ("R" == g)
+              (s = [i, j].concat(o.slice(1))),
+                h.pop(),
+                (h = h.concat(H(s, p))),
+                (n = ["R"].concat(o.slice(-2)));
+            else if ("O" == g)
+              h.pop(),
+                (s = x(i, j, o[1], o[2])),
+                s.push(s[0]),
+                (h = h.concat(s));
+            else if ("U" == g)
+              h.pop(),
+                (h = h.concat(x(i, j, o[1], o[2], o[3]))),
+                (n = ["U"].concat(h[h.length - 1].slice(-2)));
             else for (var v = 0, w = o.length; w > v; v++) n[v] = o[v];
             if (((g = g.toUpperCase()), "O" != g))
               switch (n[0]) {
@@ -2385,7 +3425,14 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         function B(a, b, c, d, e, f) {
           var g = 1 / 3,
             h = 2 / 3;
-          return [g * a + h * c, g * b + h * d, g * e + h * c, g * f + h * d, e, f];
+          return [
+            g * a + h * c,
+            g * b + h * d,
+            g * e + h * c,
+            g * f + h * d,
+            e,
+            f,
+          ];
         }
         function C(b, c, d, e, f, g, h, i, j, k) {
           var l,
@@ -2399,26 +3446,43 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             });
           if (k) (y = k[0]), (z = k[1]), (w = k[2]), (x = k[3]);
           else {
-            (l = p(b, c, -n)), (b = l.x), (c = l.y), (l = p(i, j, -n)), (i = l.x), (j = l.y);
+            (l = p(b, c, -n)),
+              (b = l.x),
+              (c = l.y),
+              (l = p(i, j, -n)),
+              (i = l.x),
+              (j = l.y);
             var q = (O.cos((P / 180) * f), O.sin((P / 180) * f), (b - i) / 2),
               r = (c - j) / 2,
               s = (q * q) / (d * d) + (r * r) / (e * e);
             s > 1 && ((s = O.sqrt(s)), (d = s * d), (e = s * e));
             var t = d * d,
               u = e * e,
-              v = (g == h ? -1 : 1) * O.sqrt(T((t * u - t * r * r - u * q * q) / (t * r * r + u * q * q))),
+              v =
+                (g == h ? -1 : 1) *
+                O.sqrt(
+                  T((t * u - t * r * r - u * q * q) / (t * r * r + u * q * q))
+                ),
               w = (v * d * r) / e + (b + i) / 2,
               x = (v * -e * q) / d + (c + j) / 2,
               y = O.asin(((c - x) / e).toFixed(9)),
               z = O.asin(((j - x) / e).toFixed(9));
-            (y = w > b ? P - y : y), (z = w > i ? P - z : z), 0 > y && (y = 2 * P + y), 0 > z && (z = 2 * P + z), h && y > z && (y -= 2 * P), !h && z > y && (z -= 2 * P);
+            (y = w > b ? P - y : y),
+              (z = w > i ? P - z : z),
+              0 > y && (y = 2 * P + y),
+              0 > z && (z = 2 * P + z),
+              h && y > z && (y -= 2 * P),
+              !h && z > y && (z -= 2 * P);
           }
           var A = z - y;
           if (T(A) > m) {
             var B = z,
               D = i,
               E = j;
-            (z = y + m * (h && z > y ? 1 : -1)), (i = w + d * O.cos(z)), (j = x + e * O.sin(z)), (o = C(i, j, d, e, f, 0, h, D, E, [z, B, w, x]));
+            (z = y + m * (h && z > y ? 1 : -1)),
+              (i = w + d * O.cos(z)),
+              (j = x + e * O.sin(z)),
+              (o = C(i, j, d, e, f, 0, h, D, E, [z, B, w, x]));
           }
           A = z - y;
           var F = O.cos(y),
@@ -2432,14 +3496,27 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             N = [b + K * G, c - L * F],
             Q = [i + K * I, j - L * H],
             R = [i, j];
-          if (((N[0] = 2 * M[0] - N[0]), (N[1] = 2 * M[1] - N[1]), k)) return [N, Q, R].concat(o);
+          if (((N[0] = 2 * M[0] - N[0]), (N[1] = 2 * M[1] - N[1]), k))
+            return [N, Q, R].concat(o);
           o = [N, Q, R].concat(o).join().split(",");
-          for (var S = [], U = 0, V = o.length; V > U; U++) S[U] = U % 2 ? p(o[U - 1], o[U], n).y : p(o[U], o[U + 1], n).x;
+          for (var S = [], U = 0, V = o.length; V > U; U++)
+            S[U] = U % 2 ? p(o[U - 1], o[U], n).y : p(o[U], o[U + 1], n).x;
           return S;
         }
         function D(a, b, c, d, e, f, g, h, i) {
           var j = 1 - i;
-          return { x: S(j, 3) * a + 3 * S(j, 2) * i * c + 3 * j * i * i * e + S(i, 3) * g, y: S(j, 3) * b + 3 * S(j, 2) * i * d + 3 * j * i * i * f + S(i, 3) * h };
+          return {
+            x:
+              S(j, 3) * a +
+              3 * S(j, 2) * i * c +
+              3 * j * i * i * e +
+              S(i, 3) * g,
+            y:
+              S(j, 3) * b +
+              3 * S(j, 2) * i * d +
+              3 * j * i * i * f +
+              S(i, 3) * h,
+          };
         }
         function E(a, b, c, d, e, f, g, h) {
           var i,
@@ -2453,8 +3530,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           return (
             T(m) > "1e12" && (m = 0.5),
             T(n) > "1e12" && (n = 0.5),
-            m > 0 && 1 > m && ((i = D(a, b, c, d, e, f, g, h, m)), p.push(i.x), o.push(i.y)),
-            n > 0 && 1 > n && ((i = D(a, b, c, d, e, f, g, h, n)), p.push(i.x), o.push(i.y)),
+            m > 0 &&
+              1 > m &&
+              ((i = D(a, b, c, d, e, f, g, h, m)), p.push(i.x), o.push(i.y)),
+            n > 0 &&
+              1 > n &&
+              ((i = D(a, b, c, d, e, f, g, h, n)), p.push(i.x), o.push(i.y)),
             (j = f - 2 * d + b - (h - 2 * f + d)),
             (k = 2 * (d - b) - 2 * (f - d)),
             (l = b - d),
@@ -2462,9 +3543,16 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             (n = (-k - O.sqrt(k * k - 4 * j * l)) / 2 / j),
             T(m) > "1e12" && (m = 0.5),
             T(n) > "1e12" && (n = 0.5),
-            m > 0 && 1 > m && ((i = D(a, b, c, d, e, f, g, h, m)), p.push(i.x), o.push(i.y)),
-            n > 0 && 1 > n && ((i = D(a, b, c, d, e, f, g, h, n)), p.push(i.x), o.push(i.y)),
-            { min: { x: Q.apply(0, p), y: Q.apply(0, o) }, max: { x: R.apply(0, p), y: R.apply(0, o) } }
+            m > 0 &&
+              1 > m &&
+              ((i = D(a, b, c, d, e, f, g, h, m)), p.push(i.x), o.push(i.y)),
+            n > 0 &&
+              1 > n &&
+              ((i = D(a, b, c, d, e, f, g, h, n)), p.push(i.x), o.push(i.y)),
+            {
+              min: { x: Q.apply(0, p), y: Q.apply(0, o) },
+              max: { x: R.apply(0, p), y: R.apply(0, o) },
+            }
           );
         }
         function F(a, b) {
@@ -2472,70 +3560,105 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           if (!b && d.curve) return f(d.curve);
           for (
             var e = z(a),
-            g = b && z(b),
-            h = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
-            i = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
-            j = function (a, b) {
-              var c, d;
-              if (!a) return ["C", b.x, b.y, b.x, b.y, b.x, b.y];
-              switch ((!(a[0] in { T: 1, Q: 1 }) && (b.qx = b.qy = null), a[0])) {
-                case "M":
-                  (b.X = a[1]), (b.Y = a[2]);
-                  break;
-                case "A":
-                  a = ["C"].concat(C.apply(0, [b.x, b.y].concat(a.slice(1))));
-                  break;
-                case "S":
-                  (c = b.x + (b.x - (b.bx || b.x))), (d = b.y + (b.y - (b.by || b.y))), (a = ["C", c, d].concat(a.slice(1)));
-                  break;
-                case "T":
-                  (b.qx = b.x + (b.x - (b.qx || b.x))), (b.qy = b.y + (b.y - (b.qy || b.y))), (a = ["C"].concat(B(b.x, b.y, b.qx, b.qy, a[1], a[2])));
-                  break;
-                case "Q":
-                  (b.qx = a[1]), (b.qy = a[2]), (a = ["C"].concat(B(b.x, b.y, a[1], a[2], a[3], a[4])));
-                  break;
-                case "L":
-                  a = ["C"].concat(A(b.x, b.y, a[1], a[2]));
-                  break;
-                case "H":
-                  a = ["C"].concat(A(b.x, b.y, a[1], b.y));
-                  break;
-                case "V":
-                  a = ["C"].concat(A(b.x, b.y, b.x, a[1]));
-                  break;
-                case "Z":
-                  a = ["C"].concat(A(b.x, b.y, b.X, b.Y));
-              }
-              return a;
-            },
-            k = function (a, b) {
-              if (a[b].length > 7) {
-                a[b].shift();
-                for (var c = a[b]; c.length;) a.splice(b++, 0, ["C"].concat(c.splice(0, 6)));
-                a.splice(b, 1), (n = R(e.length, (g && g.length) || 0));
-              }
-            },
-            l = function (a, b, c, d, f) {
-              a && b && "M" == a[f][0] && "M" != b[f][0] && (b.splice(f, 0, ["M", d.x, d.y]), (c.bx = 0), (c.by = 0), (c.x = a[f][1]), (c.y = a[f][2]), (n = R(e.length, (g && g.length) || 0)));
-            },
-            m = 0,
-            n = R(e.length, (g && g.length) || 0);
+              g = b && z(b),
+              h = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
+              i = { x: 0, y: 0, bx: 0, by: 0, X: 0, Y: 0, qx: null, qy: null },
+              j = function (a, b) {
+                var c, d;
+                if (!a) return ["C", b.x, b.y, b.x, b.y, b.x, b.y];
+                switch (
+                  (!(a[0] in { T: 1, Q: 1 }) && (b.qx = b.qy = null), a[0])
+                ) {
+                  case "M":
+                    (b.X = a[1]), (b.Y = a[2]);
+                    break;
+                  case "A":
+                    a = ["C"].concat(C.apply(0, [b.x, b.y].concat(a.slice(1))));
+                    break;
+                  case "S":
+                    (c = b.x + (b.x - (b.bx || b.x))),
+                      (d = b.y + (b.y - (b.by || b.y))),
+                      (a = ["C", c, d].concat(a.slice(1)));
+                    break;
+                  case "T":
+                    (b.qx = b.x + (b.x - (b.qx || b.x))),
+                      (b.qy = b.y + (b.y - (b.qy || b.y))),
+                      (a = ["C"].concat(B(b.x, b.y, b.qx, b.qy, a[1], a[2])));
+                    break;
+                  case "Q":
+                    (b.qx = a[1]),
+                      (b.qy = a[2]),
+                      (a = ["C"].concat(B(b.x, b.y, a[1], a[2], a[3], a[4])));
+                    break;
+                  case "L":
+                    a = ["C"].concat(A(b.x, b.y, a[1], a[2]));
+                    break;
+                  case "H":
+                    a = ["C"].concat(A(b.x, b.y, a[1], b.y));
+                    break;
+                  case "V":
+                    a = ["C"].concat(A(b.x, b.y, b.x, a[1]));
+                    break;
+                  case "Z":
+                    a = ["C"].concat(A(b.x, b.y, b.X, b.Y));
+                }
+                return a;
+              },
+              k = function (a, b) {
+                if (a[b].length > 7) {
+                  a[b].shift();
+                  for (var c = a[b]; c.length; )
+                    a.splice(b++, 0, ["C"].concat(c.splice(0, 6)));
+                  a.splice(b, 1), (n = R(e.length, (g && g.length) || 0));
+                }
+              },
+              l = function (a, b, c, d, f) {
+                a &&
+                  b &&
+                  "M" == a[f][0] &&
+                  "M" != b[f][0] &&
+                  (b.splice(f, 0, ["M", d.x, d.y]),
+                  (c.bx = 0),
+                  (c.by = 0),
+                  (c.x = a[f][1]),
+                  (c.y = a[f][2]),
+                  (n = R(e.length, (g && g.length) || 0)));
+              },
+              m = 0,
+              n = R(e.length, (g && g.length) || 0);
             n > m;
             m++
           ) {
-            (e[m] = j(e[m], h)), k(e, m), g && (g[m] = j(g[m], i)), g && k(g, m), l(e, g, h, i, m), l(g, e, i, h, m);
+            (e[m] = j(e[m], h)),
+              k(e, m),
+              g && (g[m] = j(g[m], i)),
+              g && k(g, m),
+              l(e, g, h, i, m),
+              l(g, e, i, h, m);
             var o = e[m],
               p = g && g[m],
               q = o.length,
               r = g && p.length;
-            (h.x = o[q - 2]), (h.y = o[q - 1]), (h.bx = N(o[q - 4]) || h.x), (h.by = N(o[q - 3]) || h.y), (i.bx = g && (N(p[r - 4]) || i.x)), (i.by = g && (N(p[r - 3]) || i.y)), (i.x = g && p[r - 2]), (i.y = g && p[r - 1]);
+            (h.x = o[q - 2]),
+              (h.y = o[q - 1]),
+              (h.bx = N(o[q - 4]) || h.x),
+              (h.by = N(o[q - 3]) || h.y),
+              (i.bx = g && (N(p[r - 4]) || i.x)),
+              (i.by = g && (N(p[r - 3]) || i.y)),
+              (i.x = g && p[r - 2]),
+              (i.y = g && p[r - 1]);
           }
           return g || (d.curve = f(e)), g ? [e, g] : e;
         }
         function G(a, b) {
           if (!b) return a;
           var c, d, e, f, g, h, i;
-          for (a = F(a), e = 0, g = a.length; g > e; e++) for (i = a[e], f = 1, h = i.length; h > f; f += 2) (c = b.x(i[f], i[f + 1])), (d = b.y(i[f], i[f + 1])), (i[f] = c), (i[f + 1] = d);
+          for (a = F(a), e = 0, g = a.length; g > e; e++)
+            for (i = a[e], f = 1, h = i.length; h > f; f += 2)
+              (c = b.x(i[f], i[f + 1])),
+                (d = b.y(i[f], i[f + 1])),
+                (i[f] = c),
+                (i[f + 1] = d);
           return a;
         }
         function H(a, b) {
@@ -2550,12 +3673,22 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               ? d
                 ? e - 4 == d
                   ? (f[3] = { x: +a[0], y: +a[1] })
-                  : e - 2 == d && ((f[2] = { x: +a[0], y: +a[1] }), (f[3] = { x: +a[2], y: +a[3] }))
+                  : e - 2 == d &&
+                    ((f[2] = { x: +a[0], y: +a[1] }),
+                    (f[3] = { x: +a[2], y: +a[3] }))
                 : (f[0] = { x: +a[e - 2], y: +a[e - 1] })
               : e - 4 == d
-                ? (f[3] = f[2])
-                : d || (f[0] = { x: +a[d], y: +a[d + 1] }),
-              c.push(["C", (-f[0].x + 6 * f[1].x + f[2].x) / 6, (-f[0].y + 6 * f[1].y + f[2].y) / 6, (f[1].x + 6 * f[2].x - f[3].x) / 6, (f[1].y + 6 * f[2].y - f[3].y) / 6, f[2].x, f[2].y]);
+              ? (f[3] = f[2])
+              : d || (f[0] = { x: +a[d], y: +a[d + 1] }),
+              c.push([
+                "C",
+                (-f[0].x + 6 * f[1].x + f[2].x) / 6,
+                (-f[0].y + 6 * f[1].y + f[2].y) / 6,
+                (f[1].x + 6 * f[2].x - f[3].x) / 6,
+                (f[1].y + 6 * f[2].y - f[3].y) / 6,
+                f[2].x,
+                f[2].y,
+              ]);
           }
           return c;
         }
@@ -2608,7 +3741,9 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               return w(b.x, b.y, b.width, b.height);
             },
             line: function (a) {
-              return "M" + [a.attr("x1"), a.attr("y1"), a.attr("x2"), a.attr("y2")];
+              return (
+                "M" + [a.attr("x1"), a.attr("y1"), a.attr("x2"), a.attr("y2")]
+              );
             },
             polyline: function (a) {
               return "M" + a.attr("points");
@@ -2634,7 +3769,9 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             return b ? W(d, b).end : d;
           }),
           (I.getTotalLength = function () {
-            return this.node.getTotalLength ? this.node.getTotalLength() : void 0;
+            return this.node.getTotalLength
+              ? this.node.getTotalLength()
+              : void 0;
           }),
           (I.getPointAtLength = function (a) {
             return V(this.attr("d"), a);
@@ -2663,33 +3800,46 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         var b = Math.max,
           c = Math.min,
           d = function (a) {
-            if (((this.items = []), (this.length = 0), (this.type = "set"), a)) for (var b = 0, c = a.length; c > b; b++) a[b] && ((this[this.items.length] = this.items[this.items.length] = a[b]), this.length++);
+            if (((this.items = []), (this.length = 0), (this.type = "set"), a))
+              for (var b = 0, c = a.length; c > b; b++)
+                a[b] &&
+                  ((this[this.items.length] = this.items[this.items.length] =
+                    a[b]),
+                  this.length++);
           },
           e = d.prototype;
         (e.push = function () {
-          for (var a, b, c = 0, d = arguments.length; d > c; c++) (a = arguments[c]), a && ((b = this.items.length), (this[b] = this.items[b] = a), this.length++);
+          for (var a, b, c = 0, d = arguments.length; d > c; c++)
+            (a = arguments[c]),
+              a &&
+                ((b = this.items.length),
+                (this[b] = this.items[b] = a),
+                this.length++);
           return this;
         }),
           (e.pop = function () {
             return this.length && delete this[this.length--], this.items.pop();
           }),
           (e.forEach = function (a, b) {
-            for (var c = 0, d = this.items.length; d > c; c++) if (a.call(b, this.items[c], c) === !1) return this;
+            for (var c = 0, d = this.items.length; d > c; c++)
+              if (a.call(b, this.items[c], c) === !1) return this;
             return this;
           }),
           (e.remove = function () {
-            for (; this.length;) this.pop().remove();
+            for (; this.length; ) this.pop().remove();
             return this;
           }),
           (e.attr = function (a) {
-            for (var b = 0, c = this.items.length; c > b; b++) this.items[b].attr(a);
+            for (var b = 0, c = this.items.length; c > b; b++)
+              this.items[b].attr(a);
             return this;
           }),
           (e.clear = function () {
-            for (; this.length;) this.pop();
+            for (; this.length; ) this.pop();
           }),
           (e.splice = function (a, e) {
-            (a = 0 > a ? b(this.length + a, 0) : a), (e = b(0, c(this.length - a, e)));
+            (a = 0 > a ? b(this.length + a, 0) : a),
+              (e = b(0, c(this.length - a, e)));
             var f,
               g = [],
               h = [],
@@ -2698,29 +3848,55 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             for (f = 0; e > f; f++) h.push(this[a + f]);
             for (; f < this.length - a; f++) g.push(this[a + f]);
             var j = i.length;
-            for (f = 0; f < j + g.length; f++) this.items[a + f] = this[a + f] = j > f ? i[f] : g[f - j];
-            for (f = this.items.length = this.length -= e - j; this[f];) delete this[f++];
+            for (f = 0; f < j + g.length; f++)
+              this.items[a + f] = this[a + f] = j > f ? i[f] : g[f - j];
+            for (f = this.items.length = this.length -= e - j; this[f]; )
+              delete this[f++];
             return new d(h);
           }),
           (e.exclude = function (a) {
-            for (var b = 0, c = this.length; c > b; b++) if (this[b] == a) return this.splice(b, 1), !0;
+            for (var b = 0, c = this.length; c > b; b++)
+              if (this[b] == a) return this.splice(b, 1), !0;
             return !1;
           }),
           (e.insertAfter = function (a) {
-            for (var b = this.items.length; b--;) this.items[b].insertAfter(a);
+            for (var b = this.items.length; b--; ) this.items[b].insertAfter(a);
             return this;
           }),
           (e.getBBox = function () {
-            for (var a = [], d = [], e = [], f = [], g = this.items.length; g--;)
+            for (
+              var a = [], d = [], e = [], f = [], g = this.items.length;
+              g--;
+
+            )
               if (!this.items[g].removed) {
                 var h = this.items[g].getBBox();
-                a.push(h.x), d.push(h.y), e.push(h.x + h.width), f.push(h.y + h.height);
+                a.push(h.x),
+                  d.push(h.y),
+                  e.push(h.x + h.width),
+                  f.push(h.y + h.height);
               }
-            return (a = c.apply(0, a)), (d = c.apply(0, d)), (e = b.apply(0, e)), (f = b.apply(0, f)), { x: a, y: d, x2: e, y2: f, width: e - a, height: f - d, cx: a + (e - a) / 2, cy: d + (f - d) / 2 };
+            return (
+              (a = c.apply(0, a)),
+              (d = c.apply(0, d)),
+              (e = b.apply(0, e)),
+              (f = b.apply(0, f)),
+              {
+                x: a,
+                y: d,
+                x2: e,
+                y2: f,
+                width: e - a,
+                height: f - d,
+                cx: a + (e - a) / 2,
+                cy: d + (f - d) / 2,
+              }
+            );
           }),
           (e.clone = function (a) {
             a = new d();
-            for (var b = 0, c = this.items.length; c > b; b++) a.push(this.items[b].clone());
+            for (var b = 0, c = this.items.length; c > b; b++)
+              a.push(this.items[b].clone());
             return a;
           }),
           (e.toString = function () {
@@ -2729,7 +3905,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           (e.type = "set"),
           (a.set = function () {
             var a = new d();
-            return arguments.length && a.push.apply(a, Array.prototype.slice.call(arguments, 0)), a;
+            return (
+              arguments.length &&
+                a.push.apply(a, Array.prototype.slice.call(arguments, 0)),
+              a
+            );
           });
       }),
       d.plugin(function (a, b) {
@@ -2743,17 +3923,48 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             case "r":
               return 4 == a.length ? [b, 0, a[2], a[3]] : [b, 0];
             case "s":
-              return 5 == a.length ? [b, 1, 1, a[3], a[4]] : 3 == a.length ? [b, 1, 1] : [b, 1];
+              return 5 == a.length
+                ? [b, 1, 1, a[3], a[4]]
+                : 3 == a.length
+                ? [b, 1, 1]
+                : [b, 1];
           }
         }
         function d(b, d, e) {
-          (d = l(d).replace(/\.{3}|\u2026/g, b)), (b = a.parseTransformString(b) || []), (d = a.parseTransformString(d) || []);
-          for (var f, g, j, k, m = Math.max(b.length, d.length), n = [], o = [], p = 0; m > p; p++) {
-            if (((j = b[p] || c(d[p])), (k = d[p] || c(j)), j[0] != k[0] || ("r" == j[0].toLowerCase() && (j[2] != k[2] || j[3] != k[3])) || ("s" == j[0].toLowerCase() && (j[3] != k[3] || j[4] != k[4])))) {
-              (b = a._.transform2matrix(b, e())), (d = a._.transform2matrix(d, e())), (n = [["m", b.a, b.b, b.c, b.d, b.e, b.f]]), (o = [["m", d.a, d.b, d.c, d.d, d.e, d.f]]);
+          (d = l(d).replace(/\.{3}|\u2026/g, b)),
+            (b = a.parseTransformString(b) || []),
+            (d = a.parseTransformString(d) || []);
+          for (
+            var f,
+              g,
+              j,
+              k,
+              m = Math.max(b.length, d.length),
+              n = [],
+              o = [],
+              p = 0;
+            m > p;
+            p++
+          ) {
+            if (
+              ((j = b[p] || c(d[p])),
+              (k = d[p] || c(j)),
+              j[0] != k[0] ||
+                ("r" == j[0].toLowerCase() && (j[2] != k[2] || j[3] != k[3])) ||
+                ("s" == j[0].toLowerCase() && (j[3] != k[3] || j[4] != k[4])))
+            ) {
+              (b = a._.transform2matrix(b, e())),
+                (d = a._.transform2matrix(d, e())),
+                (n = [["m", b.a, b.b, b.c, b.d, b.e, b.f]]),
+                (o = [["m", d.a, d.b, d.c, d.d, d.e, d.f]]);
               break;
             }
-            for (n[p] = [], o[p] = [], f = 0, g = Math.max(j.length, k.length); g > f; f++) f in j && (n[p][f] = j[f]), f in k && (o[p][f] = k[f]);
+            for (
+              n[p] = [], o[p] = [], f = 0, g = Math.max(j.length, k.length);
+              g > f;
+              f++
+            )
+              f in j && (n[p][f] = j[f]), f in k && (o[p][f] = k[f]);
           }
           return { from: i(n), to: i(o), f: h(n) };
         }
@@ -2778,13 +3989,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             h = 0,
             i = [];
           for (b = 0, c = a.length; c > b; b++) {
-            for (f = "[", g = ['"' + a[b][0] + '"'], d = 1, e = a[b].length; e > d; d++) g[d] = "val[" + h++ + "]";
+            for (
+              f = "[", g = ['"' + a[b][0] + '"'], d = 1, e = a[b].length;
+              e > d;
+              d++
+            )
+              g[d] = "val[" + h++ + "]";
             (f += g + "]"), (i[b] = f);
           }
           return Function("val", "return Snap.path.toString.call([" + i + "])");
         }
         function i(a) {
-          for (var b = [], c = 0, d = a.length; d > c; c++) for (var e = 1, f = a[c].length; f > e; e++) b.push(a[c][e]);
+          for (var b = [], c = 0, d = a.length; d > c; c++)
+            for (var e = 1, f = a[c].length; f > e; e++) b.push(a[c][e]);
           return b;
         }
         var j = {},
@@ -2797,8 +4014,21 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               o = l(this.attr(b) || ""),
               p = this;
             if (o == +o && c == +c) return { from: +o, to: +c, f: e };
-            if ("colour" == j[b]) return (m = a.color(o)), (n = a.color(c)), { from: [m.r, m.g, m.b, m.opacity], to: [n.r, n.g, n.b, n.opacity], f: g };
-            if ("transform" == b || "gradientTransform" == b || "patternTransform" == b)
+            if ("colour" == j[b])
+              return (
+                (m = a.color(o)),
+                (n = a.color(c)),
+                {
+                  from: [m.r, m.g, m.b, m.opacity],
+                  to: [n.r, n.g, n.b, n.opacity],
+                  f: g,
+                }
+              );
+            if (
+              "transform" == b ||
+              "gradientTransform" == b ||
+              "patternTransform" == b
+            )
               return (
                 c instanceof a.Matrix && (c = c.toTransformString()),
                 a._.rgTransform.test(c) || (c = a._.svgTransform2string(c)),
@@ -2806,7 +4036,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   return p.getBBox(1);
                 })
               );
-            if ("d" == b || "path" == b) return (m = a.path.toCubic(o, c)), { from: i(m[0]), to: i(m[1]), f: h(m[0]) };
+            if ("d" == b || "path" == b)
+              return (
+                (m = a.path.toCubic(o, c)),
+                { from: i(m[0]), to: i(m[1]), f: h(m[0]) }
+              );
             if ("points" == b)
               return (
                 (m = l(o).split(",")),
@@ -2821,107 +4055,206 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               );
             var q = o.match(k),
               r = l(c).match(k);
-            return q && q == r ? { from: parseFloat(o), to: parseFloat(c), f: f(q) } : { from: this.asPX(b), to: this.asPX(b, c), f: e };
+            return q && q == r
+              ? { from: parseFloat(o), to: parseFloat(c), f: f(q) }
+              : { from: this.asPX(b), to: this.asPX(b, c), f: e };
           });
       }),
       d.plugin(function (a, c, d, e) {
         for (
           var f = c.prototype,
-          g = "hasOwnProperty",
-          h = ("createTouch" in e.doc),
-          i = ["click", "dblclick", "mousedown", "mousemove", "mouseout", "mouseover", "mouseup", "touchstart", "touchmove", "touchend", "touchcancel"],
-          j = { mousedown: "touchstart", mousemove: "touchmove", mouseup: "touchend" },
-          k = function (a) {
-            var b = "y" == a ? "scrollTop" : "scrollLeft";
-            return e.doc.documentElement[b] || e.doc.body[b];
-          },
-          l = function () {
-            this.returnValue = !1;
-          },
-          m = function () {
-            return this.originalEvent.preventDefault();
-          },
-          n = function () {
-            this.cancelBubble = !0;
-          },
-          o = function () {
-            return this.originalEvent.stopPropagation();
-          },
-          p = (function () {
-            return e.doc.addEventListener
-              ? function (a, b, c, d) {
-                var e = h && j[b] ? j[b] : b,
-                  f = function (e) {
-                    var f = k("y"),
-                      i = k("x");
-                    if (h && j[g](b))
-                      for (var l = 0, n = e.targetTouches && e.targetTouches.length; n > l; l++)
-                        if (e.targetTouches[l].target == a || a.contains(e.targetTouches[l].target)) {
-                          var p = e;
-                          (e = e.targetTouches[l]), (e.originalEvent = p), (e.preventDefault = m), (e.stopPropagation = o);
-                          break;
-                        }
-                    var q = e.clientX + i,
-                      r = e.clientY + f;
-                    return c.call(d, e, q, r);
-                  };
-                return (
-                  b !== e && a.addEventListener(b, f, !1),
-                  a.addEventListener(e, f, !1),
-                  function () {
-                    return b !== e && a.removeEventListener(b, f, !1), a.removeEventListener(e, f, !1), !0;
-                  }
-                );
-              }
-              : e.doc.attachEvent
+            g = "hasOwnProperty",
+            h = ("createTouch" in e.doc),
+            i = [
+              "click",
+              "dblclick",
+              "mousedown",
+              "mousemove",
+              "mouseout",
+              "mouseover",
+              "mouseup",
+              "touchstart",
+              "touchmove",
+              "touchend",
+              "touchcancel",
+            ],
+            j = {
+              mousedown: "touchstart",
+              mousemove: "touchmove",
+              mouseup: "touchend",
+            },
+            k = function (a) {
+              var b = "y" == a ? "scrollTop" : "scrollLeft";
+              return e.doc.documentElement[b] || e.doc.body[b];
+            },
+            l = function () {
+              this.returnValue = !1;
+            },
+            m = function () {
+              return this.originalEvent.preventDefault();
+            },
+            n = function () {
+              this.cancelBubble = !0;
+            },
+            o = function () {
+              return this.originalEvent.stopPropagation();
+            },
+            p = (function () {
+              return e.doc.addEventListener
                 ? function (a, b, c, d) {
-                  var f = function (a) {
-                    a = a || e.win.event;
-                    var b = k("y"),
-                      f = k("x"),
-                      g = a.clientX + f,
-                      h = a.clientY + b;
-                    return (a.preventDefault = a.preventDefault || l), (a.stopPropagation = a.stopPropagation || n), c.call(d, a, g, h);
-                  };
-                  a.attachEvent("on" + b, f);
-                  var g = function () {
-                    return a.detachEvent("on" + b, f), !0;
-                  };
-                  return g;
-                }
-                : void 0;
-          })(),
-          q = [],
-          r = function (c) {
-            for (var d, e = c.clientX, f = c.clientY, g = k("y"), i = k("x"), j = q.length; j--;) {
-              if (((d = q[j]), h)) {
-                for (var l, m = c.touches && c.touches.length; m--;)
-                  if (((l = c.touches[m]), l.identifier == d.el._drag.id || d.el.node.contains(l.target))) {
-                    (e = l.clientX), (f = l.clientY), (c.originalEvent ? c.originalEvent : c).preventDefault();
-                    break;
+                    var e = h && j[b] ? j[b] : b,
+                      f = function (e) {
+                        var f = k("y"),
+                          i = k("x");
+                        if (h && j[g](b))
+                          for (
+                            var l = 0,
+                              n = e.targetTouches && e.targetTouches.length;
+                            n > l;
+                            l++
+                          )
+                            if (
+                              e.targetTouches[l].target == a ||
+                              a.contains(e.targetTouches[l].target)
+                            ) {
+                              var p = e;
+                              (e = e.targetTouches[l]),
+                                (e.originalEvent = p),
+                                (e.preventDefault = m),
+                                (e.stopPropagation = o);
+                              break;
+                            }
+                        var q = e.clientX + i,
+                          r = e.clientY + f;
+                        return c.call(d, e, q, r);
+                      };
+                    return (
+                      b !== e && a.addEventListener(b, f, !1),
+                      a.addEventListener(e, f, !1),
+                      function () {
+                        return (
+                          b !== e && a.removeEventListener(b, f, !1),
+                          a.removeEventListener(e, f, !1),
+                          !0
+                        );
+                      }
+                    );
                   }
-              } else c.preventDefault();
-              var n = d.el.node;
-              a._.glob, n.nextSibling, n.parentNode, n.style.display, (e += i), (f += g), b("snap.drag.move." + d.el.id, d.move_scope || d.el, e - d.el._drag.x, f - d.el._drag.y, e, f, c);
-            }
-          },
-          s = function (c) {
-            a.unmousemove(r).unmouseup(s);
-            for (var d, e = q.length; e--;) (d = q[e]), (d.el._drag = {}), b("snap.drag.end." + d.el.id, d.end_scope || d.start_scope || d.move_scope || d.el, c);
-            q = [];
-          },
-          t = i.length;
+                : e.doc.attachEvent
+                ? function (a, b, c, d) {
+                    var f = function (a) {
+                      a = a || e.win.event;
+                      var b = k("y"),
+                        f = k("x"),
+                        g = a.clientX + f,
+                        h = a.clientY + b;
+                      return (
+                        (a.preventDefault = a.preventDefault || l),
+                        (a.stopPropagation = a.stopPropagation || n),
+                        c.call(d, a, g, h)
+                      );
+                    };
+                    a.attachEvent("on" + b, f);
+                    var g = function () {
+                      return a.detachEvent("on" + b, f), !0;
+                    };
+                    return g;
+                  }
+                : void 0;
+            })(),
+            q = [],
+            r = function (c) {
+              for (
+                var d,
+                  e = c.clientX,
+                  f = c.clientY,
+                  g = k("y"),
+                  i = k("x"),
+                  j = q.length;
+                j--;
+
+              ) {
+                if (((d = q[j]), h)) {
+                  for (var l, m = c.touches && c.touches.length; m--; )
+                    if (
+                      ((l = c.touches[m]),
+                      l.identifier == d.el._drag.id ||
+                        d.el.node.contains(l.target))
+                    ) {
+                      (e = l.clientX),
+                        (f = l.clientY),
+                        (c.originalEvent
+                          ? c.originalEvent
+                          : c
+                        ).preventDefault();
+                      break;
+                    }
+                } else c.preventDefault();
+                var n = d.el.node;
+                a._.glob,
+                  n.nextSibling,
+                  n.parentNode,
+                  n.style.display,
+                  (e += i),
+                  (f += g),
+                  b(
+                    "snap.drag.move." + d.el.id,
+                    d.move_scope || d.el,
+                    e - d.el._drag.x,
+                    f - d.el._drag.y,
+                    e,
+                    f,
+                    c
+                  );
+              }
+            },
+            s = function (c) {
+              a.unmousemove(r).unmouseup(s);
+              for (var d, e = q.length; e--; )
+                (d = q[e]),
+                  (d.el._drag = {}),
+                  b(
+                    "snap.drag.end." + d.el.id,
+                    d.end_scope || d.start_scope || d.move_scope || d.el,
+                    c
+                  );
+              q = [];
+            },
+            t = i.length;
           t--;
 
         )
           !(function (b) {
-            (a[b] = f[b] = function (c, d) {
-              return a.is(c, "function") && ((this.events = this.events || []), this.events.push({ name: b, f: c, unbind: p(this.shape || this.node || e.doc, b, c, d || this) })), this;
-            }),
-              (a["un" + b] = f["un" + b] = function (a) {
-                for (var c = this.events || [], d = c.length; d--;) if (c[d].name == b && (c[d].f == a || !a)) return c[d].unbind(), c.splice(d, 1), !c.length && delete this.events, this;
-                return this;
-              });
+            (a[b] = f[b] =
+              function (c, d) {
+                return (
+                  a.is(c, "function") &&
+                    ((this.events = this.events || []),
+                    this.events.push({
+                      name: b,
+                      f: c,
+                      unbind: p(
+                        this.shape || this.node || e.doc,
+                        b,
+                        c,
+                        d || this
+                      ),
+                    })),
+                  this
+                );
+              }),
+              (a["un" + b] = f["un" + b] =
+                function (a) {
+                  for (var c = this.events || [], d = c.length; d--; )
+                    if (c[d].name == b && (c[d].f == a || !a))
+                      return (
+                        c[d].unbind(),
+                        c.splice(d, 1),
+                        !c.length && delete this.events,
+                        this
+                      );
+                  return this;
+                });
           })(i[t]);
         (f.hover = function (a, b, c, d) {
           return this.mouseover(a, c).mouseout(b, d || c);
@@ -2954,10 +4287,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               }
             );
           }
-          return (this._drag = {}), u.push({ el: this, start: i }), this.mousedown(i), this;
+          return (
+            (this._drag = {}),
+            u.push({ el: this, start: i }),
+            this.mousedown(i),
+            this
+          );
         }),
           (f.undrag = function () {
-            for (var c = u.length; c--;) u[c].el == this && (this.unmousedown(u[c].start), u.splice(c, 1), b.unbind("snap.drag.*." + this.id));
+            for (var c = u.length; c--; )
+              u[c].el == this &&
+                (this.unmousedown(u[c].start),
+                u.splice(c, 1),
+                b.unbind("snap.drag.*." + this.id));
             return !u.length && a.unmousemove(r).unmouseup(s), this;
           });
       }),
@@ -2973,7 +4315,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             var e = a.parse(g(b)),
               f = a._.id(),
               i = (d.node.offsetWidth, d.node.offsetHeight, h("filter"));
-            return h(i, { id: f, filterUnits: "userSpaceOnUse" }), i.appendChild(e.node), d.defs.appendChild(i), new c(i);
+            return (
+              h(i, { id: f, filterUnits: "userSpaceOnUse" }),
+              i.appendChild(e.node),
+              d.defs.appendChild(i),
+              new c(i)
+            );
           }),
           b.on("snap.util.getattr.filter", function () {
             b.stop();
@@ -2987,14 +4334,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             if (d instanceof c && "filter" == d.type) {
               b.stop();
               var e = d.node.id;
-              e || (h(d.node, { id: d.id }), (e = d.id)), h(this.node, { filter: a.url(e) });
+              e || (h(d.node, { id: d.id }), (e = d.id)),
+                h(this.node, { filter: a.url(e) });
             }
-            (d && "none" != d) || (b.stop(), this.node.removeAttribute("filter"));
+            (d && "none" != d) ||
+              (b.stop(), this.node.removeAttribute("filter"));
           }),
           (a.filter.blur = function (b, c) {
             null == b && (b = 2);
             var d = null == c ? b : [b, c];
-            return a.format('<feGaussianBlur stdDeviation="{def}"/>', { def: d });
+            return a.format('<feGaussianBlur stdDeviation="{def}"/>', {
+              def: d,
+            });
           }),
           (a.filter.blur.toString = function () {
             return this();
@@ -3019,16 +4370,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           (a.filter.grayscale = function (b) {
             return (
               null == b && (b = 1),
-              a.format('<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {b} {h} 0 0 0 0 0 1 0"/>', {
-                a: 0.2126 + 0.7874 * (1 - b),
-                b: 0.7152 - 0.7152 * (1 - b),
-                c: 0.0722 - 0.0722 * (1 - b),
-                d: 0.2126 - 0.2126 * (1 - b),
-                e: 0.7152 + 0.2848 * (1 - b),
-                f: 0.0722 - 0.0722 * (1 - b),
-                g: 0.2126 - 0.2126 * (1 - b),
-                h: 0.0722 + 0.9278 * (1 - b),
-              })
+              a.format(
+                '<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {b} {h} 0 0 0 0 0 1 0"/>',
+                {
+                  a: 0.2126 + 0.7874 * (1 - b),
+                  b: 0.7152 - 0.7152 * (1 - b),
+                  c: 0.0722 - 0.0722 * (1 - b),
+                  d: 0.2126 - 0.2126 * (1 - b),
+                  e: 0.7152 + 0.2848 * (1 - b),
+                  f: 0.0722 - 0.0722 * (1 - b),
+                  g: 0.2126 - 0.2126 * (1 - b),
+                  h: 0.0722 + 0.9278 * (1 - b),
+                }
+              )
             );
           }),
           (a.filter.grayscale.toString = function () {
@@ -3037,30 +4391,43 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           (a.filter.sepia = function (b) {
             return (
               null == b && (b = 1),
-              a.format('<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {h} {i} 0 0 0 0 0 1 0"/>', {
-                a: 0.393 + 0.607 * (1 - b),
-                b: 0.769 - 0.769 * (1 - b),
-                c: 0.189 - 0.189 * (1 - b),
-                d: 0.349 - 0.349 * (1 - b),
-                e: 0.686 + 0.314 * (1 - b),
-                f: 0.168 - 0.168 * (1 - b),
-                g: 0.272 - 0.272 * (1 - b),
-                h: 0.534 - 0.534 * (1 - b),
-                i: 0.131 + 0.869 * (1 - b),
-              })
+              a.format(
+                '<feColorMatrix type="matrix" values="{a} {b} {c} 0 0 {d} {e} {f} 0 0 {g} {h} {i} 0 0 0 0 0 1 0"/>',
+                {
+                  a: 0.393 + 0.607 * (1 - b),
+                  b: 0.769 - 0.769 * (1 - b),
+                  c: 0.189 - 0.189 * (1 - b),
+                  d: 0.349 - 0.349 * (1 - b),
+                  e: 0.686 + 0.314 * (1 - b),
+                  f: 0.168 - 0.168 * (1 - b),
+                  g: 0.272 - 0.272 * (1 - b),
+                  h: 0.534 - 0.534 * (1 - b),
+                  i: 0.131 + 0.869 * (1 - b),
+                }
+              )
             );
           }),
           (a.filter.sepia.toString = function () {
             return this();
           }),
           (a.filter.saturate = function (b) {
-            return null == b && (b = 1), a.format('<feColorMatrix type="saturate" values="{amount}"/>', { amount: 1 - b });
+            return (
+              null == b && (b = 1),
+              a.format('<feColorMatrix type="saturate" values="{amount}"/>', {
+                amount: 1 - b,
+              })
+            );
           }),
           (a.filter.saturate.toString = function () {
             return this();
           }),
           (a.filter.hueRotate = function (b) {
-            return (b = b || 0), a.format('<feColorMatrix type="hueRotate" values="{angle}"/>', { angle: b });
+            return (
+              (b = b || 0),
+              a.format('<feColorMatrix type="hueRotate" values="{angle}"/>', {
+                angle: b,
+              })
+            );
           }),
           (a.filter.hueRotate.toString = function () {
             return this();
@@ -3080,7 +4447,10 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           (a.filter.brightness = function (b) {
             return (
               null == b && (b = 1),
-              a.format('<feComponentTransfer><feFuncR type="linear" slope="{amount}"/><feFuncG type="linear" slope="{amount}"/><feFuncB type="linear" slope="{amount}"/></feComponentTransfer>', { amount: b })
+              a.format(
+                '<feComponentTransfer><feFuncR type="linear" slope="{amount}"/><feFuncG type="linear" slope="{amount}"/><feFuncB type="linear" slope="{amount}"/></feComponentTransfer>',
+                { amount: b }
+              )
             );
           }),
           (a.filter.brightness.toString = function () {
@@ -3105,15 +4475,15 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
   !(function (a, b) {
     "function" == typeof define && define.amd
       ? define(["jquery"], function (c) {
-        return b(a, c);
-      })
+          return b(a, c);
+        })
       : "object" == typeof exports
-        ? b(a, require("jquery"))
-        : b(a, a.jQuery);
+      ? b(a, require("jquery"))
+      : b(a, a.jQuery);
   })("undefined" != typeof window ? window : this, function (a, b) {
     "use strict";
     function c(a, b) {
-      for (var c = a.length; --c;) if (+a[c] !== +b[c]) return !1;
+      for (var c = a.length; --c; ) if (+a[c] !== +b[c]) return !1;
       return !0;
     }
     function d(a) {
@@ -3121,14 +4491,19 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       return "boolean" == typeof a ? (c.animate = a) : b.extend(c, a), c;
     }
     function e(a, c, d, e, f, g, h, i, j) {
-      this.elements = "array" === b.type(a) ? [+a[0], +a[2], +a[4], +a[1], +a[3], +a[5], 0, 0, 1] : [a, c, d, e, f, g, h || 0, i || 0, j || 1];
+      this.elements =
+        "array" === b.type(a)
+          ? [+a[0], +a[2], +a[4], +a[1], +a[3], +a[5], 0, 0, 1]
+          : [a, c, d, e, f, g, h || 0, i || 0, j || 1];
     }
     function f(a, b, c) {
       this.elements = [a, b, c];
     }
     function g(a, c) {
       if (!(this instanceof g)) return new g(a, c);
-      1 !== a.nodeType && b.error("Panzoom called on non-Element node"), b.contains(l, a) || b.error("Panzoom element must be attached to the document");
+      1 !== a.nodeType && b.error("Panzoom called on non-Element node"),
+        b.contains(l, a) ||
+          b.error("Panzoom element must be attached to the document");
       var d = b.data(a, m);
       if (d) return d;
       (this.options = c = b.extend({}, g.defaults, c)), (this.elem = a);
@@ -3136,10 +4511,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       (this.$set = c.$set && c.$set.length ? c.$set : e),
         (this.$doc = b(a.ownerDocument || l)),
         (this.$parent = e.parent()),
-        (this.isSVG = r.test(a.namespaceURI) && "svg" !== a.nodeName.toLowerCase()),
+        (this.isSVG =
+          r.test(a.namespaceURI) && "svg" !== a.nodeName.toLowerCase()),
         (this.panning = !1),
         this._buildTransform(),
-        (this._transform = !this.isSVG && b.cssProps.transform.replace(q, "-$1").toLowerCase()),
+        (this._transform =
+          !this.isSVG && b.cssProps.transform.replace(q, "-$1").toLowerCase()),
         this._buildTransition(),
         this.resetDimensions();
       var f = b(),
@@ -3159,11 +4536,20 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       });
     else {
       var k = i.props;
-      (i.props = k.concat(["touches", "changedTouches", "targetTouches", "altKey", "ctrlKey", "metaKey", "shiftKey"])),
+      (i.props = k.concat([
+        "touches",
+        "changedTouches",
+        "targetTouches",
+        "altKey",
+        "ctrlKey",
+        "metaKey",
+        "shiftKey",
+      ])),
         (i.filter = function (a, b) {
           var c,
             d = k.length;
-          if (!b.pageX && b.touches && (c = b.touches[0])) for (; d--;) a[k[d]] = c[k[d]];
+          if (!b.pageX && b.touches && (c = b.touches[0]))
+            for (; d--; ) a[k[d]] = c[k[d]];
           return a;
         }),
         b.each(h, function (a, c) {
@@ -3181,14 +4567,18 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       o = !!a.PointerEvent,
       p = (function () {
         var a = l.createElement("input");
-        return a.setAttribute("oninput", "return"), "function" == typeof a.oninput;
+        return (
+          a.setAttribute("oninput", "return"), "function" == typeof a.oninput
+        );
       })(),
       q = /([A-Z])/g,
       r = /^http:[\w\.\/]+svg$/,
       s = /^inline/,
       t = "(\\-?[\\d\\.e]+)",
       u = "\\,?\\s*",
-      v = new RegExp("^matrix\\(" + t + u + t + u + t + u + t + u + t + u + t + "\\)$");
+      v = new RegExp(
+        "^matrix\\(" + t + u + t + u + t + u + t + u + t + u + t + "\\)$"
+      );
     return (
       (e.prototype = {
         x: function (a) {
@@ -3196,9 +4586,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             c = this.elements,
             d = a.elements;
           return b && 3 === d.length
-            ? new f(c[0] * d[0] + c[1] * d[1] + c[2] * d[2], c[3] * d[0] + c[4] * d[1] + c[5] * d[2], c[6] * d[0] + c[7] * d[1] + c[8] * d[2])
+            ? new f(
+                c[0] * d[0] + c[1] * d[1] + c[2] * d[2],
+                c[3] * d[0] + c[4] * d[1] + c[5] * d[2],
+                c[6] * d[0] + c[7] * d[1] + c[8] * d[2]
+              )
             : d.length === c.length
-              ? new e(
+            ? new e(
                 c[0] * d[0] + c[1] * d[3] + c[2] * d[6],
                 c[0] * d[1] + c[1] * d[4] + c[2] * d[7],
                 c[0] * d[2] + c[1] * d[5] + c[2] * d[8],
@@ -3209,7 +4603,7 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                 c[6] * d[1] + c[7] * d[4] + c[8] * d[7],
                 c[6] * d[2] + c[7] * d[5] + c[8] * d[8]
               )
-              : !1;
+            : !1;
         },
         inverse: function () {
           var a = 1 / this.determinant(),
@@ -3228,15 +4622,33 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         },
         determinant: function () {
           var a = this.elements;
-          return a[0] * (a[8] * a[4] - a[7] * a[5]) - a[3] * (a[8] * a[1] - a[7] * a[2]) + a[6] * (a[5] * a[1] - a[4] * a[2]);
+          return (
+            a[0] * (a[8] * a[4] - a[7] * a[5]) -
+            a[3] * (a[8] * a[1] - a[7] * a[2]) +
+            a[6] * (a[5] * a[1] - a[4] * a[2])
+          );
         },
       }),
-      (f.prototype.e = e.prototype.e = function (a) {
-        return this.elements[a];
-      }),
+      (f.prototype.e = e.prototype.e =
+        function (a) {
+          return this.elements[a];
+        }),
       (g.rmatrix = v),
       (g.events = b.pointertouch),
-      (g.defaults = { eventNamespace: ".panzoom", transition: !0, cursor: "move", disablePan: isLargeScreen(), disableZoom: !1, increment: 0.3, minScale: 0.4, maxScale: 5, rangeStep: 0.05, duration: 200, easing: "ease-in-out", contain: !1 }),
+      (g.defaults = {
+        eventNamespace: ".panzoom",
+        transition: !0,
+        cursor: "move",
+        disablePan: isLargeScreen(),
+        disableZoom: !1,
+        increment: 0.3,
+        minScale: 0.4,
+        maxScale: 5,
+        rangeStep: 0.05,
+        duration: 200,
+        easing: "ease-in-out",
+        contain: !1,
+      }),
       (g.prototype = {
         constructor: g,
         instance: function () {
@@ -3262,10 +4674,30 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             e = this.elem,
             f = this.$elem;
           this.isSVG
-            ? ((c = e.getBoundingClientRect()), (c = { left: c.left - d.left, top: c.top - d.top, width: c.width, height: c.height, margin: { left: 0, top: 0 } }))
-            : (c = { left: b.css(e, "left", !0) || 0, top: b.css(e, "top", !0) || 0, width: f.innerWidth(), height: f.innerHeight(), margin: { top: b.css(e, "marginTop", !0) || 0, left: b.css(e, "marginLeft", !0) || 0 } }),
-            (c.widthBorder = b.css(e, "borderLeftWidth", !0) + b.css(e, "borderRightWidth", !0) || 0),
-            (c.heightBorder = b.css(e, "borderTopWidth", !0) + b.css(e, "borderBottomWidth", !0) || 0),
+            ? ((c = e.getBoundingClientRect()),
+              (c = {
+                left: c.left - d.left,
+                top: c.top - d.top,
+                width: c.width,
+                height: c.height,
+                margin: { left: 0, top: 0 },
+              }))
+            : (c = {
+                left: b.css(e, "left", !0) || 0,
+                top: b.css(e, "top", !0) || 0,
+                width: f.innerWidth(),
+                height: f.innerHeight(),
+                margin: {
+                  top: b.css(e, "marginTop", !0) || 0,
+                  left: b.css(e, "marginLeft", !0) || 0,
+                },
+              }),
+            (c.widthBorder =
+              b.css(e, "borderLeftWidth", !0) +
+                b.css(e, "borderRightWidth", !0) || 0),
+            (c.heightBorder =
+              b.css(e, "borderTopWidth", !0) +
+                b.css(e, "borderBottomWidth", !0) || 0),
             (this.dimensions = c);
         },
         reset: function (a) {
@@ -3284,12 +4716,25 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           this.pan(b[4], b[5], d(a));
         },
         setTransform: function (a) {
-          for (var c = this.isSVG ? "attr" : "style", d = this.$set, e = d.length; e--;) b[c](d[e], "transform", a);
+          for (
+            var c = this.isSVG ? "attr" : "style", d = this.$set, e = d.length;
+            e--;
+
+          )
+            b[c](d[e], "transform", a);
         },
         getTransform: function (a) {
           var c = this.$set,
             d = c[0];
-          return a ? this.setTransform(a) : (a = b[this.isSVG ? "attr" : "style"](d, "transform")), "none" === a || v.test(a) || this.setTransform((a = b.css(d, "transform"))), a || "none";
+          return (
+            a
+              ? this.setTransform(a)
+              : (a = b[this.isSVG ? "attr" : "style"](d, "transform")),
+            "none" === a ||
+              v.test(a) ||
+              this.setTransform((a = b.css(d, "transform"))),
+            a || "none"
+          );
         },
         getMatrix: function (a) {
           var b = v.exec(a || this.getTransform());
@@ -3310,10 +4755,13 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               m,
               n = +a[0],
               o = this.$parent,
-              p = "undefined" != typeof c.contain ? c.contain : this.options.contain;
+              p =
+                "undefined" != typeof c.contain
+                  ? c.contain
+                  : this.options.contain;
             return (
               p &&
-              ((d = this._checkDims()),
+                ((d = this._checkDims()),
                 (e = this.container),
                 (l = d.width + d.widthBorder),
                 (m = d.height + d.heightBorder),
@@ -3327,34 +4775,54 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                     (f += (e.width - l) / 2),
                     (g += (e.height - m) / 2),
                     (a[4] = Math.max(Math.min(a[4], f - j), -f - j - h)),
-                    (a[5] = Math.max(Math.min(a[5], g - k), -g - k - i + d.heightBorder)))
+                    (a[5] = Math.max(
+                      Math.min(a[5], g - k),
+                      -g - k - i + d.heightBorder
+                    )))
                   : ((g += d.heightBorder / 2),
                     (h = e.width > l ? e.width - l : 0),
                     (i = e.height > m ? e.height - m : 0),
-                    "center" === o.css("textAlign") && s.test(b.css(this.elem, "display")) ? (h = 0) : (f = g = 0),
+                    "center" === o.css("textAlign") &&
+                    s.test(b.css(this.elem, "display"))
+                      ? (h = 0)
+                      : (f = g = 0),
                     (a[4] = Math.min(Math.max(a[4], f - j), -f - j + h)),
                     (a[5] = Math.min(Math.max(a[5], g - k), -g - k + i)))),
               "skip" !== c.animate && this.transition(!c.animate),
               c.range && this.$zoomRange.val(n),
-              ((a[4] <= 214) && (a[4] >= -214)) && ((a[5] >= -150) && ((a[5] <= 150)))
+              a[4] <= 214 && a[4] >= -214 && a[5] >= -150 && a[5] <= 150
                 ? this.setTransform("matrix(" + a.join(",") + ")")
                 : null,
               c.silent || this._trigger("change", a),
               a
-            )
+            );
           }
         },
         isPanning: function () {
           return this.panning;
         },
         transition: function (a) {
-          if (this._transition) for (var c = a || !this.options.transition ? "none" : this._transition, d = this.$set, e = d.length; e--;) b.style(d[e], "transition") !== c && b.style(d[e], "transition", c);
+          if (this._transition)
+            for (
+              var c = a || !this.options.transition ? "none" : this._transition,
+                d = this.$set,
+                e = d.length;
+              e--;
+
+            )
+              b.style(d[e], "transition") !== c &&
+                b.style(d[e], "transition", c);
         },
         pan: function (a, b, c) {
           if (!this.options.disablePan) {
             c || (c = {});
             var d = c.matrix;
-            d || (d = this.getMatrix()), c.relative && ((a += +d[4]), (b += +d[5])), (d[4] = a), (d[5] = b), this.setMatrix(d, c), c.silent || this._trigger("pan", d[4], d[5]);
+            d || (d = this.getMatrix()),
+              c.relative && ((a += +d[4]), (b += +d[5])),
+              (d[4] = a),
+              (d[5] = b),
+              this.setMatrix(d, c),
+              c.silent || this._trigger("pan", d[4], d[5]);
           }
         },
         zoom: function (a, c) {
@@ -3363,29 +4831,52 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           if (!d.disableZoom) {
             var g = !1,
               h = d.matrix || this.getMatrix();
-            "number" != typeof a && ((a = +h[0] + d.increment * (a ? -1 : 1)), (g = !0)), a > d.maxScale ? (a = d.maxScale) : a < d.minScale && (a = d.minScale);
+            "number" != typeof a &&
+              ((a = +h[0] + d.increment * (a ? -1 : 1)), (g = !0)),
+              a > d.maxScale
+                ? (a = d.maxScale)
+                : a < d.minScale && (a = d.minScale);
             var i = d.focal;
             if (i && !d.disablePan) {
               var j = this._checkDims(),
                 k = i.clientX,
                 l = i.clientY;
-              this.isSVG || ((k -= (j.width + j.widthBorder) / 2), (l -= (j.height + j.heightBorder) / 2));
+              this.isSVG ||
+                ((k -= (j.width + j.widthBorder) / 2),
+                (l -= (j.height + j.heightBorder) / 2));
               var m = new f(k, l, 1),
                 n = new e(h),
                 o = this.parentOffset || this.$parent.offset(),
-                p = new e(1, 0, o.left - this.$doc.scrollLeft(), 0, 1, o.top - this.$doc.scrollTop()),
+                p = new e(
+                  1,
+                  0,
+                  o.left - this.$doc.scrollLeft(),
+                  0,
+                  1,
+                  o.top - this.$doc.scrollTop()
+                ),
                 q = n.inverse().x(p.inverse().x(m)),
                 r = a / h[0];
-              (n = n.x(new e([r, 0, 0, r, 0, 0]))), (m = p.x(n.x(q))), (h[4] = +h[4] + (k - m.e(0))), (h[5] = +h[5] + (l - m.e(1)));
+              (n = n.x(new e([r, 0, 0, r, 0, 0]))),
+                (m = p.x(n.x(q))),
+                (h[4] = +h[4] + (k - m.e(0))),
+                (h[5] = +h[5] + (l - m.e(1)));
             }
-            (h[0] = a), (h[3] = "number" == typeof d.dValue ? d.dValue : a), this.setMatrix(h, { animate: "boolean" == typeof d.animate ? d.animate : g, range: !d.noSetRange }), d.silent || this._trigger("zoom", h[0], d);
+            (h[0] = a),
+              (h[3] = "number" == typeof d.dValue ? d.dValue : a),
+              this.setMatrix(h, {
+                animate: "boolean" == typeof d.animate ? d.animate : g,
+                range: !d.noSetRange,
+              }),
+              d.silent || this._trigger("zoom", h[0], d);
           }
         },
         option: function (a, c) {
           var d;
           if (!a) return b.extend({}, this.options);
           if ("string" == typeof a) {
-            if (1 === arguments.length) return void 0 !== this.options[a] ? this.options[a] : null;
+            if (1 === arguments.length)
+              return void 0 !== this.options[a] ? this.options[a] : null;
             (d = {}), (d[a] = c);
           } else d = a;
           this._setOptions(d);
@@ -3451,19 +4942,32 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   this.transition();
                   break;
                 case "$set":
-                  c instanceof b && c.length && ((this.$set = c), this._initStyle(), this._buildTransform());
+                  c instanceof b &&
+                    c.length &&
+                    ((this.$set = c),
+                    this._initStyle(),
+                    this._buildTransform());
               }
             }, this)
           );
         },
         _initStyle: function () {
-          var a = { "backface-visibility": "hidden", "transform-origin": this.isSVG ? "0 0" : "50% 50%" };
-          this.options.disablePan || (a.cursor = this.options.cursor), this.$set.css(a);
+          var a = {
+            "backface-visibility": "hidden",
+            "transform-origin": this.isSVG ? "0 0" : "50% 50%",
+          };
+          this.options.disablePan || (a.cursor = this.options.cursor),
+            this.$set.css(a);
           var c = this.$parent;
-          c.length && !b.nodeName(c[0], "body") && ((a = { overflow: "hidden" }), "static" === c.css("position") && (a.position = "relative"), c.css(a));
+          c.length &&
+            !b.nodeName(c[0], "body") &&
+            ((a = { overflow: "hidden" }),
+            "static" === c.css("position") && (a.position = "relative"),
+            c.css(a));
         },
         _resetStyle: function () {
-          this.$elem.css({ cursor: "", transition: "" }), this.$parent.css({ overflow: "", position: "" });
+          this.$elem.css({ cursor: "", transition: "" }),
+            this.$parent.css({ overflow: "", position: "" });
         },
         _bind: function () {
           var a = this,
@@ -3475,22 +4979,38 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             i = this.$reset,
             j = this.$zoomRange;
           if (
-            (b.each(["Start", "Change", "Zoom", "Pan", "End", "Reset"], function () {
-              var a = c["on" + this];
-              b.isFunction(a) && (h["panzoom" + this.toLowerCase() + d] = a);
-            }),
-              (c.disablePan && c.disableZoom) ||
+            (b.each(
+              ["Start", "Change", "Zoom", "Pan", "End", "Reset"],
+              function () {
+                var a = c["on" + this];
+                b.isFunction(a) && (h["panzoom" + this.toLowerCase() + d] = a);
+              }
+            ),
+            (c.disablePan && c.disableZoom) ||
               (h[e] = function (b) {
                 var d;
-                ("touchstart" === b.type ? !(d = b.touches) || ((1 !== d.length || c.disablePan) && 2 !== d.length) : c.disablePan || 1 !== b.which) || (b.preventDefault(), b.stopPropagation(), a._startMove(b, d));
+                ("touchstart" === b.type
+                  ? !(d = b.touches) ||
+                    ((1 !== d.length || c.disablePan) && 2 !== d.length)
+                  : c.disablePan || 1 !== b.which) ||
+                  (b.preventDefault(), b.stopPropagation(), a._startMove(b, d));
               }),
-              this.$elem.on(h),
-              i.length &&
+            this.$elem.on(h),
+            i.length &&
               i.on(f, function (b) {
                 b.preventDefault(), a.reset();
               }),
-              j.length && j.attr({ step: (c.rangeStep === g.defaults.rangeStep && j.attr("step")) || c.rangeStep, min: c.minScale, max: c.maxScale }).prop({ value: this.getMatrix()[0] }),
-              !c.disableZoom)
+            j.length &&
+              j
+                .attr({
+                  step:
+                    (c.rangeStep === g.defaults.rangeStep && j.attr("step")) ||
+                    c.rangeStep,
+                  min: c.minScale,
+                  max: c.maxScale,
+                })
+                .prop({ value: this.getMatrix()[0] }),
+            !c.disableZoom)
           ) {
             var k = this.$zoomIn,
               l = this.$zoomOut;
@@ -3499,11 +5019,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
               (k.on(f, function (b) {
                 b.preventDefault(), a.zoom();
               }),
-                l.on(f, function (b) {
-                  b.preventDefault(), a.zoom(!0);
-                })),
+              l.on(f, function (b) {
+                b.preventDefault(), a.zoom(!0);
+              })),
               j.length &&
-              ((h = {}),
+                ((h = {}),
                 (h[(o ? "pointerdown" : "mousedown") + d] = function () {
                   a.transition(!0);
                 }),
@@ -3514,33 +5034,49 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           }
         },
         _unbind: function () {
-          this.$elem.add(this.$zoomIn).add(this.$zoomOut).add(this.$reset).off(this.options.eventNamespace);
+          this.$elem
+            .add(this.$zoomIn)
+            .add(this.$zoomOut)
+            .add(this.$reset)
+            .off(this.options.eventNamespace);
         },
         _buildTransform: function () {
-          return (this._origTransform = this.getTransform(this.options.startTransform));
+          return (this._origTransform = this.getTransform(
+            this.options.startTransform
+          ));
         },
         _buildTransition: function () {
           if (this._transform) {
             var a = this.options;
-            this._transition = this._transform + " " + a.duration + "ms " + a.easing;
+            this._transition =
+              this._transform + " " + a.duration + "ms " + a.easing;
           }
         },
         _checkDims: function () {
           var a = this.dimensions;
-          return (a.width && a.height) || this.resetDimensions(), this.dimensions;
+          return (
+            (a.width && a.height) || this.resetDimensions(), this.dimensions
+          );
         },
         _getDistance: function (a) {
           var b = a[0],
             c = a[1];
-          return Math.sqrt(Math.pow(Math.abs(c.clientX - b.clientX), 2) + Math.pow(Math.abs(c.clientY - b.clientY), 2));
+          return Math.sqrt(
+            Math.pow(Math.abs(c.clientX - b.clientX), 2) +
+              Math.pow(Math.abs(c.clientY - b.clientY), 2)
+          );
         },
         _getMiddle: function (a) {
           var b = a[0],
             c = a[1];
-          return { clientX: (c.clientX - b.clientX) / 2 + b.clientX, clientY: (c.clientY - b.clientY) / 2 + b.clientY };
+          return {
+            clientX: (c.clientX - b.clientX) / 2 + b.clientX,
+            clientY: (c.clientY - b.clientY) / 2 + b.clientY,
+          };
         },
         _trigger: function (a) {
-          "string" == typeof a && (a = "panzoom" + a), this.$elem.triggerHandler(a, [this].concat(n.call(arguments, 1)));
+          "string" == typeof a && (a = "panzoom" + a),
+            this.$elem.triggerHandler(a, [this].concat(n.call(arguments, 1)));
         },
         _startMove: function (a, d) {
           var e,
@@ -3559,7 +5095,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
             t = +s[4],
             u = +s[5],
             v = { matrix: r, animate: "skip" };
-          o ? ((f = "pointermove"), (g = "pointerup")) : "touchstart" === a.type ? ((f = "touchmove"), (g = "touchend")) : ((f = "mousemove"), (g = "mouseup")),
+          o
+            ? ((f = "pointermove"), (g = "pointerup"))
+            : "touchstart" === a.type
+            ? ((f = "touchmove"), (g = "touchend"))
+            : ((f = "mousemove"), (g = "mouseup")),
             (f += q),
             (g += q),
             this.transition(!0),
@@ -3573,18 +5113,33 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
                   a.preventDefault();
                   var b = n._getMiddle((d = a.touches)),
                     c = n._getDistance(d) - h;
-                  n.zoom(c * (p.increment / 100) + i, { focal: b, matrix: r, animate: !1 }), n.pan(+r[4] + b.clientX - j.clientX, +r[5] + b.clientY - j.clientY, v), (j = b);
+                  n.zoom(c * (p.increment / 100) + i, {
+                    focal: b,
+                    matrix: r,
+                    animate: !1,
+                  }),
+                    n.pan(
+                      +r[4] + b.clientX - j.clientX,
+                      +r[5] + b.clientY - j.clientY,
+                      v
+                    ),
+                    (j = b);
                 }))
               : ((k = a.pageX),
                 (m = a.pageY),
                 (e = function (a) {
-                  a.preventDefault(), n.pan(t + a.pageX - k, u + a.pageY - m, v);
+                  a.preventDefault(),
+                    n.pan(t + a.pageX - k, u + a.pageY - m, v);
                 })),
             b(l)
               .off(q)
               .on(f, e)
               .on(g, function (a) {
-                a.preventDefault(), b(this).off(q), (n.panning = !1), (a.type = "panzoomend"), n._trigger(a, r, !c(r, s));
+                a.preventDefault(),
+                  b(this).off(q),
+                  (n.panning = !1),
+                  (a.type = "panzoomend"),
+                  n._trigger(a, r, !c(r, s));
               });
         },
       }),
@@ -3595,18 +5150,28 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
           ? ((f = []),
             (d = n.call(arguments, 1)),
             this.each(function () {
-              (c = b.data(this, m)), c ? "_" !== a.charAt(0) && "function" == typeof (e = c[a]) && void 0 !== (e = e.apply(c, d)) && f.push(e) : f.push(void 0);
+              (c = b.data(this, m)),
+                c
+                  ? "_" !== a.charAt(0) &&
+                    "function" == typeof (e = c[a]) &&
+                    void 0 !== (e = e.apply(c, d)) &&
+                    f.push(e)
+                  : f.push(void 0);
             }),
             f.length ? (1 === f.length ? f[0] : f) : this)
           : this.each(function () {
-            new g(this, a);
-          });
+              new g(this, a);
+            });
       }),
       g
     );
   }),
   (function (factory) {
-    "function" == typeof define && define.amd ? define(["jquery"], factory) : "object" == typeof exports ? (module.exports = factory) : factory(jQuery);
+    "function" == typeof define && define.amd
+      ? define(["jquery"], factory)
+      : "object" == typeof exports
+      ? (module.exports = factory)
+      : factory(jQuery);
   })(function ($) {
     function handler(event) {
       var orgEvent = event || window.event,
@@ -3617,16 +5182,20 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         absDelta = 0;
       if (
         ((event = $.event.fix(orgEvent)),
-          (event.type = "mousewheel"),
-          "detail" in orgEvent && (deltaY = -1 * orgEvent.detail),
-          "wheelDelta" in orgEvent && (deltaY = orgEvent.wheelDelta),
-          "wheelDeltaY" in orgEvent && (deltaY = orgEvent.wheelDeltaY),
-          "wheelDeltaX" in orgEvent && (deltaX = -1 * orgEvent.wheelDeltaX),
-          "axis" in orgEvent && orgEvent.axis === orgEvent.HORIZONTAL_AXIS && ((deltaX = -1 * deltaY), (deltaY = 0)),
-          (delta = 0 === deltaY ? deltaX : deltaY),
-          "deltaY" in orgEvent && ((deltaY = -1 * orgEvent.deltaY), (delta = deltaY)),
-          "deltaX" in orgEvent && ((deltaX = orgEvent.deltaX), 0 === deltaY && (delta = -1 * deltaX)),
-          0 !== deltaY || 0 !== deltaX)
+        (event.type = "mousewheel"),
+        "detail" in orgEvent && (deltaY = -1 * orgEvent.detail),
+        "wheelDelta" in orgEvent && (deltaY = orgEvent.wheelDelta),
+        "wheelDeltaY" in orgEvent && (deltaY = orgEvent.wheelDeltaY),
+        "wheelDeltaX" in orgEvent && (deltaX = -1 * orgEvent.wheelDeltaX),
+        "axis" in orgEvent &&
+          orgEvent.axis === orgEvent.HORIZONTAL_AXIS &&
+          ((deltaX = -1 * deltaY), (deltaY = 0)),
+        (delta = 0 === deltaY ? deltaX : deltaY),
+        "deltaY" in orgEvent &&
+          ((deltaY = -1 * orgEvent.deltaY), (delta = deltaY)),
+        "deltaX" in orgEvent &&
+          ((deltaX = orgEvent.deltaX), 0 === deltaY && (delta = -1 * deltaX)),
+        0 !== deltaY || 0 !== deltaX)
       ) {
         if (1 === orgEvent.deltaMode) {
           var lineHeight = $.data(this, "mousewheel-line-height");
@@ -3637,8 +5206,11 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
         }
         return (
           (absDelta = Math.max(Math.abs(deltaY), Math.abs(deltaX))),
-          (!lowestDelta || lowestDelta > absDelta) && ((lowestDelta = absDelta), shouldAdjustOldDeltas(orgEvent, absDelta) && (lowestDelta /= 40)),
-          shouldAdjustOldDeltas(orgEvent, absDelta) && ((delta /= 40), (deltaX /= 40), (deltaY /= 40)),
+          (!lowestDelta || lowestDelta > absDelta) &&
+            ((lowestDelta = absDelta),
+            shouldAdjustOldDeltas(orgEvent, absDelta) && (lowestDelta /= 40)),
+          shouldAdjustOldDeltas(orgEvent, absDelta) &&
+            ((delta /= 40), (deltaX /= 40), (deltaY /= 40)),
           (delta = Math[delta >= 1 ? "floor" : "ceil"](delta / lowestDelta)),
           (deltaX = Math[deltaX >= 1 ? "floor" : "ceil"](deltaX / lowestDelta)),
           (deltaY = Math[deltaY >= 1 ? "floor" : "ceil"](deltaY / lowestDelta)),
@@ -3657,27 +5229,46 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       lowestDelta = null;
     }
     function shouldAdjustOldDeltas(orgEvent, absDelta) {
-      return special.settings.adjustOldDeltas && "mousewheel" === orgEvent.type && absDelta % 120 === 0;
+      return (
+        special.settings.adjustOldDeltas &&
+        "mousewheel" === orgEvent.type &&
+        absDelta % 120 === 0
+      );
     }
     var nullLowestDeltaTimeout,
       lowestDelta,
       toFix = ["wheel", "mousewheel", "DOMMouseScroll", "MozMousePixelScroll"],
-      toBind = "onwheel" in document || document.documentMode >= 9 ? ["wheel"] : ["mousewheel", "DomMouseScroll", "MozMousePixelScroll"],
+      toBind =
+        "onwheel" in document || document.documentMode >= 9
+          ? ["wheel"]
+          : ["mousewheel", "DomMouseScroll", "MozMousePixelScroll"],
       slice = Array.prototype.slice;
-    if ($.event.fixHooks) for (var i = toFix.length; i;) $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
+    if ($.event.fixHooks)
+      for (var i = toFix.length; i; )
+        $.event.fixHooks[toFix[--i]] = $.event.mouseHooks;
     var special = ($.event.special.mousewheel = {
       version: "3.1.9",
       setup: function () {
-        if (this.addEventListener) for (var i = toBind.length; i;) this.addEventListener(toBind[--i], handler, !1);
+        if (this.addEventListener)
+          for (var i = toBind.length; i; )
+            this.addEventListener(toBind[--i], handler, !1);
         else this.onmousewheel = handler;
-        $.data(this, "mousewheel-line-height", special.getLineHeight(this)), $.data(this, "mousewheel-page-height", special.getPageHeight(this));
+        $.data(this, "mousewheel-line-height", special.getLineHeight(this)),
+          $.data(this, "mousewheel-page-height", special.getPageHeight(this));
       },
       teardown: function () {
-        if (this.removeEventListener) for (var i = toBind.length; i;) this.removeEventListener(toBind[--i], handler, !1);
+        if (this.removeEventListener)
+          for (var i = toBind.length; i; )
+            this.removeEventListener(toBind[--i], handler, !1);
         else this.onmousewheel = null;
       },
       getLineHeight: function (elem) {
-        return parseInt($(elem)["offsetParent" in $.fn ? "offsetParent" : "parent"]().css("fontSize"), 10);
+        return parseInt(
+          $(elem)
+            ["offsetParent" in $.fn ? "offsetParent" : "parent"]()
+            .css("fontSize"),
+          10
+        );
       },
       getPageHeight: function (elem) {
         return $(elem).height();
@@ -3705,8 +5296,12 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
     }
     function svgTest() {
       var html = document.getElementsByTagName("html"),
-        svgClass = document.createElement("svg").getAttributeNS ? "svg" : "no-svg";
-      (html[0].className += ("" !== html[0].className ? " " : "") + svgClass), "no-svg" === svgClass && $('img[src$=".svg"]').attr("src", getSVGFallback);
+        svgClass = document.createElement("svg").getAttributeNS
+          ? "svg"
+          : "no-svg";
+      (html[0].className += ("" !== html[0].className ? " " : "") + svgClass),
+        "no-svg" === svgClass &&
+          $('img[src$=".svg"]').attr("src", getSVGFallback);
     }
     svgTest();
   })(this, this.document, jQuery),
@@ -3715,5 +5310,48 @@ if ("undefined" == typeof jQuery) throw new Error("E6-B Flight Compputer's JavaS
       svgPath = "svg/",
       svgFiles = { slideRule: "e6-b-sliderule.svg", wind: "e6-b-wind.svg" },
       svg = getSVG(q, svgPath, svgFiles);
-    (scope = q ? q : "sliderule"), $("body").addClass(scope), (z = Snap("#wrap")), Snap.load(svg, loadSVG);
+    (scope = q ? q : "sliderule"),
+      $("body").addClass(scope),
+      (z = Snap("#wrap")),
+      Snap.load(svg, loadSVG);
+
+    // Функція для обробки кліків на кнопки flip-slide та flip-wind
+    $("#flip-slide").click(function () {
+      if (!$(this).hasClass("active")) {
+        // Перевірка наявності класу active
+        loadSide("slideRule");
+        $(".flipside-btn").removeClass("active");
+        $(this).addClass("active");
+      }
+    });
+
+    $("#flip-wind").click(function () {
+      if (!$(this).hasClass("active")) {
+        // Перевірка наявності класу active
+        loadSide("wind");
+        $(".flipside-btn").removeClass("active");
+        $(this).addClass("active");
+      }
+    });
   });
+
+function scopeE6BSetup(tutorialItem) {
+  $(".sidebar").hide(),
+    "slide" == scope && $("#middle_circle"),
+    "wind" == scope ? $(".wind-side").show() : $(".sliderule-side").show();
+}
+
+function loadSide(tutorialItem) {
+  var q = "sliderule" == (currentScope = scope) ? "wind" : "sliderule",
+    svg =
+      ($("#flight-computer").remove(),
+      getSVG(q, "svg/", {
+        slideRule: "e6-b-sliderule.svg",
+        wind: "e6-b-wind.svg",
+      }));
+  (scope = q || "sliderule"),
+    $("body").addClass(scope),
+    (z = Snap("#wrap")),
+    Snap.load(svg, loadSVG),
+    scopeE6BSetup(tutorialItem);
+}
